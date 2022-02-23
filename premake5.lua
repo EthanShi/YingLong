@@ -16,21 +16,25 @@ project "YingLong"
         "src/**.h",
         "src/**.c",
         "src/**.cpp",
-        "src/**.hpp"
+        "src/**.hpp",
     }
 
     includedirs {
-        "thridparty/include"
+        "thridparty/GLEW/include",
+        "thridparty/GLFW/include",
     }
 
-    pchheader "../src/yinglongPCH.h"
+    -- pchheader "../src/yinglongPCH.h"
 
     libdirs {
-        "libs"
+        "thridparty/GLEW/lib/Release/x64",
+        "thridparty/GLFW/lib-2022",
     }
 
     links {
-
+        "glew32s.lib",
+        "glfw3.lib",
+        "openGL32.lib"
     }
 
     filter "platforms:Win64"
@@ -40,6 +44,24 @@ project "YingLong"
 
         defines {
             "YINGLONG_PLATFORM_WINDOWS"
+        }
+
+project "test"
+
+        location "../test"
+
+        kind "ConsoleApp"
+        language "C++"
+
+        outputdir = "%{cfg.buildcfg}/%{cfg.system}/%{cfg.architecture}"
+        targetdir ("bin/" .. outputdir)
+        objdir ("intermediate/" .. outputdir)
+
+        files {
+            "../test/src/**.h",
+            "../test/src/**.c",
+            "../test/src/**.cpp",
+            "../test/src/**.hpp"
         }
 
 filter "configurations:Debug"
