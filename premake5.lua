@@ -26,7 +26,8 @@ project "YingLong"
         "src"
     }
 
-    -- pchheader "../src/yinglongPCH.h"
+    pchheader "YingLongPCH.h"
+    pchsource "src/YingLongPCH.cpp"
 
     libdirs {
         "thirdParty/lib/GLEW/lib/Release/x64",

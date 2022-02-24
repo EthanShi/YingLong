@@ -1,7 +1,2 @@
-
 #include "YingLongPCH.h"
-
-int main()
-{
-
-}
+#include "Window.h"
