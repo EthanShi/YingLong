@@ -30,9 +30,13 @@
 *.out
 *.app
 
+# generated files
 intermediate/
 .vs/
+bin/
+
+# visual studio files
 *.sln
 *.vcxproj
 *.filters
-*.users
+*.user

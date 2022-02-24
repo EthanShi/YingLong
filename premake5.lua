@@ -20,15 +20,17 @@ project "YingLong"
     }
 
     includedirs {
-        "thridparty/GLEW/include",
-        "thridparty/GLFW/include",
+        "thirdParty/lib/GLEW/include",
+        "thirdParty/lib/GLFW/include",
+        "thirdParty/src",
+        "src"
     }
 
     -- pchheader "../src/yinglongPCH.h"
 
     libdirs {
-        "thridparty/GLEW/lib/Release/x64",
-        "thridparty/GLFW/lib-2022",
+        "thirdParty/lib/GLEW/lib/Release/x64",
+        "thirdParty/lib/GLFW/lib-vs2022",
     }
 
     links {
