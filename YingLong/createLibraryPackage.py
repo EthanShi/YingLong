@@ -26,6 +26,11 @@ print("Finish create YingLong library for publish.")
 
 print("Start copy YingLongStatic to test.")
 
-shutil.copytree(libraryDirName, os.path.join("..", "test", "thirdParty", libraryDirName))
+testYingLongLibPath = os.path.join("..", "test", "thirdParty", libraryDirName)
+
+if os.path.exists(testYingLongLibPath):
+    shutil.rmtree(testYingLongLibPath)
+
+shutil.copytree(libraryDirName, testYingLongLibPath)
 
 print("Finish copy YingLongStatic to test.")
