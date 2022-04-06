@@ -9,32 +9,36 @@ project "YingLong"
     staticruntime "on"
     systemversion "latest"
 
-    targetdir ("%{prj.location}/bin/" .. outputdir)
-    objdir ("%{prj.location}/intermediate/" .. outputdir)
+    targetdir ("bin/" .. outputdir)
+    objdir ("intermediate/" .. outputdir)
 
     files {
-        "%{prj.location}/src/**.h",
-        "%{prj.location}/src/**.c",
-        "%{prj.location}/src/**.cpp",
-        "%{prj.location}/src/**.hpp",
+        "src/**.h",
+        "src/**.c",
+        "src/**.cpp",
+        "src/**.hpp",
+
+        "thirdParty/src/glm/**.hpp",
+        "thirdParty/src/glm/**.inl",
     }
 
     includedirs {
-        "%{prj.location}/thirdParty/lib/GLEW/include",
-        "%{prj.location}/thirdParty/lib/GLFW/include",
-        "%{prj.location}/thirdParty/src",
-        "%{prj.location}/src"
+        "thirdParty/lib/GLEW/include",
+        "thirdParty/lib/GLFW/include",
+        "thirdParty/src",
+        "src"
     }
 
     pchheader "YingLongPCH.h"
-    pchsource "%{prj.location}/src/YingLongPCH.cpp"
+    pchsource "src/YingLongPCH.cpp"
 
     libdirs {
-        "%{prj.location}/thirdParty/lib/GLEW/lib/Release/x64",
-        "%{prj.location}/thirdParty/lib/GLFW/lib-vs2022",
+        "thirdParty/lib/GLEW/lib/Release/x64",
+        "thirdParty/lib/GLFW/lib-vs2022",
     }
 
     links {
+        "imgui",
         "glew32s.lib",
         "glfw3.lib",
         "openGL32.lib"
@@ -44,9 +48,6 @@ project "YingLong"
         "YINGLONG_BUILD_LIB",
         "GLEW_STATIC"
     }
-
-    filter { "system:windows" }
-        postbuildcommands { "python createLibraryPackage.py" }
 
     filter "configurations:Debug"
         defines { "YINGLONG_DEBUG" }
