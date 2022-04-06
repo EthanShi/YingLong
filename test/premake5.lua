@@ -11,7 +11,7 @@ project "test"
     staticruntime "on"
     systemversion "latest"
 
-    ignoredefaultlibraries { "LIBCMT" }
+    ignoredefaultlibraries { "LIBCMT", "MSVCRT" }
 
     targetdir ("%{prj.location}/bin/" .. outputdir)
     objdir ("%{prj.location}/intermediate/" .. outputdir)
