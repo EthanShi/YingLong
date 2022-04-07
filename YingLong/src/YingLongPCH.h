@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <Windows.h>
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -14,15 +16,13 @@
 #include <vector>
 #include <functional>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include <glad/gl.h>
 
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
 
-#include "entt/entt.hpp"
-
-#include "std_image/stb_image.h"
+#include <stb_image.h>

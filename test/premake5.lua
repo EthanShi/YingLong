@@ -1,8 +1,4 @@
 
-outputdir = "%{cfg.buildcfg}/%{cfg.system}/%{cfg.architecture}"
-
-include "/thirdParty/YingLongStatic/dependencies"
-
 project "test"
 
     kind "ConsoleApp"
@@ -11,56 +7,42 @@ project "test"
     staticruntime "on"
     systemversion "latest"
 
-    ignoredefaultlibraries { "LIBCMT", "MSVCRT" }
+    -- ignoredefaultlibraries { "LIBCMT", "MSVCRT" }
 
-    targetdir ("%{prj.location}/bin/" .. outputdir)
-    objdir ("%{prj.location}/intermediate/" .. outputdir)
+    targetdir ("bin/" .. outputdir)
+    objdir ("intermediate/" .. outputdir)
 
     files {
-        "%{prj.location}/src/**.h",
-        "%{prj.location}/src/**.c",
-        "%{prj.location}/src/**.cpp",
-        "%{prj.location}/src/**.hpp"
+        "src/**.h",
+        "src/**.c",
+        "src/**.cpp",
+        "src/**.hpp"
     }
 
-    YingLongLibPath = "%{prj.location}/thirdParty/"
+    YingLongPath = "../YingLong/"
 
-    _includeDirs = { "%{prj.location}/src" }
-    for k,v in ipairs(YingLongIncludePaths) do
-        table.insert(_includeDirs, YingLongLibPath .. v)
-    end
+    includedirs {
+        YingLongPath .. "thirdParty/glad/include",
+        YingLongPath .. "thirdParty/glfw/include",
+        YingLongPath .. "thirdParty/imgui",
+        YingLongPath .. "thirdParty/entt",
+        YingLongPath .. "thirdParty/glm",
+        YingLongPath .. "thirdParty/stb",
+        YingLongPath .. "src",
+        "src"
+    }
 
-    includedirs(_includeDirs)
-
-    _libDirs = {}
-    for k,v in ipairs(YingLongLibDirs) do
-        table.insert(_libDirs, YingLongLibPath .. v)
-    end
-
-    libdirs(_libDirs)
-
-    _linksLibs = {}
-    for k,v in ipairs(YingLongLinkLibs) do
-        table.insert(_linksLibs, v)
-    end
-
-    links(_linksLibs)
-
-    linkoptions { "-IGNORE:4099" }
-
-    defines {
-        "GLEW_STATIC"
+    links {
+        "YingLong"
     }
 
     filter "configurations:Debug"
         symbols "On"
         runtime "Debug"
-        debuglevel (2)
 
     filter "configurations:Release"
         optimize "On"
         runtime "Release"
-        debuglevel (0)
 
     filter "platforms:Win64"
         system "Windows"

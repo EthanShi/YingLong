@@ -9,22 +9,33 @@ project "imgui"
     staticruntime "On"
     systemversion "latest"
 
-    targetdir ("%{prj.location}/bin/" .. outputdir)
-    objdir ("%{prj.location}/intermediate/" .. outputdir)
+    targetdir ("imgui/bin/" .. outputdir)
+    objdir ("imgui/intermediate/" .. outputdir)
 
-    files
-    {
-        "imconfig.h",
-        "imgui.h",
-        "imgui_internal.h",
-        "imgui.cpp",
-        "imgui_draw.cpp",
-        "imgui_demo.cpp",
-        "imgui_tables.cpp",
-        "imgui_widgets.cpp",
-        "imstb_rectpack.h",
-        "imstb_textedit.h",
-        "imstb_truetype.h"
+    files {
+        "imgui/imconfig.h",
+        "imgui/imgui.h",
+        "imgui/imgui_internal.h",
+        "imgui/imgui.cpp",
+        "imgui/imgui_draw.cpp",
+        "imgui/imgui_demo.cpp",
+        "imgui/imgui_tables.cpp",
+        "imgui/imgui_widgets.cpp",
+        "imgui/imstb_rectpack.h",
+        "imgui/imstb_textedit.h",
+        "imgui/imstb_truetype.h",
+        "imgui/backends/imgui_impl_glfw.h",
+        "imgui/backends/imgui_impl_glfw.cpp",
+        "imgui/backends/imgui_impl_opengl3.h",
+        "imgui/backends/imgui_impl_opengl3.cpp",
+        "imgui/backends/imgui_impl_opengl3_loader.h"
+    }
+
+    includedirs {
+        "imgui",
+        "imgui/backends",
+        
+        "glfw/include"
     }
 
     filter "configurations:Debug"

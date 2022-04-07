@@ -13,42 +13,45 @@ namespace YingLong
 	Engine::Engine(const std::string& WindowTitle)
 		: m_WindowTitle(WindowTitle)
 	{
-		GLFWwindow* window;
-
 		/* Initialize the library */
 		assert(glfwInit());
 
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
 		/* Create a windowed mode window and its OpenGL context */
-		window = glfwCreateWindow(m_DEFAULT_WINDOW_WIDTH, m_DEFAULT_WINDOW_HEIGHT, m_WindowTitle.c_str(), NULL, NULL);
-		if (!window)
+		m_Window = glfwCreateWindow(m_DEFAULT_WINDOW_WIDTH, m_DEFAULT_WINDOW_HEIGHT, m_WindowTitle.c_str(), NULL, NULL);
+		if (!m_Window)
 		{
 			glfwTerminate();
 		}
 
 		/* Make the window's context current */
-		glfwMakeContextCurrent(window);
-
-		/* Set frame size callback */
-		glfwSetFramebufferSizeCallback(window, &Engine::OnFrameSizeChanged);
-		OnFrameSizeChanged(window, m_DEFAULT_WINDOW_WIDTH, m_DEFAULT_WINDOW_HEIGHT);
-
+		glfwMakeContextCurrent(m_Window);
 		glfwSwapInterval(5);
 
-		GLenum err = glewInit();
-		if (GLEW_OK != err)
-		{
-			/* Problem: glewInit failed, something is seriously wrong. */
-			std::cout << "Error: %s\n" << glewGetErrorString(err) << std::endl;
-		}
-		else
-		{
-			std::cout << glGetString(GL_VERSION) << std::endl;
-		}
+		/* Set frame size callback */
+		glfwSetFramebufferSizeCallback(m_Window, &Engine::OnFrameSizeChanged);
 
+		int version = gladLoadGL(glfwGetProcAddress);
+		if (version == 0) {
+			printf("Failed to initialize OpenGL context\n");
+			return;
+		}
+		// Successfully loaded OpenGL
+		printf("Loaded OpenGL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+
+		// Setup Dear ImGui context
+		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGui_ImplGlfw_InitForOpenGL(window, true);
-		ImGui_ImplOpenGL3_Init("#version 130");
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
+
+		// Setup Platform/Renderer backends
+		ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
+		ImGui_ImplOpenGL3_Init("#version 130");
 
 		//test::Test* currentTest = nullptr;
 		//test::TestMenu* testMenu = new test::TestMenu(currentTest);
@@ -63,11 +66,13 @@ namespace YingLong
 		Renderer::SetDepthTestEnable(true);
 
 		// Set Input
-		Input::InitInput(window);
+		Input::InitInput(m_Window);
 
 		m_LastFrameTime = std::chrono::duration_cast<std::chrono::milliseconds>(
 			std::chrono::system_clock::now().time_since_epoch()
 			).count();
+
+		OnFrameSizeChanged(m_Window, m_DEFAULT_WINDOW_WIDTH, m_DEFAULT_WINDOW_HEIGHT);
 	}
 
 	Engine::~Engine()

@@ -1,6 +1,4 @@
 
-outputdir = "%{cfg.buildcfg}/%{cfg.system}/%{cfg.architecture}"
-
 project "YingLong"
 
     kind "StaticLib"
@@ -18,29 +16,29 @@ project "YingLong"
         "src/**.cpp",
         "src/**.hpp",
 
-        "thirdParty/src/glm/**.hpp",
-        "thirdParty/src/glm/**.inl",
+        "thirdParty/glm/glm/**.hpp",
+        "thirdParty/glm/glm/**.inl",
+
+        "thirdParty/entt/entt/entt.hpp"
     }
 
     includedirs {
-        "thirdParty/lib/GLEW/include",
-        "thirdParty/lib/GLFW/include",
-        "thirdParty/src",
+        "thirdParty/glad/include",
+        "thirdParty/glfw/include",
+        "thirdParty/imgui",
+        "thirdParty/entt",
+        "thirdParty/glm",
+        "thirdParty/stb",
         "src"
     }
 
     pchheader "YingLongPCH.h"
     pchsource "src/YingLongPCH.cpp"
 
-    libdirs {
-        "thirdParty/lib/GLEW/lib/Release/x64",
-        "thirdParty/lib/GLFW/lib-vs2022",
-    }
-
     links {
         "imgui",
-        "glew32s.lib",
-        "glfw3.lib",
+        "glad",
+        "glfw",
         "openGL32.lib"
     }
 
@@ -53,13 +51,11 @@ project "YingLong"
         defines { "YINGLONG_DEBUG" }
         symbols "On"
         runtime "Debug"
-        debuglevel (2)
 
     filter "configurations:Release"
         defines { "YINGLONG_RELEASE" }
         optimize "On"
         runtime "Release"
-        debuglevel (0)
 
     filter "platforms:Win64"
         system "Windows"

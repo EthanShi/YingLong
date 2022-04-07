@@ -1,3 +1,9 @@
 [submodule "YingLong/thirdParty/imgui"]
 	path = YingLong/thirdParty/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "YingLong/thirdParty/glfw"]
+	path = YingLong/thirdParty/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "YingLong/thirdParty/glm"]
+	path = YingLong/thirdParty/glm
+	url = https://github.com/g-truc/glm.git
