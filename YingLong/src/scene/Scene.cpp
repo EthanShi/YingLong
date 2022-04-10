@@ -2,7 +2,7 @@
 #include "YingLongPCH.h"
 
 #include "Scene.h"
-#include "renderer/Renderer.h"
+#include "renderer/Renderer3D.h"
 
 namespace YingLong {
 

@@ -4,6 +4,7 @@
 #include "glm/glm.hpp"
 
 #include "core/Macros.h"
+#include "renderer/Camera3D.h"
 
 namespace YingLong {
 
@@ -30,6 +31,8 @@ namespace YingLong {
 		entt::registry m_Registry;
 
 		glm::vec4 m_BackgroundColor;
+
+		Camera3D PrimaryCamera;
 	};
 
 	using Scene_SPtr = std::shared_ptr<Scene>;

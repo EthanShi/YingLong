@@ -1,28 +1,30 @@
 
 #include "YingLongPCH.h"
 
-#include "Renderer.h"
+#include "Renderer3D.h"
 
 namespace YingLong {
 
 	glm::mat4 Renderer::m_ScaleMatrix = glm::mat4(1.0);
 	uint32 Renderer::m_windowHeight = 2;
 	uint32 Renderer::m_windowWidth = 2;
-	std::shared_ptr<Camera> Renderer::m_Camera = nullptr;
 
-	void Renderer::Draw(const VertexArray& vao, const IndexBuffer& ibo, Shader& shader, glm::mat4 modelTransform)
+	void Renderer::Draw(const VertexArray& vao,
+		const IndexBuffer& ibo,
+		Shader& shader,
+		const glm::mat4& modelTransform,
+		const glm::mat4& Projection,
+		const glm::mat4& View)
 	{
-		if (m_windowHeight == 0 || m_windowWidth == 0 || !m_Camera)
+		if (m_windowHeight == 0 || m_windowWidth == 0)
 		{
 			return;
 		}
 
 		shader.Bind();
 		shader.SetUniformMat4f(VIEWPORT_UNIFORM_NAME, GetViewportMatrix());
-		glm::mat4 Proj = m_Camera->GetPerspective();
-		glm::mat4 View = m_Camera->GetInverseTransform();
 
-		shader.SetUniformMat4f(MVP_UNIFORM_NAME, Proj * View * modelTransform * m_ScaleMatrix);
+		shader.SetUniformMat4f(MVP_UNIFORM_NAME, Projection * View * modelTransform * m_ScaleMatrix);
 
 		vao.Bind();
 		ibo.Bind();
@@ -42,11 +44,6 @@ namespace YingLong {
 	void Renderer::Clear()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
-
-	void Renderer::SetCamera(const std::shared_ptr<Camera>& camera)
-	{
-		m_Camera = camera;
 	}
 
 	void Renderer::SetUnit(RendererUnit unit)

@@ -23,9 +23,8 @@ project "test"
         YingLongPath .. "thirdParty/glad/include",
         YingLongPath .. "thirdParty/glfw/include",
         YingLongPath .. "thirdParty/imgui",
-        YingLongPath .. "thirdParty/entt",
         YingLongPath .. "thirdParty/glm",
-        YingLongPath .. "thirdParty/stb",
+        YingLongPath .. "thirdParty",
         YingLongPath .. "src",
         "src"
     }

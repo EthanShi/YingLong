@@ -3,8 +3,8 @@
 
 #include "Engine.h"
 
-#include "renderer/Camera.h"
-#include "renderer/Renderer.h"
+#include "renderer/Camera3D.h"
+#include "renderer/Renderer3D.h"
 #include "input/Input.h"
 
 namespace YingLong
@@ -52,18 +52,6 @@ namespace YingLong
 		// Setup Platform/Renderer backends
 		ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
 		ImGui_ImplOpenGL3_Init("#version 130");
-
-		//test::Test* currentTest = nullptr;
-		//test::TestMenu* testMenu = new test::TestMenu(currentTest);
-		//RegisterTests(testMenu);
-		//currentTest = testMenu;
-
-		// Set default camera
-		std::shared_ptr<Camera> camera = std::make_shared<Camera>();
-		camera->SetPostion(glm::vec3(0.0f, 0.0f, 10.0f));
-		Renderer::SetCamera(camera);
-		Renderer::SetUnit(RendererUnit::Centimeter);
-		Renderer::SetDepthTestEnable(true);
 
 		// Set Input
 		Input::InitInput(m_Window);

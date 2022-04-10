@@ -19,7 +19,7 @@ project "YingLong"
         "thirdParty/glm/glm/**.hpp",
         "thirdParty/glm/glm/**.inl",
 
-        "thirdParty/entt/entt/entt.hpp",
+        "thirdParty/entt/entt.hpp",
 
         "thirdParty/tinyobjloader/**.h",
         "thirdParty/tinyobjloader/**.cpp",
