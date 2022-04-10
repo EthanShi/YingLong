@@ -21,5 +21,7 @@ namespace YingLong {
 		void UpdateData(uint32 dataIndex, const VertexBufferLayout& layout, uint32 elementIndex, const void* data);
 	};
 
+	using VertexBuffer_SPtr = std::shared_ptr<VertexBuffer>;
+
 }
 

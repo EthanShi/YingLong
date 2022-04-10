@@ -100,7 +100,7 @@ namespace YingLong
 			auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
 				std::chrono::system_clock::now().time_since_epoch()
 				).count();
-			float deltaTime = (currentTime - m_LastFrameTime) * 0.001f;
+			float deltatime = (currentTime - m_LastFrameTime) * 0.001f;
 			m_LastFrameTime = currentTime;
 
 			Renderer::Clear();
@@ -111,6 +111,11 @@ namespace YingLong
 			ImGui::NewFrame();
 
 			Input::ProcessInput();
+
+			for (Scene_SPtr& scene : m_Scenes)
+			{
+				scene->Tick(deltatime);
+			}
 
 			//if (currentTest)
 			//{
@@ -139,6 +144,16 @@ namespace YingLong
 			/* Poll for and process events */
 			glfwPollEvents();
 		}
+	}
+
+	void Engine::AddScene(const Scene_SPtr& scene)
+	{
+		m_Scenes.push_back(scene);
+	}
+
+	void Engine::RemoveScene(const Scene_SPtr& scene)
+	{
+		std::remove(m_Scenes.begin(), m_Scenes.end(), scene);
 	}
 
 	void Engine::OnFrameSizeChanged(GLFWwindow* Window, int32 Width, int32 Height)

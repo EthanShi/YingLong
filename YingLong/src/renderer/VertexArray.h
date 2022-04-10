@@ -22,4 +22,6 @@ namespace YingLong {
 		void UnBind() const;
 	};
 
+	using VertexArray_SPtr = std::shared_ptr<VertexArray>;
+
 }

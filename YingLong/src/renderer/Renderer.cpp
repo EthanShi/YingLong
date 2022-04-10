@@ -29,6 +29,11 @@ namespace YingLong {
 		GLCall(glDrawElements(GL_TRIANGLES, ibo.GetCount(), GL_UNSIGNED_INT, nullptr));
 	}
 
+	void Renderer::SetClearColor(const glm::vec4& color)
+	{
+		SetClearColor(color[0], color[1], color[2], color[3]);
+	}
+
 	void Renderer::SetClearColor(float red, float green, float blue, float alpha)
 	{
 		GLCall(glClearColor(red, green, blue, alpha));

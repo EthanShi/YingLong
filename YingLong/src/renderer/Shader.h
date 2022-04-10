@@ -40,5 +40,7 @@ namespace YingLong {
 		ShaderPrgramSource ParseShader(const std::string& filepath);
 	};
 
+	using Shader_SPtr = std::shared_ptr<Shader>;
+
 }
 

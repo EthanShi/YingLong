@@ -5,7 +5,7 @@ project "glad"
 
     kind "StaticLib"
     language "C"
-    staticruntime "off"
+    staticruntime "on"
     systemversion "latest"
 
     targetdir ("glad/bin/" .. outputdir)

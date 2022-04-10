@@ -3,9 +3,9 @@
 #include <string>
 
 #include "GLFW/glfw3.h"
-#include "entt/entt.hpp"
 
-#include "Macros.h"
+#include "core/Macros.h"
+#include "scene/Scene.h"
 
 namespace YingLong {
 
@@ -17,21 +17,24 @@ namespace YingLong {
 
 		void MainLoop();
 
+		void AddScene(const Scene_SPtr& scene);
+		void RemoveScene(const Scene_SPtr& scene);
+
 	public:
 
 	private:
 		static void OnFrameSizeChanged(GLFWwindow* Window, int32 Width, int32 Height);
 	
 	private:
-		GLFWwindow* m_Window;
+		GLFWwindow* m_Window = nullptr;
 		const int32 m_DEFAULT_WINDOW_WIDTH = 1280;
 		const int32 m_DEFAULT_WINDOW_HEIGHT = 720;
 
 		std::string m_WindowTitle = "YingLong";
 
-		entt::registry m_Registry;
+		std::vector<Scene_SPtr> m_Scenes;
 
-		uint64 m_LastFrameTime;
+		uint64 m_LastFrameTime = 0;
 	};
 
 }

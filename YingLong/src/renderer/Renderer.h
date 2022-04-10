@@ -30,6 +30,7 @@ namespace YingLong {
 		static void Draw(const VertexArray& vao, const IndexBuffer& vbo, Shader& shader, glm::mat4 modelTransform);
 
 		// Set functions
+		static void SetClearColor(const glm::vec4& color);
 		static void SetClearColor(float red, float green, float blue, float alpha);
 		static void Clear();
 

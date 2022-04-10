@@ -20,4 +20,6 @@ namespace YingLong {
 		inline uint32 GetCount() const { return m_Count; }
 	};
 
+	using IndexBuffer_SPtr = std::shared_ptr<IndexBuffer>;
+
 }

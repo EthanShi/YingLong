@@ -15,6 +15,7 @@
 #include <map>
 #include <vector>
 #include <functional>
+#include <algorithm>
 
 #include <glad/gl.h>
 
@@ -25,4 +26,6 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-#include <stb_image.h>
+#include <stb/stb_image.h>
+
+#include <tinyobjloader/tiny_obj_loader.h>

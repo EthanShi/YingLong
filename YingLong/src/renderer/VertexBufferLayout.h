@@ -65,4 +65,6 @@ namespace YingLong {
 		inline std::vector<uint32> GetOffsets() const { return m_Offsets; }
 	};
 
+	using VertexBufferLayout_SPtr = std::shared_ptr<VertexBufferLayout>;
+
 }

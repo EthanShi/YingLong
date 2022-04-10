@@ -19,16 +19,18 @@ project "YingLong"
         "thirdParty/glm/glm/**.hpp",
         "thirdParty/glm/glm/**.inl",
 
-        "thirdParty/entt/entt/entt.hpp"
+        "thirdParty/entt/entt/entt.hpp",
+
+        "thirdParty/tinyobjloader/**.h",
+        "thirdParty/tinyobjloader/**.cpp",
     }
 
     includedirs {
         "thirdParty/glad/include",
         "thirdParty/glfw/include",
         "thirdParty/imgui",
-        "thirdParty/entt",
         "thirdParty/glm",
-        "thirdParty/stb",
+        "thirdParty",
         "src"
     }
 

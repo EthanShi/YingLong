@@ -25,5 +25,7 @@ namespace YingLong {
 		inline int32 GetHeight() const { return m_Height; }
 	};
 
+	using Texture_SPtr = std::shared_ptr<Texture>;
+
 }
 
