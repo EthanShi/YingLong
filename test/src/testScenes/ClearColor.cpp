@@ -22,10 +22,6 @@ void ClearColorScene::Update(float deltatime)
 		m_ClearColor[3]));
 }
 
-void ClearColorScene::DrawEntities(float deltatime)
-{
-}
-
 void ClearColorScene::DrawImgui(float deltatime)
 {
 	ImGui::Begin("clear color");

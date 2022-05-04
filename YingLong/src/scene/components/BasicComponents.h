@@ -4,40 +4,23 @@
 #include "glm/gtx/matrix_transform_2d.hpp"
 #include "glm/gtx/transform.hpp"
 
+#include "renderer/Camera3D.h"
+
 namespace YingLong {
-
-	struct Transform2DComponent
-	{
-		glm::vec2 Position = glm::vec2(0.0f, 0.0f);
-		float RotateAngle = 0.0f;
-		glm::vec2 Scale = glm::vec2(1.0f, 1.0f);
-
-		glm::mat3 GetTransform()
-		{
-			glm::mat3 transform = glm::translate(glm::mat3(1.0f), Position);
-			transform = glm::rotate(transform, RotateAngle);
-			transform = glm::scale(transform, Scale);
-			return transform;
-		}
-
-		glm::mat3 GetInverseTransform()
-		{
-			return glm::inverse(GetTransform());
-		}
-	};
 
 	struct Transform3DComponent
 	{
-		glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
-		glm::vec3 Forward = glm::vec3(0.0f, 0.0f, -1.0f);
-		glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
+		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f);
 
-		glm::mat3 GetTransform()
+		glm::mat4 GetTransform() const
 		{
-			return glm::lookAt(Position, Position + Forward, Up);
+			return glm::lookAt(position, position + forward, up) * glm::scale(scale);
 		}
 
-		glm::mat3 GetInverseTransform()
+		glm::mat4 GetInverseTransform() const
 		{
 			return glm::inverse(GetTransform());
 		}
@@ -45,6 +28,8 @@ namespace YingLong {
 
 	struct Camera3DComponent
 	{
+		Camera3D Camera;
 
+		operator Camera3D() { return Camera; }
 	};
 }

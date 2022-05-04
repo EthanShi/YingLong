@@ -23,6 +23,8 @@ namespace YingLong {
 		static uint32 m_windowHeight;
 		static uint32 m_windowWidth;
 
+		static ShaderManager m_ShaderManager;
+
 	public:
 		// Draw calls
 		static void Draw(
@@ -32,6 +34,19 @@ namespace YingLong {
 			const glm::mat4& modelTransform,
 			const glm::mat4& Projection,
 			const glm::mat4& View);
+
+		static void Draw(
+			const VertexArray& vao,
+			const IndexBuffer& ibo,
+			uint32 shaderID,
+			const glm::mat4& modelTransform,
+			const glm::mat4& Projection,
+			const glm::mat4& View)
+		{
+			Draw(vao, ibo, m_ShaderManager.GetShader(shaderID), modelTransform, Projection, View);
+		}
+
+		static ShaderManager& GetShaderManager() { return m_ShaderManager; }
 
 		// Set functions
 		static void SetClearColor(const glm::vec4& color);

@@ -23,6 +23,9 @@ project "YingLong"
 
         "thirdParty/tinyobjloader/**.h",
         "thirdParty/tinyobjloader/**.cpp",
+
+        "thirdParty/stb/**.h",
+        "thirdParty/stb/**.cpp",
     }
 
     includedirs {
@@ -31,7 +34,7 @@ project "YingLong"
         "thirdParty/imgui",
         "thirdParty/glm",
         "thirdParty",
-        "src"
+        "src",
     }
 
     pchheader "YingLongPCH.h"

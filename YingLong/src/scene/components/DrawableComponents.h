@@ -2,12 +2,24 @@
 
 #include "glm/glm.hpp"
 
-#include "renderer/Texture.h"
+#include "renderer/Mesh.h"
+#include "renderer/Shader.h"
+#include "renderer/Renderer3D.h"
 
 using namespace YingLong;
 
-struct SpriteComponent
+struct MeshComponent
 {
-	glm::vec4 color;
-	Texture_SPtr Texture;
+	Mesh mesh;
+};
+
+struct ShaderComponent
+{
+	uint32 shaderID;
+	Shader::Uniforms uniforms;
+
+	void LoadShader(const std::string& filepath)
+	{
+		shaderID = Renderer::GetShaderManager().LoadShader(filepath);
+	}
 };

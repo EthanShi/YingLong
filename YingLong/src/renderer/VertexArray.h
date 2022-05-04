@@ -10,11 +10,13 @@ namespace YingLong {
 	class YINGLONG_API VertexArray
 	{
 	private:
-		uint32 m_RendererID;
+		uint32 m_RendererID = 0;
 
 	public:
-		VertexArray();
+		VertexArray() = default;
 		~VertexArray();
+
+		void Init();
 
 		void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
 

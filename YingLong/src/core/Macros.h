@@ -16,6 +16,8 @@
 	#define YINGLONG_API
 #endif
 
+#define ASSERT(x) if(!(x)) __debugbreak();
+
 // type alias
 using int8 = int8_t;
 using int16 = int16_t;

@@ -12,8 +12,11 @@ namespace YingLong {
 		uint32 m_RendererID;
 
 	public:
+		VertexBuffer() = default;
 		VertexBuffer(const void* data, uint32 size, int32 usage);
 		~VertexBuffer();
+
+		void Init(const void* data, uint32 size, int32 usage);
 
 		void Bind() const;
 		void UnBind() const;

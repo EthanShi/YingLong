@@ -15,12 +15,18 @@ namespace YingLong {
 		virtual ~Scene();
 
 		void Tick(float deltatime);
-		const glm::vec4& GetBackgroundColor() const { return m_BackgroundColor; }
-		void SetBackgroundColor(const glm::vec4& color) { m_BackgroundColor = color; }
 
 		virtual void Update(float deltatime);
 		virtual void DrawEntities(float deltatime);
 		virtual void DrawImgui(float deltatime);
+
+		const glm::vec4& GetBackgroundColor() const { return m_BackgroundColor; }
+		void SetBackgroundColor(const glm::vec4& color) { m_BackgroundColor = color; }
+
+		const entt::entity& GetPrimaryCamera() const { return PrimaryCamera; }
+		void SetPrimaryCamera(const entt::entity& camera) { PrimaryCamera = camera; }
+
+		entt::registry& GetRegistry() { return m_Registry; }
 
 	private:
 		void InnerUpdate(float deltatime);
@@ -32,7 +38,7 @@ namespace YingLong {
 
 		glm::vec4 m_BackgroundColor;
 
-		Camera3D PrimaryCamera;
+		entt::entity PrimaryCamera;
 	};
 
 	using Scene_SPtr = std::shared_ptr<Scene>;

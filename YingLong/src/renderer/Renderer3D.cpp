@@ -8,6 +8,7 @@ namespace YingLong {
 	glm::mat4 Renderer::m_ScaleMatrix = glm::mat4(1.0);
 	uint32 Renderer::m_windowHeight = 2;
 	uint32 Renderer::m_windowWidth = 2;
+	ShaderManager Renderer::m_ShaderManager;
 
 	void Renderer::Draw(const VertexArray& vao,
 		const IndexBuffer& ibo,
@@ -16,13 +17,12 @@ namespace YingLong {
 		const glm::mat4& Projection,
 		const glm::mat4& View)
 	{
-		if (m_windowHeight == 0 || m_windowWidth == 0)
+		if (m_windowHeight == 0 || m_windowWidth == 0 || shader.GetRendererID() <= 0)
 		{
 			return;
 		}
 
 		shader.Bind();
-		shader.SetUniformMat4f(VIEWPORT_UNIFORM_NAME, GetViewportMatrix());
 
 		shader.SetUniformMat4f(MVP_UNIFORM_NAME, Projection * View * modelTransform * m_ScaleMatrix);
 

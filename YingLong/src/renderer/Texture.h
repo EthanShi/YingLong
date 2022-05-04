@@ -9,14 +9,19 @@ namespace YingLong {
 	class YINGLONG_API Texture
 	{
 	private:
-		uint32 m_RendererID;
+		uint32 m_RendererID = 0;
 		std::string m_FilePath;
-		unsigned char* m_LocalBuffer;
-		int32 m_Width, m_Height, m_BPP;
+		unsigned char* m_LocalBuffer = nullptr;
+		int32 m_Width = 0;
+		int32 m_Height = 0;
+		int32 m_BPP = 0;
 
 	public:
-		Texture(const std::string filepath);
+		Texture() = default;
+		Texture(const std::string& filepath);
 		~Texture();
+
+		void Load(const std::string& filepath);
 
 		void Bind(uint32 slot) const;
 		void UnBind() const;

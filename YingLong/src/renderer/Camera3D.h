@@ -22,7 +22,7 @@ namespace YingLong {
 		glm::mat4 m_Perspective = glm::mat4();
 
 	public:
-		Camera3D() {}
+		Camera3D() { UpdatePerspective(); }
 		Camera3D(float fov, float aspect, float zNear, float zFar);
 		Camera3D(const Camera3DInfo& info);
 		~Camera3D() {}
@@ -38,4 +38,5 @@ namespace YingLong {
 		void UpdatePerspective();
 	};
 
+	using Camera3D_SPtr = std::shared_ptr<Camera3D>;
 }

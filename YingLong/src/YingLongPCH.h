@@ -16,6 +16,7 @@
 #include <vector>
 #include <functional>
 #include <algorithm>
+#include <regex>
 
 #include <glad/gl.h>
 

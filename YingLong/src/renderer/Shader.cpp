@@ -7,14 +7,20 @@
 namespace YingLong {
 
 	Shader::Shader(const std::string& filepath)
-		: m_Filepath(filepath)
 	{
-		ShaderPrgramSource source = ParseShader(m_Filepath);
-		m_RendererID = CreateShader(source.VertexShaderSource, source.FragmentShaderSource);
+		Load(filepath);
 	}
 
 	Shader::~Shader()
 	{
+	}
+
+	void Shader::Load(const std::string& filepath)
+	{
+		m_Filepath = filepath;
+
+		ShaderPrgramSource source = ParseShader(m_Filepath);
+		m_RendererID = CreateShader(source.VertexShaderSource, source.FragmentShaderSource);
 	}
 
 	void Shader::Bind() const
@@ -89,6 +95,7 @@ namespace YingLong {
 
 		GLCall(glAttachShader(program, vs));
 		GLCall(glAttachShader(program, fs));
+
 		GLCall(glLinkProgram(program));
 		GLCall(glValidateProgram(program));
 
@@ -126,6 +133,37 @@ namespace YingLong {
 		}
 
 		return { vs.str(), fs.str() };
+	}
+
+	uint32 ShaderManager::LoadShader(const std::string& filepath)
+	{
+		auto& shader = m_LoadedShaderMap.find(filepath);
+		if (shader != m_LoadedShaderMap.end())
+		{
+			return shader->second.GetRendererID();
+		}
+
+		auto& result = m_LoadedShaderMap.emplace(filepath, Shader(filepath));
+		if (result.second)
+		{
+			uint32 rendererID = result.first->second.GetRendererID();
+			m_LoadedShaderMapPath.emplace(rendererID, filepath);
+			return rendererID;
+		}
+		return 0;
+	}
+
+	Shader& ShaderManager::GetShader(uint32 shaderID)
+	{
+		if (m_LoadedShaderMapPath.find(shaderID) != m_LoadedShaderMapPath.end())
+		{
+			const std::string& filepath = m_LoadedShaderMapPath.at(shaderID);
+			if (m_LoadedShaderMap.find(filepath) != m_LoadedShaderMap.end())
+			{
+				return m_LoadedShaderMap.at(filepath);
+			}
+		}
+		return m_InvalidShader;
 	}
 
 }

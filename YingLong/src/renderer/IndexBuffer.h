@@ -11,8 +11,11 @@ namespace YingLong {
 		uint32 m_Count;
 
 	public:
+		IndexBuffer() = default;
 		IndexBuffer(const uint32* data, uint32 count);
 		~IndexBuffer();
+
+		void Init(const uint32* data, uint32 count);
 
 		void Bind() const;
 		void UnBind() const;

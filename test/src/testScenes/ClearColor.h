@@ -11,7 +11,6 @@ public:
 	virtual ~ClearColorScene() override;
 
 	virtual void Update(float deltatime) override;
-	virtual void DrawEntities(float deltatime) override;
 	virtual void DrawImgui(float deltatime) override;
 
 private:

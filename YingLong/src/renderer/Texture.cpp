@@ -6,10 +6,20 @@
 
 namespace YingLong {
 
-	Texture::Texture(const std::string filepath)
-		: m_FilePath(filepath), m_LocalBuffer(nullptr),
-		m_Width(0), m_Height(0), m_BPP(0)
+	Texture::Texture(const std::string& filepath)
 	{
+		Load(filepath);
+	}
+
+	Texture::~Texture()
+	{
+		GLCall(glDeleteTextures(1, &m_RendererID));
+	}
+
+	void Texture::Load(const std::string& filepath)
+	{
+		m_FilePath = filepath;
+
 		stbi_set_flip_vertically_on_load(1);
 		m_LocalBuffer = stbi_load(filepath.c_str(), &m_Width, &m_Height, &m_BPP, 3);
 
@@ -23,11 +33,6 @@ namespace YingLong {
 
 		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, m_LocalBuffer));
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-	}
-
-	Texture::~Texture()
-	{
-		GLCall(glDeleteTextures(1, &m_RendererID));
 	}
 
 	void Texture::Bind(uint32 slot) const
