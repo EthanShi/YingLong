@@ -47,10 +47,6 @@ namespace YingLong {
 		VertexArray m_VertexArray;
 		VertexBuffer m_VertexBuffer;
 		IndexBuffer m_IndexBuffer;
-
-	private:
-		void CalcBufferSize(size_t& vertexBufferSize, size_t& indexBufferSize);
-		bool CheckObjDataValid();
 	};
 
 }
