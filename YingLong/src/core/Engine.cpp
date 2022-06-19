@@ -28,7 +28,7 @@ namespace YingLong
 
 		/* Make the window's context current */
 		glfwMakeContextCurrent(m_Window);
-		glfwSwapInterval(5);
+		glfwSwapInterval(1);
 
 		/* Set frame size callback */
 		glfwSetFramebufferSizeCallback(m_Window, &Engine::OnFrameSizeChanged);
@@ -65,12 +65,6 @@ namespace YingLong
 
 	Engine::~Engine()
 	{
-		//if (currentTest != testMenu)
-		//{
-		//	delete testMenu;
-		//}
-		//delete currentTest;
-
 		// Cleanup
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
@@ -85,6 +79,9 @@ namespace YingLong
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(m_Window))
 		{
+			/* Poll for and process events */
+			glfwPollEvents();
+
 			auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
 				std::chrono::system_clock::now().time_since_epoch()
 				).count();
@@ -100,37 +97,18 @@ namespace YingLong
 
 			Input::ProcessInput();
 
-			for (Scene_SPtr& scene : m_Scenes)
+			// m_Scenes may be change in scenes Tick, copy all scenes for this frame.
+			std::vector<Scene_SPtr> Scenes = m_Scenes;
+			for (Scene_SPtr& scene : Scenes)
 			{
 				scene->Tick(deltatime);
 			}
-
-			//if (currentTest)
-			//{
-			//	currentTest->OnUpdate(deltaTime);
-			//	currentTest->OnRender();
-
-			//	ImGui::Begin("Tests");
-
-			//	if (currentTest != testMenu && ImGui::Button("<-"))
-			//	{
-			//		delete currentTest;
-			//		currentTest = testMenu;
-			//	}
-
-			//	currentTest->OnImguiRender();
-
-			//	ImGui::End();
-			//}
 
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(m_Window);
-
-			/* Poll for and process events */
-			glfwPollEvents();
 		}
 	}
 
@@ -141,7 +119,7 @@ namespace YingLong
 
 	void Engine::RemoveScene(const Scene_SPtr& scene)
 	{
-		std::remove(m_Scenes.begin(), m_Scenes.end(), scene);
+		m_Scenes.erase(std::remove(m_Scenes.begin(), m_Scenes.end(), scene), m_Scenes.end());
 	}
 
 	void Engine::OnFrameSizeChanged(GLFWwindow* Window, int32 Width, int32 Height)

@@ -4,10 +4,8 @@
 #include "glad/gl.h"
 
 #include "core/Engine.h"
-#include "renderer/Renderer3D.h"
-#include "renderer/Mesh.h"
 
-#include "testScenes/clearColor.h"
+#include "testScenes/TestSelector.h"
 
 #include "scene/components/BasicComponents.h"
 #include "scene/components/DrawableComponents.h"
@@ -18,33 +16,8 @@ int main()
 {
 	std::shared_ptr<Engine> engine = std::make_shared<Engine>("Test YingLong");
 
-	Scene_SPtr TestClearColor = std::make_shared<ClearColorScene>();
-
-	auto& reg = TestClearColor->GetRegistry();
-
-	// Init camera
-	const auto camera = reg.create();
-	Transform3DComponent& cameraTransform = reg.emplace<Transform3DComponent>(camera);
-	cameraTransform.position = glm::vec3(0.0f, 0.0f, 5.0f);
-	reg.emplace<Camera3DComponent>(camera);
-	TestClearColor->SetPrimaryCamera(camera);
-
-	// Init cubes mesh & shader
-	const auto cubes = reg.create();
-	Transform3DComponent& cubesTransform = reg.emplace<Transform3DComponent>(cubes);
-	cubesTransform.scale = glm::vec3(100.f, 100.f, 100.f);
-	cubesTransform.forward = glm::vec3(1.f, 1.f, 1.f);
-
-	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cubes);
-
-	MeshComp.mesh.Load("res\\models\\cube.obj");
-	MeshComp.mesh.SetDefaultColor(glm::vec3(1.0f, 0.5f, 0.3f));
-	MeshComp.mesh.FillRenderData(false, false, true);
-
-	ShaderComponent& ShaderComp = reg.emplace<ShaderComponent>(cubes);
-	ShaderComp.LoadShader("res\\shader\\basic3D.shader");
-
-	engine->AddScene(TestClearColor);
+	Scene_SPtr TestSelector = std::make_shared<TestSelectorScene>(engine);
+	engine->AddScene(TestSelector);
 
 	Renderer::SetUnit(RendererUnit::Centimeter);
 

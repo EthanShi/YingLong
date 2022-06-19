@@ -23,10 +23,13 @@ namespace YingLong {
 		const glm::vec4& GetBackgroundColor() const { return m_BackgroundColor; }
 		void SetBackgroundColor(const glm::vec4& color) { m_BackgroundColor = color; }
 
-		const entt::entity& GetPrimaryCamera() const { return PrimaryCamera; }
-		void SetPrimaryCamera(const entt::entity& camera) { PrimaryCamera = camera; }
+		const entt::entity& GetPrimaryCamera() const { return m_PrimaryCamera; }
+		void SetPrimaryCamera(const entt::entity& camera) { m_PrimaryCamera = camera; }
 
 		entt::registry& GetRegistry() { return m_Registry; }
+
+	protected:
+		virtual void CreateDefaultCamera();
 
 	private:
 		void InnerUpdate(float deltatime);
@@ -38,7 +41,7 @@ namespace YingLong {
 
 		glm::vec4 m_BackgroundColor;
 
-		entt::entity PrimaryCamera;
+		entt::entity m_PrimaryCamera;
 	};
 
 	using Scene_SPtr = std::shared_ptr<Scene>;

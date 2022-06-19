@@ -10,7 +10,9 @@
 namespace YingLong {
 
 	Scene::Scene()
+		: m_BackgroundColor(0.3f, 0.3f, 0.3f, 1.0f)
 	{
+		CreateDefaultCamera();
 	}
 
 	Scene::~Scene()
@@ -19,11 +21,8 @@ namespace YingLong {
 
 	void Scene::Tick(float deltatime)
 	{
-		InnerUpdate(deltatime);
-
 		Renderer::SetClearColor(m_BackgroundColor);
-		Renderer::Clear();
-
+		InnerUpdate(deltatime);
 		InnerDrawEntities(deltatime);
 		InnerDrawImgui(deltatime);
 	}
@@ -36,8 +35,8 @@ namespace YingLong {
 	{
 		auto view = m_Registry.view<const Transform3DComponent, MeshComponent, ShaderComponent>();
 
-		const Transform3DComponent& CameraTransform = m_Registry.get<Transform3DComponent>(PrimaryCamera);
-		const Camera3DComponent& Camera = m_Registry.get<Camera3DComponent>(PrimaryCamera);
+		const Transform3DComponent& CameraTransform = m_Registry.get<Transform3DComponent>(m_PrimaryCamera);
+		const Camera3DComponent& Camera = m_Registry.get<Camera3DComponent>(m_PrimaryCamera);
 
 		view.each(
 			[this, &CameraTransform, &Camera](const Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader) {
@@ -55,6 +54,16 @@ namespace YingLong {
 
 	void Scene::DrawImgui(float deltatime)
 	{
+	}
+
+	void Scene::CreateDefaultCamera()
+	{
+		auto& reg = GetRegistry();
+		const auto camera = reg.create();
+		Transform3DComponent& cameraTransform = reg.emplace<Transform3DComponent>(camera);
+		cameraTransform.Position = glm::vec3(0.0f, 0.0f, 5.0f);
+		reg.emplace<Camera3DComponent>(camera);
+		SetPrimaryCamera(camera);
 	}
 
 	void Scene::InnerUpdate(float deltatime)

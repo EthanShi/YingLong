@@ -5,6 +5,8 @@
 #include <vector>
 #include <memory>
 
+#include "glad/gl.h"
+
 namespace YingLong {
 
 	struct YINGLONG_API VertexLayoutElement
