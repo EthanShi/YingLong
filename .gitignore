@@ -34,10 +34,12 @@
 intermediate/
 .vs/
 bin/
-YingLongStatic/
 
 # visual studio files
 *.sln
 *.vcxproj
 *.filters
 *.user
+
+# enable .obj in res
+!test/res/models/*.obj
