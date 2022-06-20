@@ -6,44 +6,101 @@
 
 namespace YingLong {
 
-	std::map<std::tuple<InputKey, InputKeyMode>, std::vector<InputCallback>> Input::m_RegistedKeyCallback;
-	std::map<InputKey, InputKeyMode> Input::m_LastKeyMode;
 	GLFWwindow* Input::m_Window = nullptr;
+
+	InputCallbackHandler Input::m_Handler = 0;
+
+	std::map<InputCallbackHandler, InputButtonCallback> Input::m_RegistedButtonCallbacks;
+	std::map<InputCallbackHandler, InputMouseMoveCallback> Input::m_RegistedMouseMoveCallbacks;
+
+	std::map<std::tuple<InputKey, InputMode>, std::vector<InputCallbackHandler>> Input::m_KeyModeToCallbacks;
+	std::map<std::tuple<InputMouse, InputMode>, std::vector<InputCallbackHandler>> Input::m_MouseModeToCallbacks;
+
+	std::vector<InputCallbackHandler> Input::m_MouseMoveCallbacks;
+	std::map<InputMouse, std::vector<InputCallbackHandler>> Input::m_MouseMoveCallbacksWithMouse;
+
+	std::map<InputKey, InputMode> Input::m_LastKeyMode;
+	std::map<InputMouse, InputMode> Input::m_LastMouseMode;
+	std::map<InputMouse, bool> Input::m_MousePressAndHold;
+
 
 	void Input::InitInput(GLFWwindow* Window)
 	{
 		m_Window = Window;
+		m_Handler = 0;
+		m_RegistedButtonCallbacks.clear();
+		m_RegistedMouseMoveCallbacks.clear();
+		m_KeyModeToCallbacks.clear();
+		m_MouseModeToCallbacks.clear();
+		m_MouseMoveCallbacks.clear();
+		m_MouseMoveCallbacksWithMouse.clear();
+		m_LastKeyMode.clear();
+		m_LastMouseMode.clear();
+		m_MousePressAndHold.clear();
 	}
 
-	bool Input::BindKeyEvent(InputKey Key, InputKeyMode Mode, const InputCallback& Callback)
+	void Input::SetCursorMode(CursorMode Mode)
 	{
-		std::tuple<InputKey, InputKeyMode> KeyTuple = { Key , Mode };
-		if (m_RegistedKeyCallback.find(KeyTuple) == m_RegistedKeyCallback.end())
+		glfwSetInputMode(m_Window, GLFW_CURSOR, (int)Mode);
+	}
+
+	InputCallbackHandler Input::BindKeyEvent(InputKey Key, InputMode Mode, const InputButtonCallback& Callback, bool CheckUnique)
+	{
+		std::tuple<InputKey, InputMode> KeyTuple = { Key , Mode };
+		if (m_KeyModeToCallbacks.find(KeyTuple) == m_KeyModeToCallbacks.end())
 		{
-			m_RegistedKeyCallback.insert({ KeyTuple, std::vector<InputCallback>() });
+			m_KeyModeToCallbacks.insert({ KeyTuple, std::vector<InputCallbackHandler>() });
 		}
-		auto& Callbacks = m_RegistedKeyCallback.find(KeyTuple)->second;
-		for (auto& ExistCb : Callbacks)
+		auto& Callbacks = m_KeyModeToCallbacks[KeyTuple];
+
+		// Check if Callback already registed for this Key-Mode
+		if (CheckUnique)
 		{
-			if (Callback.target<void()>() == ExistCb.target<void()>())
+			for (const InputCallbackHandler& ExistCb : Callbacks)
 			{
-				return false;
+				if (Callback.target<void()>() == m_RegistedButtonCallbacks[ExistCb].target<void()>())
+				{
+					return ExistCb;
+				}
 			}
 		}
-		Callbacks.push_back(Callback);
 
+		m_RegistedButtonCallbacks[++m_Handler] = Callback;
+		Callbacks.push_back(m_Handler);
+
+		// Init Key's mode if this key iis bind firt time
 		const auto& LastKeyMode = m_LastKeyMode.find(Key);
 		if (LastKeyMode == m_LastKeyMode.end())
 		{
-			m_LastKeyMode[Key] = Mode;
+			m_LastKeyMode[Key] = (InputMode)glfwGetKey(m_Window, (int)Key);
 		}
 
-		return true;
+		return m_Handler;
 	}
 
-	bool Input::UnBindKeyEvent(InputKey Key, InputKeyMode Mode, const InputCallback& Callback)
+	InputCallbackHandler Input::BindMouseEvent(InputMouse Mouse, InputMode Mode, const InputButtonCallback& Callback, bool CheckUnique)
 	{
-		std::tuple<InputKey, InputKeyMode> KeyTuple = { Key , Mode };
+		return false;
+	}
+
+	InputCallbackHandler Input::BindMouseMoveEvent(const InputMouseMoveCallback& Callback, bool CheckUnique)
+	{
+		return false;
+	}
+
+	InputCallbackHandler Input::BindMouseMoveEvent(InputMouse Mouse, const InputMouseMoveCallback& Callback, bool CheckUnique)
+	{
+		return false;
+	}
+
+	bool Input::UnBindInputEvent(InputCallbackHandler Handler)
+	{
+		return false;
+	}
+
+	bool Input::UnBindKeyEvent(InputKey Key, InputMode Mode, const InputCallback& Callback)
+	{
+		std::tuple<InputKey, InputMode> KeyTuple = { Key , Mode };
 		const auto& FindResult = m_RegistedKeyCallback.find(KeyTuple);
 		if (FindResult == m_RegistedKeyCallback.end())
 		{
@@ -71,8 +128,8 @@ namespace YingLong {
 		for (auto& Elem : m_RegistedKeyCallback)
 		{
 			InputKey Key = std::get<0>(Elem.first);
-			InputKeyMode Mode = std::get<1>(Elem.first);
-			InputKeyMode CurrentKeyMode = (InputKeyMode)glfwGetKey(m_Window, (int)Key);
+			InputMode Mode = std::get<1>(Elem.first);
+			InputMode CurrentKeyMode = (InputMode)glfwGetKey(m_Window, (int)Key);
 
 			const auto& LastKeyMode = m_LastKeyMode.find(Key);
 			if (LastKeyMode != m_LastKeyMode.end() &&
@@ -96,8 +153,7 @@ namespace YingLong {
 		for (auto& Elem : m_RegistedKeyCallback)
 		{
 			InputKey Key = std::get<0>(Elem.first);
-			m_LastKeyMode[Key] = (InputKeyMode)glfwGetKey(m_Window, (int)Key);
+			m_LastKeyMode[Key] = (InputMode)glfwGetKey(m_Window, (int)Key);
 		}
 	}
-
 }

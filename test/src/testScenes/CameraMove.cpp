@@ -29,14 +29,14 @@ CameraMoveScene::CameraMoveScene()
 	ShaderComponent& ShaderComp = reg.emplace<ShaderComponent>(cubes);
 	ShaderComp.LoadShader("res\\shader\\basic3D.shader");
 
-	Input::BindKeyEvent(InputKey::KEY_W, InputKeyMode::KEY_PRESS, [this]() { MoveCameraForward(1.0f); });
-	Input::BindKeyEvent(InputKey::KEY_S, InputKeyMode::KEY_PRESS, [this]() { MoveCameraForward(-1.0f); });
-	Input::BindKeyEvent(InputKey::KEY_A, InputKeyMode::KEY_PRESS, [this]() { MoveCameraRight(-1.0f); });
-	Input::BindKeyEvent(InputKey::KEY_D, InputKeyMode::KEY_PRESS, [this]() { MoveCameraRight(1.0f); });
-	Input::BindKeyEvent(InputKey::KEY_W, InputKeyMode::KEY_RELEASE, [this]() { MoveCameraForward(0.0f); });
-	Input::BindKeyEvent(InputKey::KEY_S, InputKeyMode::KEY_RELEASE, [this]() { MoveCameraForward(0.0f); });
-	Input::BindKeyEvent(InputKey::KEY_A, InputKeyMode::KEY_RELEASE, [this]() { MoveCameraRight(0.0f); });
-	Input::BindKeyEvent(InputKey::KEY_D, InputKeyMode::KEY_RELEASE, [this]() { MoveCameraRight(0.0f); });
+	Input::BindKeyEvent(InputKey::KEY_W, InputMode::KEY_PRESS, [this]() { MoveCameraForward(1.0f); });
+	Input::BindKeyEvent(InputKey::KEY_S, InputMode::KEY_PRESS, [this]() { MoveCameraForward(-1.0f); });
+	Input::BindKeyEvent(InputKey::KEY_A, InputMode::KEY_PRESS, [this]() { MoveCameraRight(-1.0f); });
+	Input::BindKeyEvent(InputKey::KEY_D, InputMode::KEY_PRESS, [this]() { MoveCameraRight(1.0f); });
+	Input::BindKeyEvent(InputKey::KEY_W, InputMode::KEY_RELEASE, [this]() { MoveCameraForward(0.0f); });
+	Input::BindKeyEvent(InputKey::KEY_S, InputMode::KEY_RELEASE, [this]() { MoveCameraForward(0.0f); });
+	Input::BindKeyEvent(InputKey::KEY_A, InputMode::KEY_RELEASE, [this]() { MoveCameraRight(0.0f); });
+	Input::BindKeyEvent(InputKey::KEY_D, InputMode::KEY_RELEASE, [this]() { MoveCameraRight(0.0f); });
 }
 
 void CameraMoveScene::Update(float Deltatime)
