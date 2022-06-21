@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <cmath>
 
 #ifndef _WIN64
 	#error YingLong only surport windows x64 platform!
@@ -32,3 +33,9 @@ using uint64 = uint64_t;
 using wchar = wchar_t;
 using char16 = char16_t;
 using char32 = char32_t;
+
+
+// precisions
+
+#define DOUBLE_PERCISION 0.00001f
+#define DOUBLE_EQUAL(x, y) (abs((x) - (y)) < DOUBLE_PERCISION)
