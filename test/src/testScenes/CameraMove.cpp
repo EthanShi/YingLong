@@ -1,6 +1,7 @@
 #include "CameraMove.h"
 
-#include <iostream>
+#include "YingLongPCH.h"
+
 #include "glad/gl.h"
 
 #include "input/Input.h"
@@ -29,14 +30,18 @@ CameraMoveScene::CameraMoveScene()
 	ShaderComponent& ShaderComp = reg.emplace<ShaderComponent>(cubes);
 	ShaderComp.LoadShader("res\\shader\\basic3D.shader");
 
-	Input::BindKeyEvent(InputKey::KEY_W, InputMode::KEY_PRESS, [this]() { MoveCameraForward(1.0f); });
-	Input::BindKeyEvent(InputKey::KEY_S, InputMode::KEY_PRESS, [this]() { MoveCameraForward(-1.0f); });
-	Input::BindKeyEvent(InputKey::KEY_A, InputMode::KEY_PRESS, [this]() { MoveCameraRight(-1.0f); });
-	Input::BindKeyEvent(InputKey::KEY_D, InputMode::KEY_PRESS, [this]() { MoveCameraRight(1.0f); });
-	Input::BindKeyEvent(InputKey::KEY_W, InputMode::KEY_RELEASE, [this]() { MoveCameraForward(0.0f); });
-	Input::BindKeyEvent(InputKey::KEY_S, InputMode::KEY_RELEASE, [this]() { MoveCameraForward(0.0f); });
-	Input::BindKeyEvent(InputKey::KEY_A, InputMode::KEY_RELEASE, [this]() { MoveCameraRight(0.0f); });
-	Input::BindKeyEvent(InputKey::KEY_D, InputMode::KEY_RELEASE, [this]() { MoveCameraRight(0.0f); });
+	// Start move
+	CallbackHandlers[0] = Input::BindKeyEvent(InputKey::KEY_W, InputMode::KEY_PRESS, [this]() { MoveCameraForward(1.0f); });
+	CallbackHandlers[1] = Input::BindKeyEvent(InputKey::KEY_S, InputMode::KEY_PRESS, [this]() { MoveCameraForward(-1.0f); });
+	CallbackHandlers[2] = Input::BindKeyEvent(InputKey::KEY_A, InputMode::KEY_PRESS, [this]() { MoveCameraRight(-1.0f); });
+	CallbackHandlers[3] = Input::BindKeyEvent(InputKey::KEY_D, InputMode::KEY_PRESS, [this]() { MoveCameraRight(1.0f); });
+	// Stop move
+	CallbackHandlers[4] = Input::BindKeyEvent(InputKey::KEY_W, InputMode::KEY_RELEASE, [this]() { MoveCameraForward(0.0f); });
+	CallbackHandlers[5] = Input::BindKeyEvent(InputKey::KEY_S, InputMode::KEY_RELEASE, [this]() { MoveCameraForward(0.0f); });
+	CallbackHandlers[6] = Input::BindKeyEvent(InputKey::KEY_A, InputMode::KEY_RELEASE, [this]() { MoveCameraRight(0.0f); });
+	CallbackHandlers[7] = Input::BindKeyEvent(InputKey::KEY_D, InputMode::KEY_RELEASE, [this]() { MoveCameraRight(0.0f); });
+	// Turn
+	CallbackHandlers[8] = Input::BindMouseMoveEvent(std::bind(&CameraMoveScene::TurnCamera, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 void CameraMoveScene::Update(float Deltatime)
@@ -60,4 +65,9 @@ void CameraMoveScene::MoveCameraForward(float Value)
 void CameraMoveScene::MoveCameraRight(float Value)
 {
 	m_MoveRightValue = Value;
+}
+
+void CameraMoveScene::TurnCamera(const glm::dvec2& OldPos, const glm::dvec2& NewPos)
+{
+	std::cout << "turn" << std::endl;
 }

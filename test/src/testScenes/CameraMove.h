@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 
+#include "input/InputTypes.h"
 #include "scene/Scene.h"
 #include "utils/Property.h"
 
@@ -21,8 +22,11 @@ private:
 	float m_MoveRightValue = 0.f;
 	float m_MoveSpeed = 4.f;
 
+	InputCallbackHandler CallbackHandlers[9];
+
 private:
 	void MoveCameraForward(float Value);
 	void MoveCameraRight(float Value);
+	void TurnCamera(const glm::dvec2& OldPos, const glm::dvec2& NewPos);
 };
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stddef.h>
-#include <cmath>
+#include <glm/glm/glm.hpp>
 
 #ifndef _WIN64
 	#error YingLong only surport windows x64 platform!
@@ -38,4 +38,4 @@ using char32 = char32_t;
 // precisions
 
 #define DOUBLE_PERCISION 0.00001f
-#define DOUBLE_EQUAL(x, y) (abs((x) - (y)) < DOUBLE_PERCISION)
+#define DOUBLE_EQUAL(x, y) (glm::abs((x) - (y)) < DOUBLE_PERCISION)

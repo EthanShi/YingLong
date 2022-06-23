@@ -1,6 +1,14 @@
 #pragma once
 
+#include <functional>
+#include "core/Macros.h"
+
 namespace YingLong {
+
+	using InputButtonCallback = std::function<void()>;
+	using InputMouseMoveCallback = std::function<void(const glm::dvec2&, const glm::dvec2&)>;
+
+	using InputCallbackHandler = uint64;
 
 	enum class InputKey
 	{
