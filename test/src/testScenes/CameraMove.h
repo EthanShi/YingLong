@@ -4,7 +4,6 @@
 
 #include "input/InputTypes.h"
 #include "scene/Scene.h"
-#include "utils/Property.h"
 
 using namespace YingLong;
 
@@ -22,7 +21,10 @@ private:
 	float m_MoveRightValue = 0.f;
 	float m_MoveSpeed = 4.f;
 
-	InputCallbackHandler CallbackHandlers[9];
+	glm::vec2 m_TurnDirect = {0.f, 0.f};
+	float m_TurnRate = 5.0f;
+
+	InputCallbackHandler CallbackHandlers[10];
 
 private:
 	void MoveCameraForward(float Value);

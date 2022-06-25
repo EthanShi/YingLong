@@ -12,8 +12,8 @@ SingleCubeScene::SingleCubeScene()
 	// Init cubes mesh & shader
 	const auto cubes = reg.create();
 	Transform3DComponent& cubesTransform = reg.emplace<Transform3DComponent>(cubes);
-	cubesTransform.Scale = glm::vec3(100.f, 100.f, 100.f);
-	cubesTransform.Forward = glm::vec3(1.f, 1.f, 1.f);
+	cubesTransform.SetScale(glm::vec3(100.f, 100.f, 100.f));
+	cubesTransform.SetForward(glm::vec3(1.f, 1.f, 1.f));
 
 	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cubes);
 

@@ -46,6 +46,11 @@ namespace YingLong {
 		glfwSetInputMode(m_Window, GLFW_CURSOR, (int)Mode);
 	}
 
+	CursorMode Input::GetCursorMode()
+	{
+		return (CursorMode)glfwGetInputMode(m_Window, GLFW_CURSOR);
+	}
+
 	InputCallbackHandler Input::BindKeyEvent(InputKey Key, InputMode Mode, const InputButtonCallback& Callback, bool CheckUnique)
 	{
 		std::pair<InputKey, InputMode> KeyTuple = { Key , Mode };
@@ -268,7 +273,6 @@ namespace YingLong {
 		glm::dvec2 PosDiff = CurrentCursorPos - m_LastCursorPos;
 		if (!DOUBLE_EQUAL(glm::length(PosDiff), 0.f))
 		{
-			m_LastCursorPos = CurrentCursorPos;
 			for (InputCallbackHandler& CallbackHandler : m_MouseMoveCallbacks)
 			{
 				m_RegistedMouseMoveCallbacks[CallbackHandler](m_LastCursorPos, CurrentCursorPos);
@@ -283,6 +287,7 @@ namespace YingLong {
 					}
 				}
 			}
+			m_LastCursorPos = CurrentCursorPos;
 		}
 	}
 }

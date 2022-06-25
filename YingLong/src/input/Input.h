@@ -14,6 +14,7 @@ namespace YingLong {
 		static void InitInput(GLFWwindow* Window);
 
 		static void SetCursorMode(CursorMode Mode);
+		static CursorMode GetCursorMode();
 
 		/* Callback will be called each time Key's mode change to Mode. */
 		static InputCallbackHandler BindKeyEvent(InputKey Key, InputMode Mode, const InputButtonCallback& Callback, bool CheckUnique = false);

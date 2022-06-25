@@ -33,13 +33,13 @@ namespace YingLong {
 
 	void Scene::DrawEntities(float deltatime)
 	{
-		auto view = m_Registry.view<const Transform3DComponent, MeshComponent, ShaderComponent>();
+		auto view = m_Registry.view<Transform3DComponent, MeshComponent, ShaderComponent>();
 
-		const Transform3DComponent& CameraTransform = m_Registry.get<Transform3DComponent>(m_PrimaryCamera);
+		Transform3DComponent& CameraTransform = m_Registry.get<Transform3DComponent>(m_PrimaryCamera);
 		const Camera3DComponent& Camera = m_Registry.get<Camera3DComponent>(m_PrimaryCamera);
 
 		view.each(
-			[this, &CameraTransform, &Camera](const Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader) {
+			[this, &CameraTransform, &Camera](Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader) {
 				Renderer::Draw(
 					mesh.mesh.GetVertexArray(),
 					mesh.mesh.GetIndexBuffer(),
@@ -61,7 +61,7 @@ namespace YingLong {
 		auto& reg = GetRegistry();
 		const auto camera = reg.create();
 		Transform3DComponent& cameraTransform = reg.emplace<Transform3DComponent>(camera);
-		cameraTransform.Position = glm::vec3(0.0f, 0.0f, 5.0f);
+		cameraTransform.SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
 		reg.emplace<Camera3DComponent>(camera);
 		SetPrimaryCamera(camera);
 	}
