@@ -21,10 +21,11 @@ namespace YingLong {
 
 	void Scene::Tick(float deltatime)
 	{
+		m_Dispatcher.update();
 		Renderer::SetClearColor(m_BackgroundColor);
-		InnerUpdate(deltatime);
-		InnerDrawEntities(deltatime);
-		InnerDrawImgui(deltatime);
+		Update(deltatime);
+		DrawEntities(deltatime);
+		DrawImgui(deltatime);
 	}
 
 	void Scene::Update(float deltatime)
@@ -58,26 +59,9 @@ namespace YingLong {
 
 	void Scene::CreateDefaultCamera()
 	{
-		auto& reg = GetRegistry();
-		const auto camera = reg.create();
-		Transform3DComponent& cameraTransform = reg.emplace<Transform3DComponent>(camera);
+		m_PrimaryCamera = m_Registry.create();
+		Transform3DComponent& cameraTransform = m_Registry.emplace<Transform3DComponent>(m_PrimaryCamera);
 		cameraTransform.SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
-		reg.emplace<Camera3DComponent>(camera);
-		SetPrimaryCamera(camera);
-	}
-
-	void Scene::InnerUpdate(float deltatime)
-	{
-		Update(deltatime);
-	}
-
-	void Scene::InnerDrawEntities(float deltatime)
-	{
-		DrawEntities(deltatime);
-	}
-
-	void Scene::InnerDrawImgui(float deltatime)
-	{
-		DrawImgui(deltatime);
+		m_Registry.emplace<Camera3DComponent>(m_PrimaryCamera);
 	}
 }

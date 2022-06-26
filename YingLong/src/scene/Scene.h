@@ -16,31 +16,26 @@ namespace YingLong {
 
 		void Tick(float deltatime);
 
+		entt::dispatcher& GetDispatcher() { return m_Dispatcher; }
+
+	protected:
 		virtual void Update(float deltatime);
 		virtual void DrawEntities(float deltatime);
 		virtual void DrawImgui(float deltatime);
 
-		const glm::vec4& GetBackgroundColor() const { return m_BackgroundColor; }
-		void SetBackgroundColor(const glm::vec4& color) { m_BackgroundColor = color; }
-
-		const entt::entity& GetPrimaryCamera() const { return m_PrimaryCamera; }
-		void SetPrimaryCamera(const entt::entity& camera) { m_PrimaryCamera = camera; }
-
-		entt::registry& GetRegistry() { return m_Registry; }
-
-	protected:
 		virtual void CreateDefaultCamera();
 
-	private:
-		void InnerUpdate(float deltatime);
-		void InnerDrawEntities(float deltatime);
-		void InnerDrawImgui(float deltatime);
-
-	private:
+	protected:
+		// Registry manage all entities & components in this Scene
 		entt::registry m_Registry;
 
+		// Event dispatcher manage all engine and user events for this Scene
+		entt::dispatcher m_Dispatcher;
+
+		// Clear color for renderer
 		glm::vec4 m_BackgroundColor;
 
+		// Camera that renderer use to render this Scene
 		entt::entity m_PrimaryCamera;
 	};
 

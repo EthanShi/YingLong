@@ -93,4 +93,9 @@ namespace YingLong {
 
 		operator Camera3D() { return Camera; }
 	};
+
+	struct DefaultMovementComponent
+	{
+
+	};
 }

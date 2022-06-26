@@ -13,7 +13,7 @@
 CameraMoveScene::CameraMoveScene()
 	: Scene::Scene()
 {
-	auto& reg = GetRegistry();
+	auto& reg = m_Registry;
 
 	// Init cubes mesh & shader
 	const auto cubes = reg.create();
@@ -52,8 +52,8 @@ CameraMoveScene::CameraMoveScene()
 
 void CameraMoveScene::Update(float Deltatime)
 {
-	auto& reg = GetRegistry();
-	Transform3DComponent& CameraTransform = reg.get<Transform3DComponent>(GetPrimaryCamera());
+	auto& reg = m_Registry;
+	Transform3DComponent& CameraTransform = reg.get<Transform3DComponent>(m_PrimaryCamera);
 	glm::vec3 Right = glm::cross(CameraTransform.GetForward(), CameraTransform.GetUp());
 	glm::vec3 MoveDirection = CameraTransform.GetForward() * m_MoveForwardValue + Right * m_MoveRightValue;
 	CameraTransform.Move(MoveDirection * Deltatime * m_MoveSpeed);

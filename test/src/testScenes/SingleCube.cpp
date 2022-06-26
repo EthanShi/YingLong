@@ -7,7 +7,7 @@
 SingleCubeScene::SingleCubeScene()
 	: Scene::Scene()
 {
-	auto& reg = GetRegistry();
+	auto& reg = m_Registry;
 
 	// Init cubes mesh & shader
 	const auto cubes = reg.create();
