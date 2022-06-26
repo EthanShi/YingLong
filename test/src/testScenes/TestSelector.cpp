@@ -27,7 +27,6 @@ void TestSelectorScene::DrawImgui(float deltatime)
 		{
 			if (ImGui::Button(testPair.first.c_str()))
 			{
-				m_Engine->RemoveScene(m_CurrentTest);
 				m_CurrentTest = testPair.second();
 				m_Engine->AddScene(m_CurrentTest);
 			}

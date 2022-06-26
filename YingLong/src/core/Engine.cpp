@@ -115,10 +115,12 @@ namespace YingLong
 	void Engine::AddScene(const Scene_SPtr& scene)
 	{
 		m_Scenes.push_back(scene);
+		scene->OnActive();
 	}
 
 	void Engine::RemoveScene(const Scene_SPtr& scene)
 	{
+		scene->OnInactive();
 		m_Scenes.erase(std::remove(m_Scenes.begin(), m_Scenes.end(), scene), m_Scenes.end());
 	}
 

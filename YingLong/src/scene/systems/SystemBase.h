@@ -1,6 +1,8 @@
 #pragma once
 
-#include <memory>
+#include "entt/entt.hpp"
+
+#include "scene/SceneTypes.h"
 
 namespace YingLong {
 
@@ -8,20 +10,24 @@ namespace YingLong {
 
 	class SystemBase
 	{
-		SystemBase(std::shared_ptr<Scene> OwnerScene)
+	public:
+		SystemBase(Scene_SPtr OwnerScene)
 		{
 			m_OwnerScene = OwnerScene;
 		}
 
-		~SystemBase() {}
+		virtual ~SystemBase() {}
 
 		Scene& GetScene()
 		{
 			return *m_OwnerScene;
 		}
 
-	private:
-		std::shared_ptr<Scene> m_OwnerScene;
-	};
+	protected:
+		entt::dispatcher& GetDispatcher();
+		entt::registry& GetRegistry();
 
+	private:
+		Scene_SPtr m_OwnerScene;
+	};
 }

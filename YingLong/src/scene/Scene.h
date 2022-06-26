@@ -14,9 +14,13 @@ namespace YingLong {
 		Scene();
 		virtual ~Scene();
 
+		virtual void OnActive();
+		virtual void OnInactive() {}
+
 		void Tick(float deltatime);
 
 		entt::dispatcher& GetDispatcher() { return m_Dispatcher; }
+		entt::registry& GetRegistry() { return m_Registry; }
 
 	protected:
 		virtual void Update(float deltatime);
@@ -38,6 +42,4 @@ namespace YingLong {
 		// Camera that renderer use to render this Scene
 		entt::entity m_PrimaryCamera;
 	};
-
-	using Scene_SPtr = std::shared_ptr<Scene>;
 }

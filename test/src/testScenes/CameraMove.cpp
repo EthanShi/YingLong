@@ -8,10 +8,12 @@
 
 #include "scene/components/BasicComponents.h"
 #include "scene/components/DrawableComponents.h"
+#include "scene/events/EventTypes.h"
 
 
 CameraMoveScene::CameraMoveScene()
 	: Scene::Scene()
+	, m_FreeMovementSystem(Scene_SPtr(this))
 {
 	auto& reg = m_Registry;
 
@@ -33,54 +35,42 @@ CameraMoveScene::CameraMoveScene()
 	Input::SetCursorMode(CursorMode::CURSOR_DISABLED);
 
 	// Start move
-	CallbackHandlers[0] = Input::BindKeyEvent(InputKey::KEY_W, InputMode::KEY_PRESS, [this]() { MoveCameraForward(1.0f); });
-	CallbackHandlers[1] = Input::BindKeyEvent(InputKey::KEY_S, InputMode::KEY_PRESS, [this]() { MoveCameraForward(-1.0f); });
-	CallbackHandlers[2] = Input::BindKeyEvent(InputKey::KEY_A, InputMode::KEY_PRESS, [this]() { MoveCameraRight(-1.0f); });
-	CallbackHandlers[3] = Input::BindKeyEvent(InputKey::KEY_D, InputMode::KEY_PRESS, [this]() { MoveCameraRight(1.0f); });
+	CallbackHandlers[0] = Input::BindKeyEvent(InputKey::KEY_W, InputMode::KEY_PRESS, [this]() { m_Dispatcher.enqueue<Event::MoveForward>(1.f); });
+	CallbackHandlers[1] = Input::BindKeyEvent(InputKey::KEY_S, InputMode::KEY_PRESS, [this]() { m_Dispatcher.enqueue<Event::MoveForward>(-1.f); });
+	CallbackHandlers[2] = Input::BindKeyEvent(InputKey::KEY_A, InputMode::KEY_PRESS, [this]() { m_Dispatcher.enqueue<Event::MoveRight>(-1.f); });
+	CallbackHandlers[3] = Input::BindKeyEvent(InputKey::KEY_D, InputMode::KEY_PRESS, [this]() { m_Dispatcher.enqueue<Event::MoveRight>(1.f); });
 	// Stop move
-	CallbackHandlers[4] = Input::BindKeyEvent(InputKey::KEY_W, InputMode::KEY_RELEASE, [this]() { MoveCameraForward(0.0f); });
-	CallbackHandlers[5] = Input::BindKeyEvent(InputKey::KEY_S, InputMode::KEY_RELEASE, [this]() { MoveCameraForward(0.0f); });
-	CallbackHandlers[6] = Input::BindKeyEvent(InputKey::KEY_A, InputMode::KEY_RELEASE, [this]() { MoveCameraRight(0.0f); });
-	CallbackHandlers[7] = Input::BindKeyEvent(InputKey::KEY_D, InputMode::KEY_RELEASE, [this]() { MoveCameraRight(0.0f); });
+	CallbackHandlers[4] = Input::BindKeyEvent(InputKey::KEY_W, InputMode::KEY_RELEASE, [this]() { m_Dispatcher.enqueue<Event::MoveForward>(0.0f); });
+	CallbackHandlers[5] = Input::BindKeyEvent(InputKey::KEY_S, InputMode::KEY_RELEASE, [this]() { m_Dispatcher.enqueue<Event::MoveForward>(0.0f); });
+	CallbackHandlers[6] = Input::BindKeyEvent(InputKey::KEY_A, InputMode::KEY_RELEASE, [this]() { m_Dispatcher.enqueue<Event::MoveRight>(0.0f); });
+	CallbackHandlers[7] = Input::BindKeyEvent(InputKey::KEY_D, InputMode::KEY_RELEASE, [this]() { m_Dispatcher.enqueue<Event::MoveRight>(0.0f); });
 	// Turn
-	CallbackHandlers[8] = Input::BindMouseMoveEvent(std::bind(&CameraMoveScene::TurnCamera, this, std::placeholders::_1, std::placeholders::_2));
+	CallbackHandlers[8] = Input::BindMouseMoveEvent([this](const glm::vec2 OldPos, const glm::vec2 NewPos) { m_Dispatcher.enqueue<Event::CursorMove>(OldPos, NewPos); });
 	// Switch cursor mode
 	CallbackHandlers[9] = Input::BindKeyEvent(InputKey::KEY_TAB, InputMode::KEY_PRESS, [this]() {
 		Input::SetCursorMode(Input::GetCursorMode() == CursorMode::CURSOR_DISABLED ? CursorMode::CURSOR_NORMAL : CursorMode::CURSOR_DISABLED);
 		});
 }
 
+CameraMoveScene::~CameraMoveScene()
+{
+	for (InputCallbackHandler& Handler : CallbackHandlers)
+	{
+		Input::UnBindInputEvent(Handler);
+	}
+}
+
 void CameraMoveScene::Update(float Deltatime)
 {
-	auto& reg = m_Registry;
-	Transform3DComponent& CameraTransform = reg.get<Transform3DComponent>(m_PrimaryCamera);
-	glm::vec3 Right = glm::cross(CameraTransform.GetForward(), CameraTransform.GetUp());
-	glm::vec3 MoveDirection = CameraTransform.GetForward() * m_MoveForwardValue + Right * m_MoveRightValue;
-	CameraTransform.Move(MoveDirection * Deltatime * m_MoveSpeed);
-
-	if (Input::GetCursorMode() == CursorMode::CURSOR_DISABLED)
-	{
-		glm::vec2 turnValue = m_TurnDirect * m_TurnRate * Deltatime;
-		m_TurnDirect = { 0.f, 0.f };
-		CameraTransform.Rotate(-turnValue.y, -turnValue.x, 0.f);
-	}
+	m_FreeMovementSystem.Update(Deltatime);
 }
 
 void CameraMoveScene::DrawImgui(float Deltatime)
 {
 }
 
-void CameraMoveScene::MoveCameraForward(float Value)
+void CameraMoveScene::CreateDefaultCamera()
 {
-	m_MoveForwardValue = Value;
-}
-
-void CameraMoveScene::MoveCameraRight(float Value)
-{
-	m_MoveRightValue = Value;
-}
-
-void CameraMoveScene::TurnCamera(const glm::dvec2& OldPos, const glm::dvec2& NewPos)
-{
-	m_TurnDirect = NewPos - OldPos;
+	Scene::CreateDefaultCamera();
+	m_Registry.emplace<FreeMovementComponent>(m_PrimaryCamera);
 }

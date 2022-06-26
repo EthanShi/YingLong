@@ -6,6 +6,7 @@
 
 #include "core/Macros.h"
 #include "scene/Scene.h"
+#include "scene/SceneTypes.h"
 
 namespace YingLong {
 

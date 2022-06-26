@@ -10,13 +10,19 @@
 namespace YingLong {
 
 	Scene::Scene()
-		: m_BackgroundColor(0.3f, 0.3f, 0.3f, 1.0f)
-	{
-		CreateDefaultCamera();
-	}
+		: m_Registry()
+		, m_Dispatcher()
+		, m_BackgroundColor(0.3f, 0.3f, 0.3f, 1.0f)
+		, m_PrimaryCamera()
+	{}
 
 	Scene::~Scene()
 	{
+	}
+
+	void Scene::OnActive()
+	{
+		CreateDefaultCamera();
 	}
 
 	void Scene::Tick(float deltatime)

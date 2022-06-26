@@ -94,8 +94,9 @@ namespace YingLong {
 		operator Camera3D() { return Camera; }
 	};
 
-	struct DefaultMovementComponent
+	struct FreeMovementComponent
 	{
-
+		float MoveSpeed = 4.f;
+		float TurnRate = 5.0f;
 	};
 }
