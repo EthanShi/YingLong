@@ -54,7 +54,7 @@ namespace YingLong
 		ImGui_ImplOpenGL3_Init("#version 130");
 
 		// Set Input
-		Input::InitInput(m_Window);
+		Input::Instance().InitInput(m_Window);
 
 		m_LastFrameTime = std::chrono::duration_cast<std::chrono::milliseconds>(
 			std::chrono::system_clock::now().time_since_epoch()
@@ -95,7 +95,7 @@ namespace YingLong
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-			Input::ProcessInput();
+			Input::Instance().ProcessInput();
 
 			// m_Scenes may be change in scenes Tick, copy all scenes for this frame.
 			std::vector<Scene_SPtr> Scenes = m_Scenes;

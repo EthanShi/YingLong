@@ -25,7 +25,7 @@ namespace YingLong {
 				glm::vec3 Right = glm::cross(Transform.GetForward(), Transform.GetUp());
 				glm::vec3 MoveDirection = Transform.GetForward() * m_ForwardValue + Right * m_RightValue;
 				Transform.Move(MoveDirection * DeltaTime * FreeMovement.MoveSpeed);
-				if (Input::GetCursorMode() == CursorMode::CURSOR_DISABLED)
+				if (Input::Instance().GetCursorMode() == CursorMode::CURSOR_DISABLED)
 				{
 					glm::vec2 turnValue = m_TurnDirect * FreeMovement.TurnRate * DeltaTime;
 					m_TurnDirect = { 0.f, 0.f };

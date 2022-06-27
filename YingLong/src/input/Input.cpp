@@ -7,24 +7,6 @@
 
 namespace YingLong {
 
-	GLFWwindow* Input::m_Window = nullptr;
-
-	InputCallbackHandler Input::m_Handler = 0;
-
-	std::unordered_map<InputCallbackHandler, InputButtonCallback> Input::m_RegistedButtonCallbacks;
-	std::unordered_map<InputCallbackHandler, InputMouseMoveCallback> Input::m_RegistedMouseMoveCallbacks;
-
-	std::unordered_map<std::pair<InputKey, InputMode>, std::vector<InputCallbackHandler>, boost::hash<std::pair<InputKey, InputMode>>> Input::m_KeyModeToCallbacks;
-	std::unordered_map<std::pair<InputMouse, InputMode>, std::vector<InputCallbackHandler>, boost::hash<std::pair<InputMouse, InputMode>>> Input::m_MouseModeToCallbacks;
-
-	std::vector<InputCallbackHandler> Input::m_MouseMoveCallbacks;
-	std::unordered_map<InputMouse, std::vector<InputCallbackHandler>> Input::m_MouseMoveCallbacksWithMouse;
-
-	std::unordered_map<InputKey, InputMode> Input::m_LastKeyMode;
-	std::unordered_map<InputMouse, InputMode> Input::m_LastMouseMode;
-	glm::dvec2 Input::m_LastCursorPos;
-
-
 	void Input::InitInput(GLFWwindow* Window)
 	{
 		m_Window = Window;
@@ -37,8 +19,7 @@ namespace YingLong {
 		m_MouseMoveCallbacksWithMouse.clear();
 		m_LastKeyMode.clear();
 		m_LastMouseMode.clear();
-		m_LastCursorPos.x = 0.f;
-		m_LastCursorPos.y = 0.f;
+		m_LastCursorPos = { 0.f, 0.f };
 	}
 
 	void Input::SetCursorMode(CursorMode Mode)
