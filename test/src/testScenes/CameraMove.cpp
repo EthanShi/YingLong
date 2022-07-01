@@ -13,7 +13,7 @@
 
 CameraMoveScene::CameraMoveScene()
 	: Scene::Scene()
-	, m_FreeMovementSystem(Scene_SPtr(this))
+	, m_FreeMovementSystem()
 {
 	auto& reg = m_Registry;
 
@@ -60,6 +60,12 @@ CameraMoveScene::~CameraMoveScene()
 	{
 		Input::Instance().UnBindInputEvent(Handler);
 	}
+}
+
+void CameraMoveScene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This)
+{
+	Scene::OnActive(OwnerEngine, This);
+	m_FreeMovementSystem.SetOwnerScene(m_WeakThis);
 }
 
 void CameraMoveScene::Update(float Deltatime)

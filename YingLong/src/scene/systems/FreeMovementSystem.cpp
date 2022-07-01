@@ -3,17 +3,28 @@
 
 #include "FreeMovementSystem.h"
 #include "scene/components/BasicComponents.h"
+#include "scene/Scene.h"
 #include "input/Input.h"
 
 namespace YingLong {
 
-	FreeMovementSystem::FreeMovementSystem(Scene_SPtr Scene)
-		: SystemBase(Scene)
+	FreeMovementSystem::FreeMovementSystem()
+		: SystemBase()
 	{
-		auto& dispatcher = GetDispatcher();
-		dispatcher.sink<Event::MoveForward>().connect<&FreeMovementSystem::OnMoveForward>(this);
-		dispatcher.sink<Event::MoveRight>().connect<&FreeMovementSystem::OnMoveRight>(this);
-		dispatcher.sink<Event::CursorMove>().connect<&FreeMovementSystem::OnCursorMove>(this);
+
+	}
+
+	void FreeMovementSystem::OnOwnerSceneChanged(Scene* OldScene)
+	{
+		if (OldScene)
+		{
+			auto& OldDispatcher = OldScene->GetDispatcher();
+			OldDispatcher.disconnect(this);
+		}
+		auto& Dispatcher = GetDispatcher();
+		Dispatcher.sink<Event::MoveForward>().connect<&FreeMovementSystem::OnMoveForward>(this);
+		Dispatcher.sink<Event::MoveRight>().connect<&FreeMovementSystem::OnMoveRight>(this);
+		Dispatcher.sink<Event::CursorMove>().connect<&FreeMovementSystem::OnCursorMove>(this);
 	}
 
 	void FreeMovementSystem::Update(float DeltaTime)

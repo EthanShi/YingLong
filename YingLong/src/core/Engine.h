@@ -6,11 +6,10 @@
 
 #include "core/Macros.h"
 #include "scene/Scene.h"
-#include "scene/SceneTypes.h"
 
 namespace YingLong {
 
-	class YINGLONG_API Engine
+	class YINGLONG_API Engine : public std::enable_shared_from_this<Engine>
 	{
 	public:
 		Engine(const std::string& WindowTitle);
@@ -18,10 +17,8 @@ namespace YingLong {
 
 		void MainLoop();
 
-		void AddScene(const Scene_SPtr& scene);
-		void RemoveScene(const Scene_SPtr& scene);
-
-	public:
+		void AddScene(std::shared_ptr<Scene> scene);
+		void RemoveScene(const std::shared_ptr<Scene>& scene);
 
 	private:
 		static void OnFrameSizeChanged(GLFWwindow* Window, int32 Width, int32 Height);
@@ -33,7 +30,7 @@ namespace YingLong {
 
 		std::string m_WindowTitle = "YingLong";
 
-		std::vector<Scene_SPtr> m_Scenes;
+		std::vector<std::shared_ptr<Scene>> m_Scenes;
 
 		uint64 m_LastFrameTime = 0;
 	};

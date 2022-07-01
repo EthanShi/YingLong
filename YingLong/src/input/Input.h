@@ -1,9 +1,9 @@
 #pragma once
 
 #include "GLFW/glfw3.h"
-#include "boost/container_hash/hash.hpp"
 
 #include "core/Macros.h"
+#include "utils/Hash.h"
 #include "InputTypes.h"
 
 namespace YingLong {
@@ -50,8 +50,8 @@ namespace YingLong {
 		std::unordered_map<InputCallbackHandler, InputMouseMoveCallback> m_RegistedMouseMoveCallbacks;
 
 		/* Helper data to determine which callback should be called. */
-		std::unordered_map<std::pair<InputKey, InputMode>, std::vector<InputCallbackHandler>, boost::hash<std::pair<InputKey, InputMode>>> m_KeyModeToCallbacks;
-		std::unordered_map<std::pair<InputMouse, InputMode>, std::vector<InputCallbackHandler>, boost::hash<std::pair<InputMouse, InputMode>>> m_MouseModeToCallbacks;
+		std::unordered_map<std::pair<InputKey, InputMode>, std::vector<InputCallbackHandler>, HashPair> m_KeyModeToCallbacks;
+		std::unordered_map<std::pair<InputMouse, InputMode>, std::vector<InputCallbackHandler>, HashPair> m_MouseModeToCallbacks;
 
 		std::vector<InputCallbackHandler> m_MouseMoveCallbacks;
 		std::unordered_map<InputMouse, std::vector<InputCallbackHandler>> m_MouseMoveCallbacksWithMouse;

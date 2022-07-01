@@ -8,12 +8,16 @@ namespace YingLong {
 
 	entt::dispatcher& SystemBase::GetDispatcher()
 	{
-		return m_OwnerScene->GetDispatcher();
+		auto& SPtr = m_OwnerScene.lock();
+		ASSERT(SPtr);
+		return SPtr->GetDispatcher();
 	}
 
 	entt::registry& SystemBase::GetRegistry()
 	{
-		return m_OwnerScene->GetRegistry();
+		auto& SPtr = m_OwnerScene.lock();
+		ASSERT(SPtr);
+		return SPtr->GetRegistry();
 	}
 
 }

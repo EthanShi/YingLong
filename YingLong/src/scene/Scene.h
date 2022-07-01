@@ -8,13 +8,15 @@
 
 namespace YingLong {
 
+	class Engine;
+
 	class YINGLONG_API Scene
 	{
 	public:
 		Scene();
 		virtual ~Scene();
 
-		virtual void OnActive();
+		virtual void OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This);
 		virtual void OnInactive() {}
 
 		void Tick(float deltatime);
@@ -30,6 +32,12 @@ namespace YingLong {
 		virtual void CreateDefaultCamera();
 
 	protected:
+		// Weak this ptr from owner
+		std::weak_ptr<Scene> m_WeakThis;
+
+		// Owner Engine
+		std::weak_ptr<Engine> m_Engine;
+
 		// Registry manage all entities & components in this Scene
 		entt::registry m_Registry;
 

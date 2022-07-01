@@ -8,7 +8,7 @@ using namespace YingLong;
 class TestSelectorScene : public Scene
 {
 public:
-	TestSelectorScene(std::shared_ptr<Engine>& Engine);
+	TestSelectorScene();
 	virtual ~TestSelectorScene() override {}
 
 	virtual void DrawImgui(float deltatime) override;
@@ -20,8 +20,6 @@ public:
 	}
 
 private:
-	std::shared_ptr<Engine> m_Engine;
-
-	std::vector<std::pair<std::string, std::function<Scene_SPtr()>>> m_TestScenes;
-	Scene_SPtr m_CurrentTest;
+	std::vector<std::pair<std::string, std::function<std::shared_ptr<Scene>()>>> m_TestScenes;
+	std::shared_ptr<Scene> m_CurrentTest;
 };

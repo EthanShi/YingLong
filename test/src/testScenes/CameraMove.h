@@ -15,6 +15,7 @@ public:
 	CameraMoveScene();
 	virtual ~CameraMoveScene();
 
+	virtual void OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This) override;
 	virtual void Update(float Deltatime) override;
 	virtual void DrawImgui(float Deltatime) override;
 

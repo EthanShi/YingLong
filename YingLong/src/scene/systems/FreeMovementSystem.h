@@ -8,8 +8,10 @@ namespace YingLong {
 	class FreeMovementSystem : public SystemBase
 	{
 	public:
-		FreeMovementSystem(Scene_SPtr Scene);
+		FreeMovementSystem();
 		virtual ~FreeMovementSystem() {}
+
+		virtual void OnOwnerSceneChanged(Scene* OldScene) override;
 
 		void Update(float DeltaTime);
 

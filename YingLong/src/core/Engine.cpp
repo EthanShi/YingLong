@@ -98,8 +98,8 @@ namespace YingLong
 			Input::Instance().ProcessInput();
 
 			// m_Scenes may be change in scenes Tick, copy all scenes for this frame.
-			std::vector<Scene_SPtr> Scenes = m_Scenes;
-			for (Scene_SPtr& scene : Scenes)
+			std::vector<std::shared_ptr<Scene>> Scenes = m_Scenes;
+			for (std::shared_ptr<Scene>& scene : Scenes)
 			{
 				scene->Tick(deltatime);
 			}
@@ -112,13 +112,13 @@ namespace YingLong
 		}
 	}
 
-	void Engine::AddScene(const Scene_SPtr& scene)
+	void Engine::AddScene(std::shared_ptr<Scene> scene)
 	{
-		m_Scenes.push_back(scene);
-		scene->OnActive();
+		scene->OnActive(shared_from_this(), scene);
+		m_Scenes.push_back(std::move(scene));
 	}
 
-	void Engine::RemoveScene(const Scene_SPtr& scene)
+	void Engine::RemoveScene(const std::shared_ptr<Scene>& scene)
 	{
 		scene->OnInactive();
 		m_Scenes.erase(std::remove(m_Scenes.begin(), m_Scenes.end(), scene), m_Scenes.end());

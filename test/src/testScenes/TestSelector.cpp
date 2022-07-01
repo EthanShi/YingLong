@@ -7,9 +7,8 @@
 #include "testScenes/CameraMove.h"
 
 
-TestSelectorScene::TestSelectorScene(std::shared_ptr<Engine>& Engine)
+TestSelectorScene::TestSelectorScene()
 	: Scene()
-	, m_Engine(Engine)
 	, m_CurrentTest(nullptr)
 {
 	AddTestScene<ClearColorScene>("Clear color");
@@ -28,7 +27,10 @@ void TestSelectorScene::DrawImgui(float deltatime)
 			if (ImGui::Button(testPair.first.c_str()))
 			{
 				m_CurrentTest = testPair.second();
-				m_Engine->AddScene(m_CurrentTest);
+				if (auto& Engine = m_Engine.lock())
+				{
+					Engine->AddScene(m_CurrentTest);
+				}
 			}
 		}
 	}
@@ -36,7 +38,10 @@ void TestSelectorScene::DrawImgui(float deltatime)
 	{
 		if (ImGui::Button("<-"))
 		{
-			m_Engine->RemoveScene(m_CurrentTest);
+			if (auto& Engine = m_Engine.lock())
+			{
+				Engine->RemoveScene(m_CurrentTest);
+			}
 			m_CurrentTest = nullptr;
 		}
 	}

@@ -148,19 +148,28 @@ namespace YingLong {
 		m_RegistedButtonCallbacks.erase(Handler);
 		m_RegistedMouseMoveCallbacks.erase(Handler);
 
+		auto& RemoveHandlerFromVector = [](std::vector<InputCallbackHandler>& Vector, const InputCallbackHandler& Handler)
+		{
+			auto& WhereIter = std::remove(Vector.begin(), Vector.end(), Handler);
+			if (WhereIter != Vector.end())
+			{
+				Vector.erase(WhereIter);
+			}
+		};
+
 		for (auto& Iter : m_KeyModeToCallbacks)
 		{
-			Iter.second.erase(std::remove(Iter.second.begin(), Iter.second.end(), Handler));
+			RemoveHandlerFromVector(Iter.second, Handler);
 		}
 		for (auto& Iter : m_MouseModeToCallbacks)
 		{
-			Iter.second.erase(std::remove(Iter.second.begin(), Iter.second.end(), Handler));
+			RemoveHandlerFromVector(Iter.second, Handler);
 		}
 
-		m_MouseMoveCallbacks.erase(std::remove(m_MouseMoveCallbacks.begin(), m_MouseMoveCallbacks.end(), Handler));
+		RemoveHandlerFromVector(m_MouseMoveCallbacks, Handler);
 		for (auto& Iter : m_MouseMoveCallbacksWithMouse)
 		{
-			Iter.second.erase(std::remove(Iter.second.begin(), Iter.second.end(), Handler));
+			RemoveHandlerFromVector(Iter.second, Handler);
 		}
 	}
 

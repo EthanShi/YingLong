@@ -2,7 +2,7 @@
 
 #include "entt/entt.hpp"
 
-#include "scene/SceneTypes.h"
+#include "core/Macros.h"
 
 namespace YingLong {
 
@@ -11,16 +11,24 @@ namespace YingLong {
 	class SystemBase
 	{
 	public:
-		SystemBase(Scene_SPtr OwnerScene)
+		void SetOwnerScene(const std::weak_ptr<Scene>& OwnerScene)
 		{
+			auto& SPtr = m_OwnerScene.lock();
+			Scene* OldScene = SPtr ? SPtr.get() : nullptr;
 			m_OwnerScene = OwnerScene;
+			OnOwnerSceneChanged(OldScene);
 		}
 
+		SystemBase() {}
 		virtual ~SystemBase() {}
+
+		virtual void OnOwnerSceneChanged(Scene* OldScene) {}
 
 		Scene& GetScene()
 		{
-			return *m_OwnerScene;
+			auto& SPtr = m_OwnerScene.lock();
+			ASSERT(SPtr);
+			return *SPtr;
 		}
 
 	protected:
@@ -28,6 +36,6 @@ namespace YingLong {
 		entt::registry& GetRegistry();
 
 	private:
-		Scene_SPtr m_OwnerScene;
+		std::weak_ptr<Scene> m_OwnerScene;
 	};
 }

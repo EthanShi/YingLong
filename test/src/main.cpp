@@ -14,10 +14,9 @@ using namespace YingLong;
 
 int main()
 {
-	std::shared_ptr<Engine> engine = std::make_shared<Engine>("Test YingLong");
+	std::shared_ptr<Engine> engine = std::make_unique<Engine>("Test YingLong");
 
-	Scene_SPtr TestSelector = std::make_shared<TestSelectorScene>(engine);
-	engine->AddScene(TestSelector);
+	engine->AddScene(std::make_unique<TestSelectorScene>());
 
 	Renderer::SetUnit(RendererUnit::Centimeter);
 

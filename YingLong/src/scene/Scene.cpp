@@ -1,6 +1,7 @@
 
 #include "YingLongPCH.h"
 
+#include "core/Engine.h"
 #include "Scene.h"
 #include "renderer/Renderer3D.h"
 
@@ -20,8 +21,10 @@ namespace YingLong {
 	{
 	}
 
-	void Scene::OnActive()
+	void Scene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This)
 	{
+		m_Engine = OwnerEngine;
+		m_WeakThis = This;
 		CreateDefaultCamera();
 	}
 
