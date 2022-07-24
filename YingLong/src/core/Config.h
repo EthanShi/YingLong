@@ -30,8 +30,9 @@ namespace YingLong {
 		* Higher layer configs will cover lower layer configs
 		* If some configs enable user to modify, read from "ReadOnlyWithUser()", other configs just read from "ReadOnly()" which ignore user configs.
 		* 
-		* [Remove low layer's config]
-		* There is no way to remove low layer's config by higher layers, just edit the config file.
+		* [Replace perfix]
+		* If Higher layer's table/array type config key has perfix '_', merged data will use higher config data.
+		* Or, merged data will merge higher to lower data for table type. Append higher data to lower data for array type.
 		*/
 		enum class ConfigLayer
 		{

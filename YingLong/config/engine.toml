@@ -19,8 +19,3 @@
 #   Mouse = "MOUSE_BUTTON_1"
 #   Mode = "KEY_PRESS"
 [InputMouseActions]
-
-[Test]
-A = 1
-B = "B"
-C = [1, 2, "s3"]
