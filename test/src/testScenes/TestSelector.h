@@ -13,6 +13,8 @@ public:
 
 	virtual void DrawImgui(float deltatime) override;
 
+	virtual std::string GetName() override { return "TestSelectorScene"; }
+
 	template<class T>
 	void AddTestScene(const std::string& TestName)
 	{

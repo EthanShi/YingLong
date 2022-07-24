@@ -15,11 +15,13 @@ public:
 	CameraMoveScene();
 	virtual ~CameraMoveScene();
 
+	virtual std::string GetName() override { return "CameraMoveScene"; }
+
+protected:
 	virtual void OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This) override;
 	virtual void Update(float Deltatime) override;
 	virtual void DrawImgui(float Deltatime) override;
 
-protected:
 	virtual void CreateDefaultCamera() override;
 
 private:

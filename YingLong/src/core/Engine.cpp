@@ -6,6 +6,7 @@
 #include "renderer/Camera3D.h"
 #include "renderer/Renderer3D.h"
 #include "input/Input.h"
+#include "Config.h"
 
 namespace YingLong
 {
@@ -13,6 +14,9 @@ namespace YingLong
 	Engine::Engine(const std::string& WindowTitle)
 		: m_WindowTitle(WindowTitle)
 	{
+		// test config
+		Config::Instance();
+
 		/* Initialize the library */
 		assert(glfwInit());
 

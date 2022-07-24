@@ -2,6 +2,7 @@
 #include "YingLongPCH.h"
 
 #include "core/Engine.h"
+#include "core/Config.h"
 #include "Scene.h"
 #include "renderer/Renderer3D.h"
 
@@ -15,7 +16,8 @@ namespace YingLong {
 		, m_Dispatcher()
 		, m_BackgroundColor(0.3f, 0.3f, 0.3f, 1.0f)
 		, m_PrimaryCamera()
-	{}
+	{
+	}
 
 	Scene::~Scene()
 	{
@@ -26,6 +28,17 @@ namespace YingLong {
 		m_Engine = OwnerEngine;
 		m_WeakThis = This;
 		CreateDefaultCamera();
+
+		// Init configs
+		Config& ConfigInstance = Config::Instance();
+		ConfigInstance.LoadSceneConfig(Config::ConfigLayer::Scene, GetName());
+		ConfigInstance.LoadSceneConfig(Config::ConfigLayer::SceneUser, GetName());
+
+		std::cout << "Config with user:" << std::endl;
+		std::cout << toml::json_formatter(ConfigInstance.ReadOnlyWithUser()) << std::endl;
+		std::cout << "Config without user:" << std::endl;
+		std::cout << toml::json_formatter(ConfigInstance.ReadOnly ()) << std::endl;
+
 	}
 
 	void Scene::Tick(float deltatime)

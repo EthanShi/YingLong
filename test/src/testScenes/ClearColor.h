@@ -10,6 +10,9 @@ public:
 	ClearColorScene();
 	virtual ~ClearColorScene() override;
 
+	virtual std::string GetName() override { return "ClearColorScene"; }
+
+protected:
 	virtual void Update(float deltatime) override;
 	virtual void DrawImgui(float deltatime) override;
 

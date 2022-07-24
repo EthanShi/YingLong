@@ -1,0 +1,26 @@
+
+# Define key bind in higher layer configs in this table.
+# Require keys for per key: Key, Mode.
+# You can bind more than one key to an action.
+# for example:
+#   [[InputActions.MoveForward]]
+#   Key = "KEY_W"
+#   Mode = "KEY_PRESS"
+#   [[InputActions.MoveForward]]
+#   Key = "KEY_UP"
+#   Mode = "KEY_PRESS"
+[InputKeyActions]
+
+# Define mouse bind in higher layer configs in this table.
+# Require keys for per key: Mouse, Mode.
+# You can bind more than one key to an action.
+# for example:
+#   [InputActions.MoveForward]
+#   Mouse = "MOUSE_BUTTON_1"
+#   Mode = "KEY_PRESS"
+[InputMouseActions]
+
+[Test]
+A = 1
+B = "B"
+C = [1, 2, "s3"]

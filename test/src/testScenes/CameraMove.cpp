@@ -25,12 +25,12 @@ CameraMoveScene::CameraMoveScene()
 
 	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cubes);
 
-	MeshComp.mesh.Load("res\\models\\cube.obj");
+	MeshComp.mesh.Load("res/models/cube.obj");
 	MeshComp.mesh.SetDefaultColor(glm::vec3(1.0f, 0.5f, 0.3f));
 	MeshComp.mesh.FillRenderData(false, false, true);
 
 	ShaderComponent& ShaderComp = reg.emplace<ShaderComponent>(cubes);
-	ShaderComp.LoadShader("res\\shader\\basic3D.shader");
+	ShaderComp.LoadShader("res/shader/basic3D.shader");
 
 	Input& InputInstance = Input::Instance();
 	InputInstance.SetCursorMode(CursorMode::CURSOR_DISABLED);

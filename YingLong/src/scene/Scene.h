@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "entt/entt.hpp"
 #include "glm/glm.hpp"
 
@@ -19,10 +21,13 @@ namespace YingLong {
 		virtual void OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This);
 		virtual void OnInactive() {}
 
+		virtual std::string GetName() = 0;
+
 		void Tick(float deltatime);
 
 		entt::dispatcher& GetDispatcher() { return m_Dispatcher; }
 		entt::registry& GetRegistry() { return m_Registry; }
+
 
 	protected:
 		virtual void Update(float deltatime);

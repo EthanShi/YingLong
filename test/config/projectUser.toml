@@ -1,0 +1,7 @@
+# Input actions
+[[InputKeyActions._MoveForward]]
+Key = "KEY_D"
+Mode = "KEY_S"
+
+[_Test]
+A1 = 2

@@ -10,6 +10,10 @@ public:
 	SingleCubeScene();
 	virtual ~SingleCubeScene() override {}
 
+	virtual std::string GetName() override { return "SingleCubeScene"; }
+
+protected:
 	virtual void Update(float deltatime) override;
+
 };
 

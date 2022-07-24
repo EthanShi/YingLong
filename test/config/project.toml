@@ -1,0 +1,10 @@
+
+# Input actions
+[[InputKeyActions.MoveForward]]
+Key = "KEY_W"
+Mode = "KEY_PRESS"
+
+[Test]
+A1 = 2
+B = "B1"
+C = [1,2, 4, 5, "s6"]
