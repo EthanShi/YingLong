@@ -1,8 +1,6 @@
 #pragma once
 
-#include <string>
-
-#include "GLFW/glfw3.h"
+#include "YingLongPCH.h"
 
 #include "core/Macros.h"
 #include "scene/Scene.h"
@@ -30,7 +28,7 @@ namespace YingLong {
 
 		std::string m_WindowTitle = "YingLong";
 
-		std::vector<std::shared_ptr<Scene>> m_Scenes;
+		std::map<std::string, std::shared_ptr<Scene>> m_Scenes;
 
 		uint64 m_LastFrameTime = 0;
 	};

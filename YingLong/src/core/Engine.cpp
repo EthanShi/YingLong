@@ -102,10 +102,10 @@ namespace YingLong
 			Input::Instance().ProcessInput();
 
 			// m_Scenes may be change in scenes Tick, copy all scenes for this frame.
-			std::vector<std::shared_ptr<Scene>> Scenes = m_Scenes;
-			for (std::shared_ptr<Scene>& scene : Scenes)
+			std::map<std::string, std::shared_ptr<Scene>> Scenes = m_Scenes;
+			for (auto& scene : Scenes)
 			{
-				scene->Tick(deltatime);
+				scene.second->Tick(deltatime);
 			}
 
 			ImGui::Render();
@@ -118,14 +118,26 @@ namespace YingLong
 
 	void Engine::AddScene(std::shared_ptr<Scene> scene)
 	{
+		auto& FindResult = m_Scenes.find(scene->GetName());
+		if (FindResult != m_Scenes.end())
+		{
+			// Log already added error
+			return;
+		}
 		scene->OnActive(shared_from_this(), scene);
-		m_Scenes.push_back(std::move(scene));
+		m_Scenes[scene->GetName()] = std::move(scene);
 	}
 
 	void Engine::RemoveScene(const std::shared_ptr<Scene>& scene)
 	{
+		auto& FindResult = m_Scenes.find(scene->GetName());
+		if (FindResult == m_Scenes.end())
+		{
+			// Log can not find this scene error
+			return;
+		}
 		scene->OnInactive();
-		m_Scenes.erase(std::remove(m_Scenes.begin(), m_Scenes.end(), scene), m_Scenes.end());
+		m_Scenes.erase(FindResult);
 	}
 
 	void Engine::OnFrameSizeChanged(GLFWwindow* Window, int32 Width, int32 Height)
