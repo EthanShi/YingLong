@@ -1,8 +1,5 @@
 #pragma once
 
-#include <map>
-#include <string>
-
 #include "Macros.h"
 #include "toml/toml.hpp"
 
@@ -50,8 +47,8 @@ namespace YingLong {
 			return instance;
 		}
 
-		const toml::table& ReadOnly();
-		const toml::table& ReadOnlyWithUser();
+		const toml::table& ReadOnly(const std::string& SceneName = "");
+		const toml::table& ReadOnlyWithUser(const std::string& SceneName = "");
 		bool Writable(toml::table& OutTable, ConfigLayer Layer, const std::string& SceneName = "");
 		bool LoadSceneConfig(ConfigLayer Layer, const std::string& SceneName);
 		void Flush();
@@ -64,13 +61,14 @@ namespace YingLong {
 
 		ConfigTableInfo m_EngineConfig;
 		ConfigTableInfo m_ProjectConfig;
-		std::map<std::string, ConfigTableInfo> m_SceneConfigs;
+		std::unordered_map<std::string, ConfigTableInfo> m_SceneConfigs;
 		ConfigTableInfo m_ProjectUserConfig;
-		std::map<std::string, ConfigTableInfo> m_SceneUserConfigs;
+		std::unordered_map<std::string, ConfigTableInfo> m_SceneUserConfigs;
 
 		// Merged configs
-		toml::table m_Merged;
-		toml::table m_MergedWithUser;
+		ConfigTableInfo m_MergedProjectConfig;
+		std::unordered_map<std::string, ConfigTableInfo> m_MergedConfigs;
+		std::unordered_map<std::string, ConfigTableInfo> m_MergedConfigsWithUser;
 
 	private:
 		Config();

@@ -7,16 +7,26 @@
 
 namespace YingLong {
 
-    const toml::table& Config::ReadOnly()
+    const toml::table& Config::ReadOnly(const std::string& SceneName)
     {
         MergeConfigData();
-        return m_Merged;
+        auto& FindResult = m_MergedConfigs.find(SceneName);
+        if (FindResult != m_MergedConfigs.end())
+        {
+            return FindResult->second.Data;
+        }
+        return m_MergedProjectConfig.Data;
     }
 
-    const toml::table& Config::ReadOnlyWithUser()
+    const toml::table& Config::ReadOnlyWithUser(const std::string& SceneName)
     {
         MergeConfigData();
-        return m_MergedWithUser;
+        auto& FindResult = m_MergedConfigsWithUser.find(SceneName);
+        if (FindResult != m_MergedConfigsWithUser.end())
+        {
+            return FindResult->second.Data;
+        }
+        return m_MergedProjectConfig.Data;
     }
 
     bool Config::Writable(toml::table& OutTable, ConfigLayer Layer, const std::string& SceneName)
@@ -114,46 +124,55 @@ namespace YingLong {
 
     void Config::MergeConfigData()
     {
-        bool HasDirtySceneConfig = false;
+        // Merge default engine and project config
+        bool IsProjectConfigDirty = false;
+        if (m_EngineConfig.Dirty || m_ProjectConfig.Dirty)
+        {
+            IsProjectConfigDirty = true;
+            m_MergedProjectConfig = { true, m_EngineConfig.Data };
+            MergeTable(m_MergedProjectConfig.Data, m_ProjectConfig.Data);
+            m_EngineConfig.Dirty = false;
+            m_ProjectConfig.Dirty = false;
+        }
+
+        // Merge default scene configs
         for (auto& SceneConfig : m_SceneConfigs)
+        {
+            if (IsProjectConfigDirty || SceneConfig.second.Dirty)
+            {
+                m_MergedConfigs[SceneConfig.first] = { true, m_MergedProjectConfig.Data };
+                MergeTable(m_MergedConfigs[SceneConfig.first].Data, SceneConfig.second.Data);
+                SceneConfig.second.Dirty = false;
+            }
+        }
+
+        // Merge user project config
+        for (auto& SceneConfig : m_MergedConfigs)
+        {
+            if (m_ProjectUserConfig.Dirty || SceneConfig.second.Dirty)
+            {
+                m_MergedConfigsWithUser[SceneConfig.first] = { true, SceneConfig.second.Data };
+                MergeTable(m_MergedConfigsWithUser[SceneConfig.first].Data, m_ProjectUserConfig.Data);
+                SceneConfig.second.Dirty = false;
+            }
+        }
+
+        // Merge user scene configs
+        for (auto& SceneConfig : m_SceneUserConfigs)
         {
             if (SceneConfig.second.Dirty)
             {
-                HasDirtySceneConfig = true;
-                break;
-            }
-        }
-        if (m_EngineConfig.Dirty || m_ProjectConfig.Dirty || HasDirtySceneConfig)
-        {
-            m_Merged = m_EngineConfig.Data;
-            m_EngineConfig.Dirty = false;
-            MergeTable(m_Merged, m_ProjectConfig.Data);
-            m_ProjectConfig.Dirty = false;
-            for (auto& SceneConfig : m_SceneConfigs)
-            {
-                MergeTable(m_Merged, SceneConfig.second.Data);
-                SceneConfig.second.Dirty = false;
-            }
-            m_MergedWithUser = m_Merged;
-        }
-
-        bool HasDirtyUserSceneConfig = false;
-        for (auto& SceneUserConfig : m_SceneUserConfigs)
-        {
-            if (SceneUserConfig.second.Dirty)
-            {
-                HasDirtyUserSceneConfig = true;
-                break;
-            }
-        }
-        if (m_ProjectUserConfig.Dirty || HasDirtyUserSceneConfig)
-        {
-            MergeTable(m_MergedWithUser, m_ProjectUserConfig.Data);
-            m_ProjectUserConfig.Dirty = false;
-            for (auto& SceneUserConfig : m_SceneUserConfigs)
-            {
-                MergeTable(m_Merged, SceneUserConfig.second.Data);
-                SceneUserConfig.second.Dirty = false;
+                auto& FindResult = m_MergedConfigsWithUser.find(SceneConfig.first);
+                if (FindResult != m_MergedConfigsWithUser.end())
+                {
+                    MergeTable(FindResult->second.Data, SceneConfig.second.Data);
+                }
+                else
+                {
+                    m_MergedConfigsWithUser[SceneConfig.first] = { false, m_MergedProjectConfig.Data };
+                    MergeTable(m_MergedConfigsWithUser[SceneConfig.first].Data, m_ProjectUserConfig.Data);
+                    MergeTable(m_MergedConfigsWithUser[SceneConfig.first].Data, SceneConfig.second.Data);
+                }
             }
         }
     }
