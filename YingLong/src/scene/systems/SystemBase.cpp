@@ -6,6 +6,13 @@
 
 namespace YingLong {
 
+	Scene& SystemBase::GetScene()
+	{
+		auto& SPtr = m_OwnerScene.lock();
+		ASSERT(SPtr);
+		return *SPtr;
+	}
+
 	entt::dispatcher& SystemBase::GetDispatcher()
 	{
 		auto& SPtr = m_OwnerScene.lock();
@@ -18,6 +25,13 @@ namespace YingLong {
 		auto& SPtr = m_OwnerScene.lock();
 		ASSERT(SPtr);
 		return SPtr->GetRegistry();
+	}
+
+	InputAction& SystemBase::GetInputAction()
+	{
+		auto& SPtr = m_OwnerScene.lock();
+		ASSERT(SPtr);
+		return SPtr->GetInputAction();
 	}
 
 }

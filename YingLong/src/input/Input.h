@@ -1,16 +1,24 @@
 #pragma once
 
-#include "GLFW/glfw3.h"
-
 #include "core/Macros.h"
 #include "utils/Hash.h"
 #include "InputTypes.h"
+
+struct GLFWwindow;
 
 namespace YingLong {
 
 	class Input
 	{
 	public:
+
+		using CallbackHandler = uint64;
+
+		using KeyChangeCallback = std::function<void(InputKey, InputMode)>;
+		using MouseChangeCallback = std::function<void(InputMouse, InputMode)>;
+		using InputButtonCallback = std::function<void()>;
+		using InputMouseMoveCallback = std::function<void(const glm::dvec2&, const glm::dvec2&)>;
+
 		static Input& Instance()
 		{
 			static Input instance;
@@ -22,19 +30,28 @@ namespace YingLong {
 		void SetCursorMode(CursorMode Mode);
 		CursorMode GetCursorMode();
 
-		/* Callback will be called each time Key's mode change to Mode. */
-		InputCallbackHandler BindKeyEvent(InputKey Key, InputMode Mode, const InputButtonCallback& Callback, bool CheckUnique = false);
+		void AddCareKeys(std::vector<InputKey> Keys);
+		void AddCareMouses(std::vector<InputMouse> Mouses);
 
-		/* Callback will be called each time Mouse's mode change to Mode. */
-		InputCallbackHandler BindMouseEvent(InputMouse Mouse, InputMode Mode, const InputButtonCallback& Callback, bool CheckUnique = false);
+		/* Callback will be called any key mode change. May be called many times per frame. */
+		CallbackHandler BindKeyEvent(const KeyChangeCallback& Callback);
+
+		/* Callback will be called each time Key's mode change to Mode. Will add to care keys. */
+		CallbackHandler BindKeyEvent(InputKey Key, InputMode Mode, const InputButtonCallback& Callback, bool CheckUnique = false);
+		
+		/* Callback will be called any mouse mode change. May be called many times per frame. */
+		CallbackHandler BindMouseEvent(const MouseChangeCallback& Callback);
+
+		/* Callback will be called each time Mouse's mode change to Mode. Will add to care mouses. */
+		CallbackHandler BindMouseEvent(InputMouse Mouse, InputMode Mode, const InputButtonCallback& Callback, bool CheckUnique = false);
 
 		/* Callback will be called each time mouse move. */
-		InputCallbackHandler BindMouseMoveEvent(const InputMouseMoveCallback& Callback, bool CheckUnique = false);
+		CallbackHandler BindMouseMoveEvent(const InputMouseMoveCallback& Callback, bool CheckUnique = false);
 
 		/* Callback will be called each time mouse move with Mouse button press and hold. */
-		InputCallbackHandler BindMouseMoveEvent(InputMouse Mouse, const InputMouseMoveCallback& Callback, bool CheckUnique = false);
+		CallbackHandler BindMouseMoveEvent(InputMouse Mouse, const InputMouseMoveCallback& Callback, bool CheckUnique = false);
 
-		void UnBindInputEvent(const InputCallbackHandler& Handler);
+		void UnBindInputEvent(const CallbackHandler& Handler);
 
 		bool IsKeyPressed(InputKey Key);
 
@@ -43,18 +60,20 @@ namespace YingLong {
 	private:
 		GLFWwindow* m_Window = nullptr;
 
-		InputCallbackHandler m_Handler = 0;
+		CallbackHandler m_Handler = 0;
 
 		/* All registed callbacks in input system. */
-		std::unordered_map<InputCallbackHandler, InputButtonCallback> m_RegistedButtonCallbacks;
-		std::unordered_map<InputCallbackHandler, InputMouseMoveCallback> m_RegistedMouseMoveCallbacks;
+		std::unordered_map<CallbackHandler, InputButtonCallback> m_RegistedButtonCallbacks;
+		std::unordered_map<CallbackHandler, InputMouseMoveCallback> m_RegistedMouseMoveCallbacks;
+		std::unordered_map<CallbackHandler, KeyChangeCallback>  m_RegistedKeyChangeCallbacks;
+		std::unordered_map<CallbackHandler, MouseChangeCallback> m_RegistedMouseChangeCallbacks;
 
 		/* Helper data to determine which callback should be called. */
-		std::unordered_map<std::pair<InputKey, InputMode>, std::vector<InputCallbackHandler>, HashPair> m_KeyModeToCallbacks;
-		std::unordered_map<std::pair<InputMouse, InputMode>, std::vector<InputCallbackHandler>, HashPair> m_MouseModeToCallbacks;
+		std::unordered_map<std::pair<InputKey, InputMode>, std::vector<CallbackHandler>, HashPair> m_KeyModeToCallbacks;
+		std::unordered_map<std::pair<InputMouse, InputMode>, std::vector<CallbackHandler>, HashPair> m_MouseModeToCallbacks;
 
-		std::vector<InputCallbackHandler> m_MouseMoveCallbacks;
-		std::unordered_map<InputMouse, std::vector<InputCallbackHandler>> m_MouseMoveCallbacksWithMouse;
+		std::vector<CallbackHandler> m_MouseMoveCallbacks;
+		std::unordered_map<InputMouse, std::vector<CallbackHandler>> m_MouseMoveCallbacksWithMouse;
 
 		std::unordered_map<InputKey, InputMode> m_LastKeyMode;
 		std::unordered_map<InputMouse, InputMode> m_LastMouseMode;

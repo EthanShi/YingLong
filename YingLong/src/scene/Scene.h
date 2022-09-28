@@ -7,6 +7,7 @@
 
 #include "core/Macros.h"
 #include "renderer/Camera3D.h"
+#include "scene/inputAction/InputActions.h"
 
 namespace YingLong {
 
@@ -27,6 +28,8 @@ namespace YingLong {
 
 		entt::dispatcher& GetDispatcher() { return m_Dispatcher; }
 		entt::registry& GetRegistry() { return m_Registry; }
+
+		InputAction& GetInputAction() { return m_InputAction; }
 
 
 	protected:
@@ -54,5 +57,7 @@ namespace YingLong {
 
 		// Camera that renderer use to render this Scene
 		entt::entity m_PrimaryCamera;
+
+		InputAction m_InputAction;
 	};
 }

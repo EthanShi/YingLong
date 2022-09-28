@@ -1,21 +1,21 @@
 
-# Define key bind in higher layer configs in this table.
-# Require keys for per key: Key, Mode.
-# You can bind more than one key to an action.
+# Define trigger type actions in higher layer configs in this table.
+# Require keys for per key: InputName.
+# You can bind more than one InputName to an action.
 # for example:
-#   [[InputActions.MoveForward]]
-#   Key = "KEY_W"
-#   Mode = "KEY_PRESS"
-#   [[InputActions.MoveForward]]
-#   Key = "KEY_UP"
-#   Mode = "KEY_PRESS"
-[InputKeyActions]
+#   [[InputTriggerActions.MoveForward]]
+#   InputName = "KEY_W"
+#	InputMode = "KEY_PRESS"
+#   [[InputTriggerActions.MoveForward]]
+#   InputName = "KEY_UP"
+[InputTriggerActions]
 
-# Define mouse bind in higher layer configs in this table.
-# Require keys for per key: Mouse, Mode.
-# You can bind more than one key to an action.
+# Define axis actions in higher layer configs in this table.
+# Require keys for per key: InputName, Scale.
+# You can bind more than one InputName to an action.
 # for example:
-#   [InputActions.MoveForward]
-#   Mouse = "MOUSE_BUTTON_1"
-#   Mode = "KEY_PRESS"
-[InputMouseActions]
+#   [[InputAxisActions.Pitch]]
+#   InputName = "MOUSE_X"
+#	InputMode = "KEY_PRESS"
+#   Scale = 1.0
+[InputAxisActions]

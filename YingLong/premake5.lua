@@ -27,8 +27,8 @@ project "YingLong"
         "thirdParty/stb/**.h",
         "thirdParty/stb/**.cpp",
 
-        "thirdParty/toml/toml.hpp"
-        "thirdParty/toml/toml.cpp"
+        "thirdParty/toml/toml.hpp",
+        "thirdParty/toml/toml.cpp",
     }
 
     includedirs {

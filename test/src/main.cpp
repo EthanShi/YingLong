@@ -1,8 +1,4 @@
 
-#include <memory>
-
-#include "glad/gl.h"
-
 #include "core/Engine.h"
 
 #include "testScenes/TestSelector.h"

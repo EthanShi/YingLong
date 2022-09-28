@@ -3,6 +3,7 @@
 #include "entt/entt.hpp"
 
 #include "core/Macros.h"
+#include "scene/inputAction/InputActions.h"
 
 namespace YingLong {
 
@@ -24,16 +25,12 @@ namespace YingLong {
 
 		virtual void OnOwnerSceneChanged(Scene* OldScene) {}
 
-		Scene& GetScene()
-		{
-			auto& SPtr = m_OwnerScene.lock();
-			ASSERT(SPtr);
-			return *SPtr;
-		}
+		Scene& GetScene();
 
 	protected:
 		entt::dispatcher& GetDispatcher();
 		entt::registry& GetRegistry();
+		InputAction& GetInputAction();
 
 	private:
 		std::weak_ptr<Scene> m_OwnerScene;

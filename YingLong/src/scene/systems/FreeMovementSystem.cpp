@@ -18,13 +18,18 @@ namespace YingLong {
 	{
 		if (OldScene)
 		{
-			auto& OldDispatcher = OldScene->GetDispatcher();
-			OldDispatcher.disconnect(this);
+			auto& OldInputAction = OldScene->GetInputAction();
+			for (InputAction::CallbackHandler Handler : m_InputActionHandlers)
+			{
+				OldInputAction.UnBind(Handler);
+			}
 		}
-		auto& Dispatcher = GetDispatcher();
-		Dispatcher.sink<Event::MoveForward>().connect<&FreeMovementSystem::OnMoveForward>(this);
-		Dispatcher.sink<Event::MoveRight>().connect<&FreeMovementSystem::OnMoveRight>(this);
-		Dispatcher.sink<Event::CursorMove>().connect<&FreeMovementSystem::OnCursorMove>(this);
+		auto& InputAction = GetInputAction();
+
+		m_InputActionHandlers[0] = InputAction.Bind("MoveForward", INPUTACTION_AXIS_CALLBACK(this, OnMoveForward));
+		m_InputActionHandlers[1] = InputAction.Bind("MoveRight", INPUTACTION_AXIS_CALLBACK(this, OnMoveRight));
+		m_InputActionHandlers[2] = InputAction.Bind("TurnPitch", INPUTACTION_AXIS_CALLBACK(this, OnTurnPitch));
+		m_InputActionHandlers[3] = InputAction.Bind("TurnYaw", INPUTACTION_AXIS_CALLBACK(this, OnTurnYaw));
 	}
 
 	void FreeMovementSystem::Update(float DeltaTime)

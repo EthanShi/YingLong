@@ -37,5 +37,14 @@ namespace YingLong {
 		{
 			float Value;	// [-1, 1]
 		};
+
+		template<uint32 ActionNumber>
+		struct TriggerInputAction {};
+
+		template<uint32 ActionNumber>
+		struct AxisInputAction
+		{
+			float Value;	// [-1, 1]
+		};
 	}
 }

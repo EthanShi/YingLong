@@ -1,11 +1,8 @@
-#include "CameraMove.h"
 
 #include "YingLongPCH.h"
 
-#include "glad/gl.h"
-
+#include "CameraMove.h"
 #include "input/Input.h"
-
 #include "scene/components/BasicComponents.h"
 #include "scene/components/DrawableComponents.h"
 #include "scene/events/EventTypes.h"
@@ -56,7 +53,7 @@ CameraMoveScene::CameraMoveScene()
 
 CameraMoveScene::~CameraMoveScene()
 {
-	for (InputCallbackHandler& Handler : CallbackHandlers)
+	for (Input::CallbackHandler& Handler : CallbackHandlers)
 	{
 		Input::Instance().UnBindInputEvent(Handler);
 	}

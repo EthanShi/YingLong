@@ -1,11 +1,8 @@
 #pragma once
 
+#include "YingLongPCH.h"
+
 #include "RendererUtils.h"
-
-#include <vector>
-#include <memory>
-
-#include "glad/gl.h"
 
 namespace YingLong {
 

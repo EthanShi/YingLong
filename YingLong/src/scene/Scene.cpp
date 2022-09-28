@@ -16,6 +16,7 @@ namespace YingLong {
 		, m_Dispatcher()
 		, m_BackgroundColor(0.3f, 0.3f, 0.3f, 1.0f)
 		, m_PrimaryCamera()
+		, m_InputAction()
 	{
 	}
 
@@ -33,6 +34,8 @@ namespace YingLong {
 		Config& ConfigInstance = Config::Instance();
 		ConfigInstance.LoadSceneConfig(Config::ConfigLayer::Scene, GetName());
 		ConfigInstance.LoadSceneConfig(Config::ConfigLayer::SceneUser, GetName());
+
+		m_InputAction.Init(m_WeakThis);
 
 		std::cout << "Config with user:" << std::endl;
 		std::cout << toml::json_formatter(ConfigInstance.ReadOnlyWithUser()) << std::endl;

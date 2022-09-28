@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 
-#include "input/InputTypes.h"
+#include "input/Input.h"
 #include "scene/Scene.h"
 
 #include "scene/systems/FreeMovementSystem.h"
@@ -25,7 +25,7 @@ protected:
 	virtual void CreateDefaultCamera() override;
 
 private:
-	InputCallbackHandler CallbackHandlers[10];
+	Input::CallbackHandler CallbackHandlers[10];
 
 	FreeMovementSystem m_FreeMovementSystem;
 };

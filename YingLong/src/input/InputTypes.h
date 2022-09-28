@@ -1,14 +1,10 @@
 #pragma once
 
 #include <functional>
+#include <unordered_map>
 #include "core/Macros.h"
 
 namespace YingLong {
-
-	using InputButtonCallback = std::function<void()>;
-	using InputMouseMoveCallback = std::function<void(const glm::dvec2&, const glm::dvec2&)>;
-
-	using InputCallbackHandler = uint64;
 
 	enum class InputKey
 	{
@@ -144,6 +140,8 @@ namespace YingLong {
 
 	enum class InputMode
 	{
+		INPUT_MODE_UNKNOWN	 = -1,
+
 		KEY_RELEASE		= 0,
 		KEY_PRESS		= 1,
 		KEY_REPEAT		= 2
@@ -151,6 +149,8 @@ namespace YingLong {
 
 	enum class InputMouse
 	{
+		MOUSE_UNKNOWN          = -1,
+
 		MOUSE_BUTTON_1         = 0,
 		MOUSE_BUTTON_2         = 1,
 		MOUSE_BUTTON_3         = 2,
@@ -162,13 +162,27 @@ namespace YingLong {
 		MOUSE_BUTTON_LAST      = MOUSE_BUTTON_8,
 		MOUSE_BUTTON_LEFT      = MOUSE_BUTTON_1,
 		MOUSE_BUTTON_RIGHT     = MOUSE_BUTTON_2,
-		MOUSE_BUTTON_MIDDLE    = MOUSE_BUTTON_3
+		MOUSE_BUTTON_MIDDLE    = MOUSE_BUTTON_3,
+
+		MOUSE_X                = 8,	/* Mouse X axis move */
+		MOUSE_Y                = 9	/* Mouse Y axis move */
 	};
 
 	enum class CursorMode
 	{
+		CURSOR_MODE_UNKNOWN   = -1,
+
 		CURSOR_NORMAL         = 0x00034001,
 		CURSOR_HIDDEN         = 0x00034002,
 		CURSOR_DISABLED       = 0x00034003
 	};
+
+	// TODO: Integration a reflaction system
+	InputKey InputKeyFromString(const std::string& KeyName);
+
+	InputMode InputModeFromString(const std::string& InputModeName);
+
+	InputMouse InputMouseFromString(const std::string& InputMouseName);
+
+	CursorMode CursorModeFromString(const std::string& CursorModeName);
 }

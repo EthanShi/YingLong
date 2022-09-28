@@ -1,5 +1,16 @@
 
 # Input actions
-[[InputKeyActions.MoveForward]]
+[[InputTriggerActions.MoveForward]]
 Key = "KEY_W"
-Mode = "KEY_PRESS"
+[[InputTriggerActions.MoveBackend]]
+Key = "KEY_S"
+[[InputTriggerActions.MoveLeft]]
+Key = "KEY_A"
+[[InputTriggerActions.MoveRight]]
+Key = "KEY_D"
+[[InputAxisActions.Pitch]]
+Key = "MOUSE_X"
+Scale = 1.0
+[[InputAxisActions.Yaw]]
+Key = "MOUSE_Y"
+Scale = 1.0
