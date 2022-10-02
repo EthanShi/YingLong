@@ -14,6 +14,15 @@ namespace YingLong {
 
 	}
 
+	FreeMovementSystem::~FreeMovementSystem()
+	{
+		InputAction& SceneInputAction = GetInputAction();
+		for (auto& Handler : m_InputActionHandlers)
+		{
+			SceneInputAction.UnBind(Handler);
+		}
+	}
+
 	void FreeMovementSystem::OnOwnerSceneChanged(Scene* OldScene)
 	{
 		if (OldScene)
@@ -28,8 +37,8 @@ namespace YingLong {
 
 		m_InputActionHandlers[0] = InputAction.Bind("MoveForward", INPUTACTION_AXIS_CALLBACK(this, OnMoveForward));
 		m_InputActionHandlers[1] = InputAction.Bind("MoveRight", INPUTACTION_AXIS_CALLBACK(this, OnMoveRight));
-		m_InputActionHandlers[2] = InputAction.Bind("TurnPitch", INPUTACTION_AXIS_CALLBACK(this, OnTurnPitch));
-		m_InputActionHandlers[3] = InputAction.Bind("TurnYaw", INPUTACTION_AXIS_CALLBACK(this, OnTurnYaw));
+		m_InputActionHandlers[2] = InputAction.Bind("Pitch", INPUTACTION_AXIS_CALLBACK(this, OnTurnPitch));
+		m_InputActionHandlers[3] = InputAction.Bind("Yaw", INPUTACTION_AXIS_CALLBACK(this, OnTurnYaw));
 	}
 
 	void FreeMovementSystem::Update(float DeltaTime)

@@ -103,6 +103,7 @@ namespace YingLong {
 		using AxisActionCallback = std::function<void(float)>;
 
 		InputAction();
+		~InputAction();
 
 		void Init(std::weak_ptr<Scene> Owner);
 
@@ -118,7 +119,7 @@ namespace YingLong {
 		void OnKeyChanged(InputKey Key, InputMode Mode);
 		void OnMouseChanged(InputMouse Mouse, InputMode Mode);
 		void OnMouseMove(const glm::vec2& OldPos, const glm::vec2& NewPos);
-		void CallCallbacks(std::string ActionName, InputMode Mode, InputKey Key, InputMouse Mouse);
+		void CallCallbacks(std::string ActionName, InputMode Mode, InputKey Key, InputMouse Mouse, float InputAxisValue = 1.0f);
 
 		void ReadActions(const std::string& ActionGroupName);
 		void AddAction(const std::string& ActionGroupName, const std::string& ActionName, const toml::array* InputsInfo);

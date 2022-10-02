@@ -9,7 +9,7 @@ namespace YingLong {
 	{
 	public:
 		FreeMovementSystem();
-		virtual ~FreeMovementSystem() {}
+		virtual ~FreeMovementSystem();
 
 		virtual void OnOwnerSceneChanged(Scene* OldScene) override;
 

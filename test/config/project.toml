@@ -1,16 +1,47 @@
 
 # Input actions
-[[InputTriggerActions.MoveForward]]
-Key = "KEY_W"
-[[InputTriggerActions.MoveBackend]]
-Key = "KEY_S"
-[[InputTriggerActions.MoveLeft]]
-Key = "KEY_A"
-[[InputTriggerActions.MoveRight]]
-Key = "KEY_D"
+[[InputTriggerActions.SwitchCursorMode]]
+InputName = "KEY_TAB"
+InputMode = "KEY_PRESS"
+
+[[InputAxisActions.MoveForward]]
+InputName = "KEY_W"
+InputMode = "KEY_PRESS"
+Scale = 1.0
+[[InputAxisActions.MoveForward]]
+InputName = "KEY_W"
+InputMode = "KEY_RELEASE"
+Scale = 0.0
+[[InputAxisActions.MoveForward]]
+InputName = "KEY_S"
+InputMode = "KEY_PRESS"
+Scale = -1.0
+[[InputAxisActions.MoveForward]]
+InputName = "KEY_S"
+InputMode = "KEY_RELEASE"
+Scale = 0.0
+
+[[InputAxisActions.MoveRight]]
+InputName = "KEY_D"
+InputMode = "KEY_PRESS"
+Scale = 1.0
+[[InputAxisActions.MoveRight]]
+InputName = "KEY_D"
+InputMode = "KEY_RELEASE"
+Scale = 0.0
+
+[[InputAxisActions.MoveRight]]
+InputName = "KEY_A"
+InputMode = "KEY_PRESS"
+Scale = -1.0
+[[InputAxisActions.MoveRight]]
+InputName = "KEY_A"
+InputMode = "KEY_RELEASE"
+Scale = 0.0
+
 [[InputAxisActions.Pitch]]
-Key = "MOUSE_X"
+InputName = "MOUSE_Y"
 Scale = 1.0
 [[InputAxisActions.Yaw]]
-Key = "MOUSE_Y"
+InputName = "MOUSE_X"
 Scale = 1.0

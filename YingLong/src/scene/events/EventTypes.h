@@ -21,30 +21,5 @@ namespace YingLong {
 
 		template<InputKey Mouse>
 		struct MouseRelease {};
-
-		struct CursorMove
-		{
-			glm::vec2 OldPos;
-			glm::vec2 NewPos;
-		};
-
-		struct MoveForward
-		{
-			float Value;	// [-1, 1]
-		};
-
-		struct MoveRight
-		{
-			float Value;	// [-1, 1]
-		};
-
-		template<uint32 ActionNumber>
-		struct TriggerInputAction {};
-
-		template<uint32 ActionNumber>
-		struct AxisInputAction
-		{
-			float Value;	// [-1, 1]
-		};
 	}
 }

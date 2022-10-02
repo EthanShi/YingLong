@@ -25,8 +25,6 @@ protected:
 	virtual void CreateDefaultCamera() override;
 
 private:
-	Input::CallbackHandler CallbackHandlers[10];
-
 	FreeMovementSystem m_FreeMovementSystem;
 };
 

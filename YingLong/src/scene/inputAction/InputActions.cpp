@@ -132,7 +132,6 @@ namespace YingLong {
 		auto& Actions = m_KeyToActionsMap.find({Key, Mode});
 		if (!OwnerScene || Actions == m_KeyToActionsMap.end()) { return; }
 
-		auto& Dispatcher = OwnerScene->GetDispatcher();
 		for (auto& ActionName : Actions->second)
 		{
 			CallCallbacks(ActionName, Mode, Key, InputMouse::MOUSE_UNKNOWN);
@@ -145,7 +144,6 @@ namespace YingLong {
 		auto& Actions = m_MouseToActionsMap.find({ Mouse, Mode });
 		if (!OwnerScene || Actions == m_MouseToActionsMap.end()) { return; }
 
-		auto& Dispatcher = OwnerScene->GetDispatcher();
 		for (auto& ActionName : Actions->second)
 		{
 			CallCallbacks(ActionName, Mode, InputKey::KEY_UNKNOWN, Mouse);
@@ -154,6 +152,24 @@ namespace YingLong {
 
 	void InputAction::OnMouseMove(const glm::vec2& OldPos, const glm::vec2& NewPos)
 	{
+		auto& OwnerScene = m_OwnerScene.lock();
+		// Do MOUSE_X actions
+		auto& Actions = m_MouseToActionsMap.find({ InputMouse::MOUSE_X, InputMode::KEY_PRESS });
+		if (!OwnerScene || Actions == m_MouseToActionsMap.end()) { return; }
+
+		for (auto& ActionName : Actions->second)
+		{
+			CallCallbacks(ActionName, InputMode::KEY_PRESS, InputKey::KEY_UNKNOWN, InputMouse::MOUSE_X, NewPos.x - OldPos.x);
+		}
+
+		// Do MOUSE_Y actions
+		Actions = m_MouseToActionsMap.find({ InputMouse::MOUSE_Y, InputMode::KEY_PRESS });
+		if (!OwnerScene || Actions == m_MouseToActionsMap.end()) { return; }
+
+		for (auto& ActionName : Actions->second)
+		{
+			CallCallbacks(ActionName, InputMode::KEY_PRESS, InputKey::KEY_UNKNOWN, InputMouse::MOUSE_Y, NewPos.y - OldPos.y);
+		}
 	}
 
 	void InputAction::ReadActions(const std::string& ActionGroupName)
@@ -165,7 +181,7 @@ namespace YingLong {
 		if (ActionGroup)
 		{
 			// Iter each Action { key: ActionName, value: InputsInfoList }
-			ActionGroup->for_each([&InputInstance, &ActionGroupName, this](const toml::key& Key, auto&& Val) {
+			ActionGroup->for_each([&ActionGroupName, this](const toml::key& Key, auto&& Val) {
 				const toml::array* InputsInfo = Val.as_array();
 				if (!InputsInfo)
 				{
@@ -202,11 +218,14 @@ namespace YingLong {
 			}
 
 			auto BindInputModeName = InputInfoTable->get_as<std::string>("InputMode");
-			InputMode BindMode = InputModeFromString(BindInputModeName->get());
+			InputMode BindMode = InputModeFromString(BindInputModeName ? BindInputModeName->get() : "");
 			if (BindMode == InputMode::INPUT_MODE_UNKNOWN)
 			{
 				BindMode = InputMode::KEY_PRESS;
 			}
+
+			std::vector<InputKey> CareKeys;
+			std::vector<InputMouse> CareMouses;
 
 			KeyOrMouseUnion KeyOrMouse { InputKey::KEY_UNKNOWN };
 
@@ -221,6 +240,7 @@ namespace YingLong {
 				}
 				m_KeyToActionsMap[FindKey].push_back(ActionName);
 				KeyOrMouse.Key = TryKey;
+				CareKeys.push_back(TryKey);
 			}
 
 			InputMouse TryMouse = InputMouseFromString(BindInputName->get());
@@ -234,7 +254,12 @@ namespace YingLong {
 				}
 				m_MouseToActionsMap[FindKey].push_back(ActionName);
 				KeyOrMouse.Mouse = TryMouse;
+				CareMouses.push_back(TryMouse);
 			}
+
+			Input& InputInstance = Input::Instance();
+			InputInstance.AddCareKeys(CareKeys);
+			InputInstance.AddCareMouses(CareMouses);
 
 			if (ActionGroupName == m_TrigerActionGroupName)
 			{
@@ -273,7 +298,13 @@ namespace YingLong {
 			}
 		});
 	}
-	void InputAction::CallCallbacks(std::string ActionName, InputMode Mode, InputKey Key, InputMouse Mouse)
+
+	InputAction::~InputAction()
+	{
+		ClearCallbacks();
+	}
+
+	void InputAction::CallCallbacks(std::string ActionName, InputMode Mode, InputKey Key, InputMouse Mouse, float InputAxisValue)
 	{
 		auto& TriggerAction = m_TriggerActionsMap.find(ActionName);
 		if (TriggerAction != m_TriggerActionsMap.end())
@@ -302,7 +333,7 @@ namespace YingLong {
 			{
 				if (BindInfo.KeyOrMouse == KeyOrMouse && BindInfo.Mode == Mode)
 				{
-					Scale = BindInfo.Scale;
+					Scale = BindInfo.Scale * InputAxisValue;
 					break;
 				}
 			}
