@@ -32,6 +32,7 @@
 
 # generated files
 intermediate/
+persistence/
 .vs/
 bin/
 

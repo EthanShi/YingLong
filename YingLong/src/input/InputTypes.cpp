@@ -4,7 +4,6 @@
 
 namespace YingLong {
 
-
 	InputKey InputKeyFromString(const std::string& KeyName)
 	{
 		static std::unordered_map<std::string, InputKey> StringToKeyMap;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <chrono>
 
 #include "scene/Scene.h"
 
@@ -8,49 +9,18 @@ namespace YingLong {
 
 	namespace Path {
 
-		std::string EngineRootDir()
-		{
-			return "../";
-		}
+		std::string EngineRootDir();
+		std::string EngineConfigDir();
+		std::string EngineConfigFile();
+		std::string ProjectConfigDir();
+		std::string ProjectConfigFile();
+		std::string ProjectUserConfigFile();
+		std::string SceneConfigFile(const std::string& SceneName, bool WithUser);
+		std::string SceneConfigFile(Scene* InScene, bool WithUser);
+		std::string ProjectPersistenceDir();
+		std::string ProjectLogDir();
+		std::string ProjectLogFileName(const std::string& FileName);
 
-		std::string EngineConfigDir()
-		{
-			return "../YingLong/config/";
-		}
-
-		std::string EngineConfigFile()
-		{
-			return EngineConfigDir() + "engine.toml";
-		}
-
-		std::string ProjectConfigDir()
-		{
-			return "config/";
-		}
-
-		std::string ProjectConfigFile()
-		{
-			return "config/project.toml";
-		}
-
-		std::string ProjectUserConfigFile()
-		{
-			return "config/projectUser.toml";
-		}
-
-		std::string SceneConfigFile(const std::string& SceneName, bool WithUser)
-		{
-			return ProjectConfigDir() + SceneName + (WithUser ? "User" : "") + ".toml";
-		}
-
-		std::string SceneConfigFile(Scene* InScene, bool WithUser)
-		{
-			if (!InScene)
-			{
-				return "";
-			}
-			return SceneConfigFile(InScene->GetName(), WithUser);
-		}
 	}
 
 }

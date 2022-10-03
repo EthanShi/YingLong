@@ -8,7 +8,7 @@ struct GLFWwindow;
 
 namespace YingLong {
 
-	class Input
+	class YINGLONG_API Input
 	{
 	public:
 

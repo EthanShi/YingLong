@@ -10,7 +10,7 @@ using namespace YingLong;
 
 int main()
 {
-	std::shared_ptr<Engine> engine = std::make_unique<Engine>("Test YingLong");
+	std::shared_ptr<Engine> engine = std::make_unique<Engine>("Test", "Test YingLong");
 
 	engine->AddScene(std::make_unique<TestSelectorScene>());
 

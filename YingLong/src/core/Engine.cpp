@@ -8,20 +8,28 @@
 #include "input/Input.h"
 #include "Config.h"
 
+DEFINE_LOGGER(EngineLog)
+
 namespace YingLong
 {
 
-	Engine::Engine(const std::string& WindowTitle)
+	Engine::Engine(const std::string& ProjectName, const std::string& WindowTitle)
 		: m_WindowTitle(WindowTitle)
+		, m_ProjectName(ProjectName)
 	{
 		// test config
 		Config::Instance();
+
+		// Set Log
+		Log::Instance().SetLogFileName(m_ProjectName);
 
 		/* Initialize the library */
 		assert(glfwInit());
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
+		EngineLog().info("Initialize GLFW library");
 
 		/* Create a windowed mode window and its OpenGL context */
 		m_Window = glfwCreateWindow(m_DEFAULT_WINDOW_WIDTH, m_DEFAULT_WINDOW_HEIGHT, m_WindowTitle.c_str(), NULL, NULL);
@@ -39,11 +47,11 @@ namespace YingLong
 
 		int version = gladLoadGL(glfwGetProcAddress);
 		if (version == 0) {
-			printf("Failed to initialize OpenGL context\n");
+			EngineLog().error("Failed to initialize OpenGL context");
 			return;
 		}
 		// Successfully loaded OpenGL
-		printf("Loaded OpenGL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+		EngineLog().info("Loaded OpenGL %d.%d", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -65,6 +73,8 @@ namespace YingLong
 			).count();
 
 		OnFrameSizeChanged(m_Window, m_DEFAULT_WINDOW_WIDTH, m_DEFAULT_WINDOW_HEIGHT);
+
+		EngineLog().info("Engine initialize finished.");
 	}
 
 	Engine::~Engine()
