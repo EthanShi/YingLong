@@ -3,7 +3,7 @@
 
 #include "Log.h"
 #include "utils/Path.h"
-
+#include "Config.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
@@ -15,6 +15,27 @@ namespace YingLong {
         m_FullFileName = Path::ProjectLogFileName(FileName);
     }
 
+    spdlog::level::level_enum Log::GetLogLevelFromString(const std::string& InString)
+    {
+        static std::unordered_map<std::string, spdlog::level::level_enum> StringToLogLevelMap;
+        if (StringToLogLevelMap.empty())
+        {
+            StringToLogLevelMap["trace"] = spdlog::level::level_enum::trace;
+            StringToLogLevelMap["debug"] = spdlog::level::level_enum::debug;
+            StringToLogLevelMap["info"] = spdlog::level::level_enum::info;
+            StringToLogLevelMap["warn"] = spdlog::level::level_enum::warn;
+            StringToLogLevelMap["err"] = spdlog::level::level_enum::err;
+            StringToLogLevelMap["critical"] = spdlog::level::level_enum::critical;
+        }
+
+        auto& FindResult = StringToLogLevelMap.find(InString);
+        if (FindResult != StringToLogLevelMap.end())
+        {
+            return FindResult->second;
+        }
+        return spdlog::level::n_levels;
+    }
+
 	LoggerBase::LoggerBase(const std::string& LoggerName)
 	{
         auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
@@ -24,6 +45,12 @@ namespace YingLong {
         logger->set_pattern("[%H:%M:%S %z] [%n] [%^-%l-%$] %v");
         spdlog::register_logger(logger);
         m_logger = spdlog::get(LoggerName);
+
+        // Read log level from config
+        auto ConfigData = Config::Instance().ReadOnly();
+        const std::string& LevelStr = ConfigData["Log"]["Levels"][LoggerName].value_or("info");
+        auto Level = Log::GetLogLevelFromString(LevelStr);
+        m_logger->set_level(Level);
 	}
 
 }

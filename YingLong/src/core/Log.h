@@ -31,6 +31,8 @@ namespace YingLong {
 		void SetLogFileName(const std::string& FileName);
 		std::string& GetFileName() { return m_FullFileName; }
 
+		static spdlog::level::level_enum GetLogLevelFromString(const std::string& InString);
+
 	private:
 		std::string m_FullFileName;
 
@@ -58,6 +60,9 @@ namespace YingLong {
 			ASSERT(m_logger)
 			return *m_logger;
 		}
+
+	private:
+
 
 	private:
 		std::shared_ptr<spdlog::logger> m_logger;
