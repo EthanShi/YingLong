@@ -6,11 +6,14 @@
 #include "tinyobjloader/tiny_obj_loader.h"
 
 #include "core/Macros.h"
+#include "core/Log.h"
 
 #include "renderer/VertexArray.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/VertexBufferLayout.h"
 #include "renderer/IndexBuffer.h"
+
+DECLARE_LOGGER(MeshLog)
 
 namespace YingLong {
 

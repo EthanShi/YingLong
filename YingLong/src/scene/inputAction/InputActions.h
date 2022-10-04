@@ -2,7 +2,10 @@
 
 #include "core/Macros.h"
 #include "core/Config.h"
+#include "core/Log.h"
 #include "input/Input.h" 
+
+DECLARE_LOGGER(InputActionsLog)
 
 #define INPUTACTION_TRIGGER_CALLBACK(ObjectPtr, FunctionName) [ObjectPtr]() { ObjectPtr->FunctionName(); }
 #define INPUTACTION_AXIS_CALLBACK(ObjectPtr, FunctionName) [ObjectPtr](float Value) { ObjectPtr->FunctionName(Value); }
@@ -139,15 +142,6 @@ namespace YingLong {
 		std::unordered_map<CallbackHandler, std::string> m_HandlerToActionNameMap;
 		std::unordered_map<std::string, TriggerActionInfo> m_TriggerActionsMap;
 		std::unordered_map<std::string, AxisActionInfo> m_AxisActionsMap;
-
-		/**
-		* TODO:
-		* Cause actions can modify at runtime, so we can not use dispatcher directly.
-		* So, inputAction (Owned by scene) will handle input event and dispatch them as input actions.
-		* Save callbacks for each action.
-		* Call callbacks by input key or mouse event (and actions bind with them).
-		* Each callback should has a handler like input callbacks.
-		*/
 	};
 
 }

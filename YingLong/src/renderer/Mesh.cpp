@@ -1,6 +1,8 @@
 #include "YingLongPCH.h"
 #include "Mesh.h"
 
+DEFINE_LOGGER(MeshLog)
+
 namespace YingLong {
 
     Mesh::Mesh(const std::string& filename, const std::string& materialSearchPath)
@@ -25,21 +27,20 @@ namespace YingLong {
 
 		if (!m_ObjReader.ParseFromFile(filename, readerConfig)) {
 			if (!m_ObjReader.Error().empty()) {
-				std::cerr << "TinyObjReader: " << m_ObjReader.Error();
+                MeshLog().error("TinyObjReader: {}", m_ObjReader.Error());
 			}
             return false;
 		}
 
-		if (!m_ObjReader.Warning().empty()) {
-			std::cout << "TinyObjReader: " << m_ObjReader.Warning();
+        const std::string& WarningMsg = m_ObjReader.Warning();
+		if (!WarningMsg.empty()) {
+            MeshLog().warn("TinyObjReader: {}", WarningMsg);
 		}
 
         auto& attrib = m_ObjReader.GetAttrib();
         m_HasNormals = !attrib.normals.empty();
         m_HasTexcoords = !attrib.texcoords.empty();
         m_HasColors = !attrib.colors.empty();
-
-        //ASSERT(CheckObjDataValid())
 
         m_LoadSucceed = true;
 

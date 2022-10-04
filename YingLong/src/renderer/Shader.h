@@ -4,6 +4,9 @@
 #include <unordered_map>
 
 #include "core/Macros.h"
+#include "core/Log.h"
+
+DECLARE_LOGGER(ShaderLog)
 
 namespace YingLong {
 

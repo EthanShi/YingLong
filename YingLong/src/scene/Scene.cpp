@@ -9,6 +9,8 @@
 #include "components/BasicComponents.h"
 #include "components/DrawableComponents.h"
 
+DEFINE_LOGGER(SceneLog)
+
 namespace YingLong {
 
 	Scene::Scene()
@@ -37,11 +39,13 @@ namespace YingLong {
 
 		m_InputAction.Init(m_WeakThis);
 
-		std::cout << "Config with user:" << std::endl;
-		std::cout << toml::json_formatter(ConfigInstance.ReadOnlyWithUser()) << std::endl;
-		std::cout << "Config without user:" << std::endl;
-		std::cout << toml::json_formatter(ConfigInstance.ReadOnly ()) << std::endl;
+		std::stringstream StrStream;
+		StrStream << "Config with user:";
+		StrStream << toml::json_formatter(ConfigInstance.ReadOnlyWithUser());
+		StrStream << "Config without user:";
+		StrStream << toml::json_formatter(ConfigInstance.ReadOnly());
 
+		SceneLog().info(StrStream.str());
 	}
 
 	void Scene::Tick(float deltatime)

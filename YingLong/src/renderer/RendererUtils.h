@@ -1,6 +1,9 @@
 #pragma once
 
 #include "core/Macros.h"
+#include "core/Log.h"
+
+DECLARE_LOGGER(RendererUtilsLog)
 
 #define GLCall(x) GLClearError();\
 	x;\

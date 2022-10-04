@@ -9,6 +9,8 @@
 #include "renderer/Camera3D.h"
 #include "scene/inputAction/InputActions.h"
 
+DECLARE_LOGGER(SceneLog)
+
 namespace YingLong {
 
 	class Engine;

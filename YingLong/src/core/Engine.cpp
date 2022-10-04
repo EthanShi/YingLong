@@ -51,7 +51,7 @@ namespace YingLong
 			return;
 		}
 		// Successfully loaded OpenGL
-		EngineLog().info("Loaded OpenGL %d.%d", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+		EngineLog().info("Loaded OpenGL {}.{}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();

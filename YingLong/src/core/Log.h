@@ -2,6 +2,7 @@
 
 #include <string>
 #include "Macros.h"
+#include "spdlog/async.h"
 #include "spdlog/async_logger.h"
 
 #define DECLARE_LOGGER(LoggerName)\
@@ -37,6 +38,7 @@ namespace YingLong {
 		Log()
 			: m_FullFileName("")
 		{
+			spdlog::init_thread_pool(8192, 1);
 			SetLogFileName("Default");
 		}
 		~Log() {}

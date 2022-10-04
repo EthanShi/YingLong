@@ -6,6 +6,8 @@
 #include "scene/Scene.h"
 #include "scene/events/EventTypes.h"
 
+DEFINE_LOGGER(InputActionsLog)
+
 namespace YingLong {
 
 	InputAction::InputAction()
@@ -185,7 +187,7 @@ namespace YingLong {
 				const toml::array* InputsInfo = Val.as_array();
 				if (!InputsInfo)
 				{
-					// TODO: Print config error log
+					InputActionsLog().error("ReadActions error, [{}] is not an array.", Key.str().data());
 					return;
 				}
 				AddAction(ActionGroupName, Key.str().data(), InputsInfo);
@@ -193,7 +195,7 @@ namespace YingLong {
 		}
 		else
 		{
-			std::cout << ActionGroupName << " config is not a table." << std::endl;
+			InputActionsLog().error("ReadActions error, [{}] is not an table.", ActionGroupName);
 		}
 	}
 
@@ -208,7 +210,7 @@ namespace YingLong {
 			const toml::table* InputInfoTable = InputInfo.as_table();
 			if (!InputInfoTable)
 			{
-				// TODO: Print config error log
+				InputActionsLog().error("ReadActions error, [{}] is not an table.", ActionName);
 				return;
 			}
 			auto BindInputName = InputInfoTable->get_as<std::string>("InputName");

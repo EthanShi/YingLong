@@ -4,6 +4,8 @@
 #include "Shader.h"
 #include "RendererUtils.h"
 
+DEFINE_LOGGER(ShaderLog)
+
 namespace YingLong {
 
 	Shader::Shader(const std::string& filepath)
@@ -58,7 +60,7 @@ namespace YingLong {
 		GLCall(int32 location = glGetUniformLocation(m_RendererID, name.c_str()));
 		if (location == -1)
 		{
-			std::cout << "Warning: uniform '" << name << "' doesn't exist!" << std::endl;
+			ShaderLog().warn("Warning: uniform '{}' doesn't exist!", name);
 		}
 
 		m_UniformLocationCache[name] = location;
@@ -80,8 +82,8 @@ namespace YingLong {
 			GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
 			char* message = (char*)alloca(length * sizeof(char));
 			GLCall(glGetShaderInfoLog(id, length, &length, message));
-			std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
-			std::cout << message << std::endl;
+			ShaderLog().info("Failed to compile {}", (type == GL_VERTEX_SHADER ? "vertex" : "fragment"));
+			ShaderLog().info(message);
 		}
 
 		return id;
