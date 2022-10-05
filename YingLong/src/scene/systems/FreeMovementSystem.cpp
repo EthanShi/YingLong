@@ -16,11 +16,6 @@ namespace YingLong {
 
 	FreeMovementSystem::~FreeMovementSystem()
 	{
-		InputAction& SceneInputAction = GetInputAction();
-		for (auto& Handler : m_InputActionHandlers)
-		{
-			SceneInputAction.UnBind(Handler);
-		}
 	}
 
 	void FreeMovementSystem::OnOwnerSceneChanged(Scene* OldScene)

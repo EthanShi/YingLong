@@ -26,5 +26,8 @@ protected:
 
 private:
 	FreeMovementSystem m_FreeMovementSystem;
+
+private:
+	void CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale, const glm::vec3& Color);
 };
 
