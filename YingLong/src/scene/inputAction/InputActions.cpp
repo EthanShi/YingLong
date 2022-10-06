@@ -13,9 +13,18 @@ namespace YingLong {
 	InputAction::InputAction()
 	{
 		Input& InputInstance = Input::Instance();
-		InputInstance.BindKeyEvent([this](InputKey Key, InputMode Mode) { OnKeyChanged(Key, Mode); });
-		InputInstance.BindMouseEvent([this](InputMouse Mouse, InputMode Mode) { OnMouseChanged(Mouse, Mode); });
-		InputInstance.BindMouseMoveEvent([this](const glm::dvec2& OldPos, const glm::dvec2& NewPos) { OnMouseMove(OldPos, NewPos); });
+		KeyEventHandler = InputInstance.BindKeyEvent([this](InputKey Key, InputMode Mode) { OnKeyChanged(Key, Mode); });
+		MouseEventHandler = InputInstance.BindMouseEvent([this](InputMouse Mouse, InputMode Mode) { OnMouseChanged(Mouse, Mode); });
+		MouseMoveEventHandler = InputInstance.BindMouseMoveEvent([this](const glm::dvec2& OldPos, const glm::dvec2& NewPos) { OnMouseMove(OldPos, NewPos); });
+	}
+
+	InputAction::~InputAction()
+	{
+		Input& InputInstance = Input::Instance();
+		InputInstance.UnBindInputEvent(KeyEventHandler);
+		InputInstance.UnBindInputEvent(MouseEventHandler);
+		InputInstance.UnBindInputEvent(MouseMoveEventHandler);
+		ClearCallbacks();
 	}
 
 	void InputAction::Init(std::weak_ptr<Scene> Owner)
@@ -299,11 +308,6 @@ namespace YingLong {
 				ActionInfo.BindInfo.push_back(BindInfo);
 			}
 		});
-	}
-
-	InputAction::~InputAction()
-	{
-		ClearCallbacks();
 	}
 
 	void InputAction::CallCallbacks(std::string ActionName, InputMode Mode, InputKey Key, InputMouse Mouse, float InputAxisValue)

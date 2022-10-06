@@ -15,8 +15,11 @@ CameraMoveScene::CameraMoveScene()
 	Input& InputInstance = Input::Instance();
 	InputInstance.SetCursorMode(CursorMode::CURSOR_DISABLED);
 
+	m_CubeMesh.LoadObjData("res/models/cube.obj");
+	m_CubeMesh.SetDefaultColor(glm::vec3(1.f, 0.5f, 0.3f));
+	m_CubeMesh.FillRenderData(false, false, true);
+
 	glm::vec3 Scale(50.f, 50.f, 50.f);
-	glm::vec3 Color(1.f, 0.5f, 0.3f);
 	std::vector<glm::vec3> Positions = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
 		glm::vec3(2.0f,  5.0f, -15.0f),
@@ -35,7 +38,7 @@ CameraMoveScene::CameraMoveScene()
 			glm::vec3(static_cast<double>(std::rand()) / RAND_MAX,
 				static_cast<double>(std::rand()) / RAND_MAX,
 				static_cast<double>(std::rand()) / RAND_MAX),
-			Scale, Color);
+			Scale);
 	}
 
 	// Switch cursor mode
@@ -71,7 +74,7 @@ void CameraMoveScene::CreateDefaultCamera()
 	m_Registry.emplace<FreeMovementComponent>(m_PrimaryCamera);
 }
 
-void CameraMoveScene::CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale, const glm::vec3& Color)
+void CameraMoveScene::CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale)
 {
 	auto& reg = m_Registry;
 
@@ -82,11 +85,7 @@ void CameraMoveScene::CreateACube(const glm::vec3& Position, const glm::vec3& Fo
 	cubesTranform.SetScale(Scale);
 	cubesTranform.SetForward(Forward);
 
-	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cube);
-
-	MeshComp.mesh.Load("res/models/cube.obj");
-	MeshComp.mesh.SetDefaultColor(Color);
-	MeshComp.mesh.FillRenderData(false, false, true);
+	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cube, m_CubeMesh);
 
 	ShaderComponent& ShaderComp = reg.emplace<ShaderComponent>(cube);
 	ShaderComp.LoadShader("res/shader/basic3D.shader");

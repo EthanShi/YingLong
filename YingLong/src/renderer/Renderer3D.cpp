@@ -9,6 +9,7 @@ namespace YingLong {
 	uint32 Renderer::m_windowHeight = 2;
 	uint32 Renderer::m_windowWidth = 2;
 	ShaderManager Renderer::m_ShaderManager;
+	MeshObjDataManager Renderer::m_MeshObjDataManager;
 
 	void Renderer::Draw(const VertexArray& vao,
 		const IndexBuffer& ibo,

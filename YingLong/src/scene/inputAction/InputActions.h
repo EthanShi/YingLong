@@ -131,8 +131,10 @@ namespace YingLong {
 		const std::string m_TrigerActionGroupName = "InputTriggerActions";
 		const std::string m_AxisActionGroupName = "InputAxisActions";
 
-
 		std::weak_ptr<Scene> m_OwnerScene;
+		Input::CallbackHandler KeyEventHandler;
+		Input::CallbackHandler MouseEventHandler;
+		Input::CallbackHandler MouseMoveEventHandler;
 
 		std::map<std::pair<InputKey, InputMode>, std::vector<std::string>> m_KeyToActionsMap;
 		std::map<std::pair<InputMouse, InputMode>, std::vector<std::string>> m_MouseToActionsMap;

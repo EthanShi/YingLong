@@ -71,8 +71,8 @@ namespace YingLong {
 		view.each(
 			[this, &CameraTransform, &Camera](Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader) {
 				Renderer::Draw(
-					mesh.mesh.GetVertexArray(),
-					mesh.mesh.GetIndexBuffer(),
+					mesh.MeshRef.GetVertexArray(),
+					mesh.MeshRef.GetIndexBuffer(),
 					shader.shaderID,
 					transform.GetTransform(),
 					Camera.Camera.GetPerspective(),

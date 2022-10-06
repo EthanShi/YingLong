@@ -20,6 +20,7 @@ namespace YingLong {
 		std::string ProjectPersistenceDir();
 		std::string ProjectLogDir();
 		std::string ProjectLogFileName(const std::string& FileName);
+		std::string GetDirFromFileName(const std::string& FileName);
 
 	}
 

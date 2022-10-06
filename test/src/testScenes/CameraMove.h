@@ -4,7 +4,7 @@
 
 #include "input/Input.h"
 #include "scene/Scene.h"
-
+#include "renderer/Mesh.h"
 #include "scene/systems/FreeMovementSystem.h"
 
 using namespace YingLong;
@@ -27,7 +27,9 @@ protected:
 private:
 	FreeMovementSystem m_FreeMovementSystem;
 
+	Mesh m_CubeMesh;
+
 private:
-	void CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale, const glm::vec3& Color);
+	void CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale);
 };
 

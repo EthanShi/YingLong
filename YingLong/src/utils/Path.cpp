@@ -66,6 +66,11 @@ namespace YingLong {
 			std::string TimestampString = std::to_string(Timestamp);
 			return ProjectLogDir() + FileName + "-" + TimestampString + ".log";
 		}
+
+		std::string GetDirFromFileName(const std::string& FileName)
+		{
+			return std::regex_replace(FileName, std::regex("\\\\[a-z]*\.[a-z]*$"), "");
+		}
 	}
 
 }

@@ -6,6 +6,7 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
+#include "Mesh.h"
 
 namespace YingLong {
 
@@ -17,14 +18,6 @@ namespace YingLong {
 
 	class YINGLONG_API Renderer
 	{
-	private:
-		static glm::mat4 m_ScaleMatrix;
-
-		static uint32 m_windowHeight;
-		static uint32 m_windowWidth;
-
-		static ShaderManager m_ShaderManager;
-
 	public:
 		// Draw calls
 		static void Draw(
@@ -47,6 +40,7 @@ namespace YingLong {
 		}
 
 		static ShaderManager& GetShaderManager() { return m_ShaderManager; }
+		static MeshObjDataManager& GetMeshObjDataManager() { return m_MeshObjDataManager; }
 
 		// Set functions
 		static void SetClearColor(const glm::vec4& color);
@@ -58,6 +52,15 @@ namespace YingLong {
 
 		// Callbacks
 		static void OnWindowSizeChanged(uint32 height, uint32 width);
+
+	private:
+		static glm::mat4 m_ScaleMatrix;
+
+		static uint32 m_windowHeight;
+		static uint32 m_windowWidth;
+
+		static ShaderManager m_ShaderManager;
+		static MeshObjDataManager m_MeshObjDataManager;
 
 	private:
 		static glm::mat4 GetViewportMatrix();

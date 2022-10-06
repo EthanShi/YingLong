@@ -1,6 +1,7 @@
 #pragma once
 
 #include "scene/Scene.h"
+#include "renderer/Mesh.h"
 
 using namespace YingLong;
 
@@ -15,5 +16,7 @@ public:
 protected:
 	virtual void Update(float deltatime) override;
 
+private:
+	Mesh CubeMesh;
 };
 

@@ -15,11 +15,11 @@ SingleCubeScene::SingleCubeScene()
 	cubesTransform.SetScale(glm::vec3(100.f, 100.f, 100.f));
 	cubesTransform.SetForward(glm::vec3(1.f, 1.f, 1.f));
 
-	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cubes);
+	CubeMesh.LoadObjData("res/models/cube.obj");
+	CubeMesh.SetDefaultColor(glm::vec3(1.0f, 0.5f, 0.3f));
+	CubeMesh.FillRenderData(false, false, true);
 
-	MeshComp.mesh.Load("res/models/cube.obj");
-	MeshComp.mesh.SetDefaultColor(glm::vec3(1.0f, 0.5f, 0.3f));
-	MeshComp.mesh.FillRenderData(false, false, true);
+	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cubes, CubeMesh);
 
 	ShaderComponent& ShaderComp = reg.emplace<ShaderComponent>(cubes);
 	ShaderComp.LoadShader("res/shader/basic3D.shader");

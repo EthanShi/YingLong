@@ -1,62 +1,62 @@
+
 #include "YingLongPCH.h"
+
 #include "Mesh.h"
+#include "utils/Path.h"
+#include "renderer/Renderer3D.h"
 
 DEFINE_LOGGER(MeshLog)
 
 namespace YingLong {
 
-    Mesh::Mesh(const std::string& filename, const std::string& materialSearchPath)
+    Mesh::Mesh(const std::string& FileName, const std::string& materialSearchPath)
 	{
-		Load(filename, materialSearchPath);
+        LoadObjData(FileName, materialSearchPath);
 	}
 
-	bool Mesh::Load(const std::string& filename, const std::string& materialSearchPath)
+	bool Mesh::LoadObjData(const std::string& FileName, const std::string& MaterialSearchPath)
 	{
-        tinyobj::ObjReaderConfig readerConfig;
-
-        if (materialSearchPath.empty())
-        {
-            readerConfig.mtl_search_path = std::regex_replace(filename, std::regex("\\\\[a-z]*\.[a-z]*$"), "");
-        }
-        else
-        {
-            readerConfig.mtl_search_path = materialSearchPath;
-        }
-
-		readerConfig.triangulate = true;
-
-		if (!m_ObjReader.ParseFromFile(filename, readerConfig)) {
-			if (!m_ObjReader.Error().empty()) {
-                MeshLog().error("TinyObjReader: {}", m_ObjReader.Error());
-			}
-            return false;
-		}
-
-        const std::string& WarningMsg = m_ObjReader.Warning();
-		if (!WarningMsg.empty()) {
-            MeshLog().warn("TinyObjReader: {}", WarningMsg);
-		}
-
-        auto& attrib = m_ObjReader.GetAttrib();
-        m_HasNormals = !attrib.normals.empty();
-        m_HasTexcoords = !attrib.texcoords.empty();
-        m_HasColors = !attrib.colors.empty();
-
-        m_LoadSucceed = true;
-
-        return true;
+        m_MeshObjDataID = Renderer::GetMeshObjDataManager().LoadMeshObjData(FileName, MaterialSearchPath);
+        return m_MeshObjDataID != 0;
 	}
+
+    const MeshObjData& Mesh::GetObjData() const
+    {
+        return Renderer::GetMeshObjDataManager().GetMeshObjData(m_MeshObjDataID);
+    }
+
+    bool Mesh::HasNormals() const
+    {
+        return GetObjData().m_HasNormals;
+    }
+
+    bool Mesh::HasTexcoords() const
+    {
+        return GetObjData().m_HasTexcoords;
+    }
+
+    bool Mesh::HasColors() const
+    {
+        return GetObjData().m_HasColors;
+    }
 
 	void Mesh::FillRenderData(bool withNormal, bool withTexcoord, bool withColor)
 	{
-        auto& attrib = m_ObjReader.GetAttrib();
-        auto& shapes = m_ObjReader.GetShapes();
+        const MeshObjData& ObjData = GetObjData();
+        if (!ObjData.m_ObjReader.Valid())
+        {
+            MeshLog().error("Fill render data failed, can not get valid ObjData.");
+            return;
+        }
+
+        auto& attrib = ObjData.m_ObjReader.GetAttrib();
+        auto& shapes = ObjData.m_ObjReader.GetShapes();
 
         std::vector<float> Vertices;
         std::vector<uint32> Indexes;
         std::unordered_map<std::string, size_t> IndexMap;
 
-        auto GetIndexInVertices = [this, withNormal, withTexcoord, withColor, &attrib, &Vertices, &IndexMap](tinyobj::index_t idx) -> size_t
+        auto GetIndexInVertices = [this, withNormal, withTexcoord, withColor, &ObjData, &attrib, &Vertices, &IndexMap](tinyobj::index_t idx) -> size_t
         {
             int vi = idx.vertex_index;
             int ni = withNormal ? idx.normal_index : -1;
@@ -85,7 +85,7 @@ namespace YingLong {
 
             if (withNormal)
             {
-                if (m_HasNormals)
+                if (ObjData.m_HasNormals)
                 {
                     Vertices.insert(
                         Vertices.end(),
@@ -103,7 +103,7 @@ namespace YingLong {
 
             if (withTexcoord)
             {
-                if (m_HasTexcoords)
+                if (ObjData.m_HasTexcoords)
                 {
                     Vertices.insert(
                         Vertices.end(),
@@ -120,7 +120,7 @@ namespace YingLong {
 
             if (withColor)
             {
-                if (m_HasColors)
+                if (ObjData.m_HasColors)
                 {
                     Vertices.insert(
                         Vertices.end(),
@@ -170,4 +170,72 @@ namespace YingLong {
         m_VertexArray.AddBuffer(m_VertexBuffer, VBOLayout);
         m_IndexBuffer.Init(Indexes.data(), (uint32)Indexes.size());
 	}
+
+    uint32 MeshObjDataManager::LoadMeshObjData(const std::string& FileName, const std::string& materialSearchPath)
+    {
+        auto& FindMeshResult = m_LoadedMeshObjDataMap.find(FileName);
+        if (FindMeshResult != m_LoadedMeshObjDataMap.end())
+        {
+            return FindMeshResult->second.m_MeshObjDataID;
+        }
+
+        auto& Result = m_LoadedMeshObjDataMap.emplace(FileName, MeshObjData());
+        if (!Result.second)
+        {
+            MeshLog().error("Load mesh failed: {}", FileName);
+            return 0;
+        }
+
+        MeshObjData& NewObjData = Result.first->second;
+
+        tinyobj::ObjReaderConfig readerConfig;
+
+        if (materialSearchPath.empty())
+        {
+            readerConfig.mtl_search_path = Path::GetDirFromFileName(FileName);
+        }
+        else
+        {
+            readerConfig.mtl_search_path = materialSearchPath;
+        }
+
+        readerConfig.triangulate = true;
+
+        if (!NewObjData.m_ObjReader.ParseFromFile(FileName, readerConfig)) {
+            MeshLog().error("TinyObjReader: {}", NewObjData.m_ObjReader.Error());
+            m_LoadedMeshObjDataMap.erase(FileName);
+            return 0;
+        }
+
+        const std::string& WarningMsg = NewObjData.m_ObjReader.Warning();
+        if (!WarningMsg.empty()) {
+            MeshLog().warn("TinyObjReader: {}", WarningMsg);
+        }
+
+        auto& attrib = NewObjData.m_ObjReader.GetAttrib();
+        NewObjData.m_HasNormals = !attrib.normals.empty();
+        NewObjData.m_HasTexcoords = !attrib.texcoords.empty();
+        NewObjData.m_HasColors = !attrib.colors.empty();
+
+        NewObjData.m_MeshObjDataID = ++m_MeshObjDataID;
+        NewObjData.m_Filename = FileName;
+
+        m_LoadedMeshObjDataMapPath[NewObjData.m_MeshObjDataID] = FileName;
+
+        return NewObjData.m_MeshObjDataID;
+    }
+
+    MeshObjData& MeshObjDataManager::GetMeshObjData(uint32 MeshObjDataID)
+    {
+        if (m_LoadedMeshObjDataMapPath.find(MeshObjDataID) != m_LoadedMeshObjDataMapPath.end())
+        {
+            const std::string& filepath = m_LoadedMeshObjDataMapPath.at(MeshObjDataID);
+            auto& FindMeshObjDataResult = m_LoadedMeshObjDataMap.find(filepath);
+            if (FindMeshObjDataResult != m_LoadedMeshObjDataMap.end())
+            {
+                return FindMeshObjDataResult->second;
+            }
+        }
+        return m_InvalidMeshObjData;
+    }
 }
