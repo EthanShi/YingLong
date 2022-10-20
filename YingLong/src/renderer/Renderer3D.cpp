@@ -5,6 +5,7 @@
 
 namespace YingLong {
 
+	glm::vec4 Renderer::m_BackgroundColor = glm::vec4();
 	glm::mat4 Renderer::m_ScaleMatrix = glm::mat4(1.0);
 	uint32 Renderer::m_windowHeight = 2;
 	uint32 Renderer::m_windowWidth = 2;
@@ -32,14 +33,20 @@ namespace YingLong {
 		GLCall(glDrawElements(GL_TRIANGLES, ibo.GetCount(), GL_UNSIGNED_INT, nullptr));
 	}
 
-	void Renderer::SetClearColor(const glm::vec4& color)
+	void Renderer::SetBackgroundColor(const glm::vec4& color)
 	{
-		SetClearColor(color[0], color[1], color[2], color[3]);
+		m_BackgroundColor = color;
+		DrawBackgroundColor();
 	}
 
-	void Renderer::SetClearColor(float red, float green, float blue, float alpha)
+	void Renderer::DrawBackgroundColor()
 	{
-		GLCall(glClearColor(red, green, blue, alpha));
+		GLCall(glClearColor(m_BackgroundColor[0], m_BackgroundColor[1], m_BackgroundColor[2], m_BackgroundColor[3]));
+	}
+
+	const glm::vec4& Renderer::GetBackgroundColor()
+	{
+		return m_BackgroundColor;
 	}
 
 	void Renderer::Clear()

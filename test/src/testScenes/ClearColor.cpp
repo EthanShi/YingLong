@@ -3,22 +3,26 @@
 #include "imgui.h"
 #include "glm/glm.hpp"
 
+#include "renderer/Renderer3D.h"
+
 ClearColorScene::ClearColorScene()
 	: Scene()
-	, m_ClearColor{ 0.5f, 0.5f, 0.5f, 1.0f }
-{}
+{
+	m_BackgroundColorCache = Renderer::GetBackgroundColor();
+}
 
 ClearColorScene::~ClearColorScene()
 {
+	Renderer::SetBackgroundColor(m_BackgroundColorCache);
 }
 
 void ClearColorScene::Update(float deltatime)
 {
-	m_BackgroundColor = glm::vec4(
+	Renderer::SetBackgroundColor(glm::vec4(
 		m_ClearColor[0],
 		m_ClearColor[1],
 		m_ClearColor[2],
-		m_ClearColor[3]);
+		m_ClearColor[3]));
 }
 
 void ClearColorScene::DrawImgui(float deltatime)

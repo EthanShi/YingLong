@@ -43,8 +43,9 @@ namespace YingLong {
 		static MeshObjDataManager& GetMeshObjDataManager() { return m_MeshObjDataManager; }
 
 		// Set functions
-		static void SetClearColor(const glm::vec4& color);
-		static void SetClearColor(float red, float green, float blue, float alpha);
+		static void SetBackgroundColor(const glm::vec4& color);
+		static void DrawBackgroundColor();
+		static const glm::vec4& GetBackgroundColor();
 		static void Clear();
 
 		static void SetUnit(RendererUnit unit);
@@ -54,6 +55,9 @@ namespace YingLong {
 		static void OnWindowSizeChanged(uint32 height, uint32 width);
 
 	private:
+		// Clear color for renderer
+		static glm::vec4 m_BackgroundColor;
+
 		static glm::mat4 m_ScaleMatrix;
 
 		static uint32 m_windowHeight;

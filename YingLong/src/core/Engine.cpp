@@ -103,6 +103,7 @@ namespace YingLong
 			m_LastFrameTime = currentTime;
 
 			Renderer::Clear();
+			Renderer::DrawBackgroundColor();
 
 			// Start the Dear ImGui frame
 			ImGui_ImplOpenGL3_NewFrame();

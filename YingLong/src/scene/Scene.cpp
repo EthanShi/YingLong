@@ -16,7 +16,6 @@ namespace YingLong {
 	Scene::Scene()
 		: m_Registry()
 		, m_Dispatcher()
-		, m_BackgroundColor(0.3f, 0.3f, 0.3f, 1.0f)
 		, m_PrimaryCamera()
 		, m_InputAction()
 	{
@@ -51,7 +50,6 @@ namespace YingLong {
 	void Scene::Tick(float deltatime)
 	{
 		m_Dispatcher.update();
-		Renderer::SetClearColor(m_BackgroundColor);
 		Update(deltatime);
 		DrawEntities(deltatime);
 		DrawImgui(deltatime);

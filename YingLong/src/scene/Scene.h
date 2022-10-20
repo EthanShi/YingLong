@@ -54,9 +54,6 @@ namespace YingLong {
 		// Event dispatcher manage all engine and user events for this Scene
 		entt::dispatcher m_Dispatcher;
 
-		// Clear color for renderer
-		glm::vec4 m_BackgroundColor;
-
 		// Camera that renderer use to render this Scene
 		entt::entity m_PrimaryCamera;
 
