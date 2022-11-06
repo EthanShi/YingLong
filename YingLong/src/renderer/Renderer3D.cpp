@@ -15,18 +15,16 @@ namespace YingLong {
 	void Renderer::Draw(const VertexArray& vao,
 		const IndexBuffer& ibo,
 		Shader& shader,
-		const glm::mat4& modelTransform,
-		const glm::mat4& Projection,
-		const glm::mat4& View)
+		Shader::Uniforms& Uniforms)
 	{
 		if (m_windowHeight == 0 || m_windowWidth == 0 || shader.GetRendererID() <= 0)
 		{
 			return;
 		}
 
-		shader.Bind();
+		shader.Bind(Uniforms);
 
-		shader.SetUniformMat4f(MVP_UNIFORM_NAME, Projection * View * modelTransform * m_ScaleMatrix);
+		shader.SetUniformMat4f(UNIT_SCALE_UNIFORM_NAME, m_ScaleMatrix);
 
 		vao.Bind();
 		ibo.Bind();

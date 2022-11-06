@@ -79,6 +79,8 @@ namespace YingLong
 
 	Engine::~Engine()
 	{
+		m_Scenes.clear();
+
 		// Cleanup
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();

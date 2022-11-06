@@ -34,4 +34,11 @@ namespace YingLong {
 		return SPtr->GetInputAction();
 	}
 
+	entt::entity& SystemBase::GetPrimaryCamera()
+	{
+		auto& SPtr = m_OwnerScene.lock();
+		ASSERT(SPtr);
+		return SPtr->GetPrimaryCamera();
+	}
+
 }

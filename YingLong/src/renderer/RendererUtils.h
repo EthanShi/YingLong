@@ -14,7 +14,7 @@ bool GLLogCall(const char* function, const char* file, int32 line);
 
 
 #define VIEWPORT_UNIFORM_NAME "viewport"
-#define MVP_UNIFORM_NAME "MVP"
+#define UNIT_SCALE_UNIFORM_NAME "UnitScale"
 
 #define DEFAULT_WINDOW_HEIGHT 1080
 #define DEFAULT_WINDOW_WIDTH 1920

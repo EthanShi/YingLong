@@ -31,6 +31,7 @@ namespace YingLong {
 		entt::dispatcher& GetDispatcher();
 		entt::registry& GetRegistry();
 		InputAction& GetInputAction();
+		entt::entity& GetPrimaryCamera();
 
 	private:
 		std::weak_ptr<Scene> m_OwnerScene;

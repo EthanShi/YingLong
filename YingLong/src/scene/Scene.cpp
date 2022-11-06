@@ -61,23 +61,6 @@ namespace YingLong {
 
 	void Scene::DrawEntities(float deltatime)
 	{
-		auto view = m_Registry.view<Transform3DComponent, MeshComponent, ShaderComponent>();
-
-		Transform3DComponent& CameraTransform = m_Registry.get<Transform3DComponent>(m_PrimaryCamera);
-		const Camera3DComponent& Camera = m_Registry.get<Camera3DComponent>(m_PrimaryCamera);
-
-		view.each(
-			[this, &CameraTransform, &Camera](Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader) {
-				Renderer::Draw(
-					mesh.MeshRef.GetVertexArray(),
-					mesh.MeshRef.GetIndexBuffer(),
-					shader.shaderID,
-					transform.GetTransform(),
-					Camera.Camera.GetPerspective(),
-					CameraTransform.GetTransform()
-				);
-			}
-		);
 	}
 
 	void Scene::DrawImgui(float deltatime)

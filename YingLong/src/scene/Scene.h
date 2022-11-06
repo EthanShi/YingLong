@@ -33,6 +33,8 @@ namespace YingLong {
 
 		InputAction& GetInputAction() { return m_InputAction; }
 
+		entt::entity& GetPrimaryCamera() { return m_PrimaryCamera; }
+
 
 	protected:
 		virtual void Update(float deltatime);

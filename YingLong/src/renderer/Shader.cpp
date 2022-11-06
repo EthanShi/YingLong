@@ -30,6 +30,12 @@ namespace YingLong {
 		GLCall(glUseProgram(m_RendererID));
 	}
 
+	void Shader::Bind(const Uniforms& InUniforms)
+	{
+		Bind();
+		InUniforms.BindUniforms(*this);
+	}
+
 	void Shader::UnBind() const
 	{
 		GLCall(glUseProgram(0));
@@ -38,6 +44,11 @@ namespace YingLong {
 	void Shader::SetUniform1i(const std::string& name, int32 value)
 	{
 		GLCall(glUniform1i(GetUniformLocation(name), value));
+	}
+
+	void Shader::SetUniform1f(const std::string& name, float value)
+	{
+		GLCall(glUniform1f(GetUniformLocation(name), value));
 	}
 
 	void Shader::SetUniform4f(const std::string& name, float f0, float f1, float f2, float f3)

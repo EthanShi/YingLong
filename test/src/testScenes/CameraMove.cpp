@@ -56,7 +56,8 @@ CameraMoveScene::~CameraMoveScene()
 void CameraMoveScene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This)
 {
 	Scene::OnActive(OwnerEngine, This);
-	m_FreeMovementSystem.SetOwnerScene(m_WeakThis);
+	m_FreeMovementSystem.SetOwnerScene(This);
+	m_DrawBasic3DMeshSystem.SetOwnerScene(This);
 }
 
 void CameraMoveScene::Update(float Deltatime)
@@ -66,6 +67,13 @@ void CameraMoveScene::Update(float Deltatime)
 
 void CameraMoveScene::DrawImgui(float Deltatime)
 {
+}
+
+void CameraMoveScene::DrawEntities(float deltatime)
+{
+	Scene::DrawEntities(deltatime);
+
+	m_DrawBasic3DMeshSystem.Draw();
 }
 
 void CameraMoveScene::CreateDefaultCamera()

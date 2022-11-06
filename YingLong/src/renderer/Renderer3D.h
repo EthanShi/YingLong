@@ -24,19 +24,15 @@ namespace YingLong {
 			const VertexArray& vao,
 			const IndexBuffer& ibo,
 			Shader& shader,
-			const glm::mat4& modelTransform,
-			const glm::mat4& Projection,
-			const glm::mat4& View);
+			Shader::Uniforms& Uniforms);
 
 		static void Draw(
 			const VertexArray& vao,
 			const IndexBuffer& ibo,
 			uint32 shaderID,
-			const glm::mat4& modelTransform,
-			const glm::mat4& Projection,
-			const glm::mat4& View)
+			Shader::Uniforms& Uniforms)
 		{
-			Draw(vao, ibo, m_ShaderManager.GetShader(shaderID), modelTransform, Projection, View);
+			Draw(vao, ibo, m_ShaderManager.GetShader(shaderID), Uniforms);
 		}
 
 		static ShaderManager& GetShaderManager() { return m_ShaderManager; }

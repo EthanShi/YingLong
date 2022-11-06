@@ -5,6 +5,7 @@
 #include "testScenes/ClearColor.h"
 #include "testScenes/SingleCube.h"
 #include "testScenes/CameraMove.h"
+#include "testScenes/BasicLighting.h"
 
 
 TestSelectorScene::TestSelectorScene()
@@ -14,6 +15,7 @@ TestSelectorScene::TestSelectorScene()
 	AddTestScene<ClearColorScene>("Clear color");
 	AddTestScene<SingleCubeScene>("Single cube");
 	AddTestScene<CameraMoveScene>("Camera move");
+	AddTestScene<BasicLightingScene>("Basic lighting");
 }
 
 void TestSelectorScene::DrawImgui(float deltatime)
