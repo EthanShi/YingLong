@@ -15,7 +15,7 @@ public:\
 	{}\
 };
 
-#define DEFINE_LOGGER(LoggerName) LoggerName##Class LoggerName(#LoggerName);
+#define DEFINE_LOGGER(LoggerName) LoggerName##Class LoggerName{#LoggerName};
 
 namespace YingLong {
 
@@ -60,9 +60,6 @@ namespace YingLong {
 			ASSERT(m_logger)
 			return *m_logger;
 		}
-
-	private:
-
 
 	private:
 		std::shared_ptr<spdlog::logger> m_logger;

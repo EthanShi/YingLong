@@ -51,6 +51,11 @@ namespace YingLong {
 		GLCall(glUniform1f(GetUniformLocation(name), value));
 	}
 
+	void Shader::SetUniform3f(const std::string& name, float f0, float f1, float f2)
+	{
+		GLCall(glUniform3f(GetUniformLocation(name), f0, f1, f2));
+	}
+
 	void Shader::SetUniform4f(const std::string& name, float f0, float f1, float f2, float f3)
 	{
 		GLCall(glUniform4f(GetUniformLocation(name), f0, f1, f2, f3));

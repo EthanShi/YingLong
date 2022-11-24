@@ -24,6 +24,7 @@ namespace YingLong {
 		{
 			void SetUniform(const std::string& name, const int32& value) { m_Uniform1i[name] = value; }
 			void SetUniform(const std::string& name, const float& value) { m_Uniform1f[name] = value; }
+			void SetUniform(const std::string& name, const glm::vec3& value) { m_Uniform3f[name] = value; }
 			void SetUniform(const std::string& name, const glm::vec4& value) { m_Uniform4f[name] = value; }
 			void SetUniform(const std::string& name, const glm::mat4& value) { m_UniformMat4f[name] = value; }
 
@@ -36,6 +37,10 @@ namespace YingLong {
 				for (auto& iter : m_Uniform1f)
 				{
 					shader.SetUniform1f(iter.first, iter.second);
+				}
+				for (auto& iter : m_Uniform3f)
+				{
+					shader.SetUniform3f(iter.first, iter.second.x, iter.second.y, iter.second.z);
 				}
 				for (auto& iter : m_Uniform4f)
 				{
@@ -50,6 +55,7 @@ namespace YingLong {
 		private:
 			std::unordered_map<std::string, int32> m_Uniform1i;
 			std::unordered_map<std::string, float> m_Uniform1f;
+			std::unordered_map<std::string, glm::vec3> m_Uniform3f;
 			std::unordered_map<std::string, glm::vec4> m_Uniform4f;
 			std::unordered_map<std::string, glm::mat4> m_UniformMat4f;
 		};
@@ -69,6 +75,7 @@ namespace YingLong {
 
 		void SetUniform1i(const std::string& name, int32 value);
 		void SetUniform1f(const std::string& name, float value);
+		void SetUniform3f(const std::string& name, float f0, float f1, float f2);
 		void SetUniform4f(const std::string& name, float f0, float f1, float f2, float f3);
 		void SetUniformMat4f(const std::string& name, const glm::mat4& matrix);
 

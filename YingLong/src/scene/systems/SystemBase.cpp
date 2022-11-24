@@ -4,6 +4,8 @@
 #include "SystemBase.h"
 #include "scene/Scene.h"
 
+DEFINE_LOGGER(SystemBaseLog)
+
 namespace YingLong {
 
 	Scene& SystemBase::GetScene()

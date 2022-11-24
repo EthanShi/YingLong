@@ -10,8 +10,8 @@ namespace YingLong {
 	{
 		float fov = 45.0f;
 		float aspect = 16.0f / 9.0f;
-		float zNear = 0.1f;
-		float zFar = 100.0f;
+		float zNear = 10.f;
+		float zFar = 10000.0f;
 	};
 
 	class YINGLONG_API Camera3D

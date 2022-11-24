@@ -17,7 +17,7 @@ SingleCubeScene::SingleCubeScene()
 
 	m_CubeMesh.LoadObjData("res/models/cube.obj");
 	m_CubeMesh.SetDefaultColor(glm::vec3(1.0f, 0.5f, 0.3f));
-	m_CubeMesh.FillRenderData(false, false, true);
+	m_CubeMesh.FillRenderData(true, false, true);
 
 	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cubes, m_CubeMesh);
 

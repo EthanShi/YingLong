@@ -26,13 +26,17 @@ protected:
 
 	virtual void CreateDefaultCamera() override;
 
+	virtual std::string GetShaderPath();
+
+protected:
+	Mesh m_CubeMesh;
+
 private:
 	FreeMovementSystem m_FreeMovementSystem;
 	DrawBasic3DMeshSystem m_DrawBasic3DMeshSystem;
 
-	Mesh m_CubeMesh;
-
 private:
+	void CreateCubes();
 	void CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale);
 };
 

@@ -6,7 +6,7 @@
 namespace YingLong {
 
 	glm::vec4 Renderer::m_BackgroundColor = glm::vec4();
-	glm::mat4 Renderer::m_ScaleMatrix = glm::mat4(1.0);
+	float Renderer::m_UnitScale = 1.0f;
 	uint32 Renderer::m_windowHeight = 2;
 	uint32 Renderer::m_windowWidth = 2;
 	ShaderManager Renderer::m_ShaderManager;
@@ -24,7 +24,7 @@ namespace YingLong {
 
 		shader.Bind(Uniforms);
 
-		shader.SetUniformMat4f(UNIT_SCALE_UNIFORM_NAME, m_ScaleMatrix);
+		shader.SetUniform1f(UNIT_SCALE_UNIFORM_NAME, m_UnitScale);
 
 		vao.Bind();
 		ibo.Bind();
@@ -54,17 +54,14 @@ namespace YingLong {
 
 	void Renderer::SetUnit(RendererUnit unit)
 	{
-		float scale = 1.0f;
 		if (unit == RendererUnit::Meter)
 		{
-			scale = 1.0f;
+			m_UnitScale = 1.0f;
 		}
 		else if (unit == RendererUnit::Centimeter)
 		{
-			scale = 0.01f;
+			m_UnitScale = 0.01f;
 		}
-		m_ScaleMatrix = glm::mat4(1.0f);
-		m_ScaleMatrix = glm::scale(m_ScaleMatrix, glm::vec3(scale, scale, scale));
 	}
 
 	void Renderer::SetDepthTestEnable(bool enable)

@@ -3,7 +3,10 @@
 #include "entt/entt.hpp"
 
 #include "core/Macros.h"
+#include "core/Log.h"
 #include "scene/inputAction/InputActions.h"
+
+DECLARE_LOGGER(SystemBaseLog)
 
 namespace YingLong {
 

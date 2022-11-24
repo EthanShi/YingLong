@@ -54,7 +54,7 @@ namespace YingLong {
 		// Clear color for renderer
 		static glm::vec4 m_BackgroundColor;
 
-		static glm::mat4 m_ScaleMatrix;
+		static float m_UnitScale;
 
 		static uint32 m_windowHeight;
 		static uint32 m_windowWidth;

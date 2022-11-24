@@ -29,6 +29,9 @@ namespace YingLong {
 	{
 		m_Engine = OwnerEngine;
 		m_WeakThis = This;
+
+		Renderer::SetDepthTestEnable(true);
+
 		CreateDefaultCamera();
 
 		// Init configs
@@ -71,7 +74,7 @@ namespace YingLong {
 	{
 		m_PrimaryCamera = m_Registry.create();
 		Transform3DComponent& cameraTransform = m_Registry.emplace<Transform3DComponent>(m_PrimaryCamera);
-		cameraTransform.SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+		cameraTransform.SetPosition(glm::vec3(0.0f, 0.0f, 500.0f));
 		m_Registry.emplace<Camera3DComponent>(m_PrimaryCamera);
 	}
 }

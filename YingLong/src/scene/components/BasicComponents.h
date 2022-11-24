@@ -13,21 +13,38 @@ namespace YingLong {
 	private:
 		bool m_DirtyTransform = false;
 		glm::mat4 m_Transform{ 1.f };
+		glm::mat4 m_InverseTransform{ 1.f };
 		glm::vec3 m_Position{ 0.f, 0.f, 0.f };
 		glm::vec3 m_Scale{ 1.f, 1.f, 1.f };
 		glm::vec3 m_Forward{ 0.f, 0.f, -1.f };
 		glm::vec3 m_Up{ 0.f, 1.f, 0.f };
 
 	public:
-		glm::mat4 GetTransform() {
+		void UpdateTransforms()
+		{
 			if (m_DirtyTransform)
 			{
 				m_DirtyTransform = false;
-				m_Transform = glm::lookAt(m_Position, m_Position + m_Forward, m_Up) * glm::scale(m_Scale);
+				m_InverseTransform = glm::lookAt(m_Position, m_Position + m_Forward, m_Up);
+				m_Transform = glm::inverse(m_InverseTransform);
+				m_InverseTransform = glm::scale(m_InverseTransform, m_Scale);
+				m_Transform = glm::scale(m_Transform, m_Scale);
 			}
-			return m_Transform; 
+		}
+
+		glm::mat4 GetViewMatrix() {
+			UpdateTransforms();
+			return m_InverseTransform;
+		}
+
+		glm::mat4 GetTransform() {
+			UpdateTransforms();
+			return m_Transform;
 		};
-		glm::mat4 GetInverseTransform() { return glm::inverse(GetTransform()); };
+		glm::mat4 GetInverseTransform() {
+			UpdateTransforms();
+			return m_InverseTransform;
+		};
 
 		void SetPosition(const glm::vec3& Value) {
 			if (Value != m_Position) {
@@ -96,7 +113,7 @@ namespace YingLong {
 
 	struct FreeMovementComponent
 	{
-		float MoveSpeed = 4.f;
+		float MoveSpeed = 400.f;
 		float TurnRate = 5.0f;
 	};
 }

@@ -2,17 +2,18 @@
 #version 330 core
 
 layout(location = 0) in vec3 VertexPos;
-layout(location = 1) in vec3 VertexColor;
+layout(location = 1) in vec3 VertexNormal;
+layout(location = 2) in vec3 VertexColor;
 
 out vec3 OutVColor;
 
-uniform mat4 UnitScale;
+uniform float UnitScale;
 
 uniform mat4 MVP;
 
 void main()
 {
-    gl_Position = MVP * UnitScale * vec4(VertexPos, 1.0f);
+    gl_Position = MVP * mat4(UnitScale) * vec4(VertexPos, 1.0f);
     OutVColor = VertexColor;
 }
 

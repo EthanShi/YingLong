@@ -14,38 +14,6 @@ CameraMoveScene::CameraMoveScene()
 {
 	Input& InputInstance = Input::Instance();
 	InputInstance.SetCursorMode(CursorMode::CURSOR_DISABLED);
-
-	m_CubeMesh.LoadObjData("res/models/cube.obj");
-	m_CubeMesh.SetDefaultColor(glm::vec3(1.f, 0.5f, 0.3f));
-	m_CubeMesh.FillRenderData(false, false, true);
-
-	glm::vec3 Scale(50.f, 50.f, 50.f);
-	std::vector<glm::vec3> Positions = {
-		glm::vec3(0.0f,  0.0f,  0.0f),
-		glm::vec3(2.0f,  5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f,  3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f,  2.0f, -2.5f),
-		glm::vec3(1.5f,  0.2f, -1.5f),
-		glm::vec3(-1.3f,  1.0f, -1.5f)
-	};
-	for (int i = Positions.size() - 1; i >= 0; i--)
-	{
-		CreateACube(Positions[i],
-			glm::vec3(static_cast<double>(std::rand()) / RAND_MAX,
-				static_cast<double>(std::rand()) / RAND_MAX,
-				static_cast<double>(std::rand()) / RAND_MAX),
-			Scale);
-	}
-
-	// Switch cursor mode
-	GetInputAction().Bind("SwitchCursorMode", [this]() {
-		Input& InputInstance = Input::Instance();
-		InputInstance.SetCursorMode(InputInstance.GetCursorMode() == CursorMode::CURSOR_DISABLED ? CursorMode::CURSOR_NORMAL : CursorMode::CURSOR_DISABLED);
-		});
 }
 
 CameraMoveScene::~CameraMoveScene()
@@ -56,6 +24,15 @@ CameraMoveScene::~CameraMoveScene()
 void CameraMoveScene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This)
 {
 	Scene::OnActive(OwnerEngine, This);
+
+	CreateCubes();
+
+	// Switch cursor mode
+	GetInputAction().Bind("SwitchCursorMode", [this]() {
+		Input& InputInstance = Input::Instance();
+		InputInstance.SetCursorMode(InputInstance.GetCursorMode() == CursorMode::CURSOR_DISABLED ? CursorMode::CURSOR_NORMAL : CursorMode::CURSOR_DISABLED);
+		});
+
 	m_FreeMovementSystem.SetOwnerScene(This);
 	m_DrawBasic3DMeshSystem.SetOwnerScene(This);
 }
@@ -82,6 +59,40 @@ void CameraMoveScene::CreateDefaultCamera()
 	m_Registry.emplace<FreeMovementComponent>(m_PrimaryCamera);
 }
 
+std::string CameraMoveScene::GetShaderPath()
+{
+	return "res/shader/basic3D.shader";
+}
+
+void CameraMoveScene::CreateCubes()
+{
+	m_CubeMesh.LoadObjData("res/models/cube.obj");
+	m_CubeMesh.SetDefaultColor(glm::vec3(1.f, 0.5f, 0.3f));
+	m_CubeMesh.FillRenderData(true, false, true);
+
+	glm::vec3 Scale(50.f, 50.f, 50.f);
+	std::vector<glm::vec3> Positions = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(200.0f,  500.0f, -1500.0f),
+		glm::vec3(-150.f, -220.f, -250.f),
+		glm::vec3(-380.f, -20.f, -1230.f),
+		glm::vec3(240.f, -40.f, -350.f),
+		glm::vec3(-170.f,  300.f, -750.f),
+		glm::vec3(130.f, -200.f, -250.f),
+		glm::vec3(150.f,  200.f, -250.f),
+		glm::vec3(150.f,  20.f, -150.f),
+		glm::vec3(-130.f,  100.f, -150.f)
+	};
+	for (int i = Positions.size() - 1; i >= 0; i--)
+	{
+		CreateACube(Positions[i],
+			glm::vec3(static_cast<double>(std::rand()) / RAND_MAX,
+				static_cast<double>(std::rand()) / RAND_MAX,
+				static_cast<double>(std::rand()) / RAND_MAX),
+			Scale);
+	}
+}
+
 void CameraMoveScene::CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale)
 {
 	auto& reg = m_Registry;
@@ -96,5 +107,5 @@ void CameraMoveScene::CreateACube(const glm::vec3& Position, const glm::vec3& Fo
 	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cube, m_CubeMesh);
 
 	ShaderComponent& ShaderComp = reg.emplace<ShaderComponent>(cube);
-	ShaderComp.LoadShader("res/shader/basic3D.shader");
+	ShaderComp.LoadShader(GetShaderPath());
 }
