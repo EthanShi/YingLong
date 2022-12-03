@@ -87,7 +87,7 @@ namespace YingLong {
 		ShaderPrgramSource ParseShader(const std::string& filepath);
 
 	private:
-		uint32 m_RendererID = -1;
+		uint32 m_RendererID = 0;
 		std::string m_Filepath = "";
 		std::unordered_map<std::string, int32> m_UniformLocationCache;
 	};

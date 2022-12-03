@@ -4,7 +4,7 @@
 #include "renderer/Renderer3D.h"
 #include "scene/components/BasicComponents.h"
 #include "scene/components/DrawableComponents.h"
-#include "scene/components/LightComponent.h"
+#include "scene/components/PhongLightingComponent.h"
 
 
 DECLARE_LOGGER(DrawBasicLightingSystemLog)

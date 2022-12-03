@@ -22,7 +22,17 @@ namespace YingLong {
 		m_Filepath = filepath;
 
 		ShaderPrgramSource source = ParseShader(m_Filepath);
+		if (source.FragmentShaderSource.empty() || source.VertexShaderSource.empty())
+		{
+			ShaderLog().error("Can not find shader: '{}'", filepath);
+			return;
+		}
 		m_RendererID = CreateShader(source.VertexShaderSource, source.FragmentShaderSource);
+
+		if (m_RendererID == 0)
+		{
+			ShaderLog().error("Failed to load shader: '{}'", filepath);
+		}
 	}
 
 	void Shader::Bind() const
@@ -98,8 +108,10 @@ namespace YingLong {
 			GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
 			char* message = (char*)alloca(length * sizeof(char));
 			GLCall(glGetShaderInfoLog(id, length, &length, message));
-			ShaderLog().info("Failed to compile {}", (type == GL_VERTEX_SHADER ? "vertex" : "fragment"));
-			ShaderLog().info(message);
+			ShaderLog().error("Failed to compile {}", (type == GL_VERTEX_SHADER ? "vertex" : "fragment"));
+			ShaderLog().error(message);
+			GLCall(glDeleteShader(id));
+			return 0;
 		}
 
 		return id;
@@ -110,6 +122,12 @@ namespace YingLong {
 		GLCall(uint32 program = glCreateProgram());
 		uint32 vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
 		uint32 fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+
+		if (vs == 0 || fs == 0)
+		{
+			GLCall(glDeleteProgram(program));
+			return 0;
+		}
 
 		GLCall(glAttachShader(program, vs));
 		GLCall(glAttachShader(program, fs));
@@ -164,6 +182,7 @@ namespace YingLong {
 		auto& result = m_LoadedShaderMap.emplace(filepath, Shader(filepath));
 		if (result.second)
 		{
+
 			uint32 rendererID = result.first->second.GetRendererID();
 			m_LoadedShaderMapPath.emplace(rendererID, filepath);
 			return rendererID;

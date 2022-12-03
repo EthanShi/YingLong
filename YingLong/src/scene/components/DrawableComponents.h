@@ -6,33 +6,35 @@
 #include "renderer/Shader.h"
 #include "renderer/Renderer3D.h"
 
-using namespace YingLong;
+namespace YingLong {
 
-struct MeshComponent
-{
-	Mesh& MeshRef;
-
-	MeshComponent(Mesh& InMesh)
-		: MeshRef(InMesh)
-	{}
-
-	MeshComponent& operator=(const MeshComponent& Other)
+	struct MeshComponent
 	{
-		if (&Other != this)
+		Mesh& MeshRef;
+
+		MeshComponent(Mesh& InMesh)
+			: MeshRef(InMesh)
+		{}
+
+		MeshComponent& operator=(const MeshComponent& Other)
 		{
-			MeshRef = Other.MeshRef;
+			if (&Other != this)
+			{
+				MeshRef = Other.MeshRef;
+			}
+			return *this;
 		}
-		return *this;
-	}
-};
+	};
 
-struct ShaderComponent
-{
-	uint32 shaderID;
-	Shader::Uniforms uniforms;
-
-	void LoadShader(const std::string& FileName)
+	struct ShaderComponent
 	{
-		shaderID = Renderer::GetShaderManager().LoadShader(FileName);
-	}
-};
+		uint32 shaderID;
+		Shader::Uniforms uniforms;
+
+		void LoadShader(const std::string& FileName)
+		{
+			shaderID = Renderer::GetShaderManager().LoadShader(FileName);
+		}
+	};
+
+}

@@ -59,11 +59,6 @@ void CameraMoveScene::CreateDefaultCamera()
 	m_Registry.emplace<FreeMovementComponent>(m_PrimaryCamera);
 }
 
-std::string CameraMoveScene::GetShaderPath()
-{
-	return "res/shader/basic3D.shader";
-}
-
 void CameraMoveScene::CreateCubes()
 {
 	m_CubeMesh.LoadObjData("res/models/cube.obj");
@@ -107,5 +102,5 @@ void CameraMoveScene::CreateACube(const glm::vec3& Position, const glm::vec3& Fo
 	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cube, m_CubeMesh);
 
 	ShaderComponent& ShaderComp = reg.emplace<ShaderComponent>(cube);
-	ShaderComp.LoadShader(GetShaderPath());
+	ShaderComp.LoadShader("../YingLong/res/shaders/basic3D.shader");
 }

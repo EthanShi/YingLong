@@ -26,7 +26,7 @@ protected:
 
 	virtual void CreateDefaultCamera() override;
 
-	virtual std::string GetShaderPath();
+	virtual void CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale);
 
 protected:
 	Mesh m_CubeMesh;
@@ -37,6 +37,5 @@ private:
 
 private:
 	void CreateCubes();
-	void CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale);
 };
 
