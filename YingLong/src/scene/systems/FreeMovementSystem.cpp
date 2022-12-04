@@ -44,10 +44,10 @@ namespace YingLong {
 			[this, DeltaTime](Transform3DComponent& Transform, const FreeMovementComponent& FreeMovement) {
 				glm::vec3 Right = glm::cross(Transform.GetForward(), Transform.GetUp());
 				glm::vec3 MoveDirection = Transform.GetForward() * m_ForwardValue + Right * m_RightValue;
-				Transform.Move(MoveDirection * DeltaTime * FreeMovement.MoveSpeed);
+				Transform.Move(MoveDirection * DeltaTime * FreeMovement.m_MoveSpeed);
 				if (Input::Instance().GetCursorMode() == CursorMode::CURSOR_DISABLED)
 				{
-					glm::vec2 turnValue = m_TurnDirect * FreeMovement.TurnRate * DeltaTime;
+					glm::vec2 turnValue = m_TurnDirect * FreeMovement.m_TurnRate * DeltaTime;
 					m_TurnDirect = { 0.f, 0.f };
 					Transform.Rotate(-turnValue.y, -turnValue.x, 0.f);
 				}

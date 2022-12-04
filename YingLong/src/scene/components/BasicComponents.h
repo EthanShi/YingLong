@@ -106,14 +106,14 @@ namespace YingLong {
 
 	struct Camera3DComponent
 	{
-		Camera3D Camera;
+		Camera3D m_Camera;
 
-		operator Camera3D() { return Camera; }
+		operator Camera3D() { return m_Camera; }
 	};
 
 	struct FreeMovementComponent
 	{
-		float MoveSpeed = 400.f;
-		float TurnRate = 5.0f;
+		float m_MoveSpeed = 400.f;
+		float m_TurnRate = 5.0f;
 	};
 }

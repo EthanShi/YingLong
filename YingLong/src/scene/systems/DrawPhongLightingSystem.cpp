@@ -29,21 +29,21 @@ void YingLong::DrawBasicLightingSystem::Draw()
 	Transform3DComponent& LightTransfrom = Reg.get<Transform3DComponent>(FirstLightEntity);
 
 	auto DrawMesh = [this, &CameraTransform, &Camera, &Light, &LightTransfrom](Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader, PhongMaterialComponent& Material) {
-		shader.uniforms.SetUniform("Model", transform.GetTransform());
-		shader.uniforms.SetUniform("VP", Camera.Camera.GetPerspective() * CameraTransform.GetViewMatrix());
-		shader.uniforms.SetUniform("InverseModel", transform.GetInverseTransform());
-		shader.uniforms.SetUniform("material.ambient", Material.Material.Ambient);
-		shader.uniforms.SetUniform("material.diffuse", Material.Material.Diffuse);
-		shader.uniforms.SetUniform("material.specular", Material.Material.Specular);
-		shader.uniforms.SetUniform("material.shininess", Material.Material.Shininess);
-		shader.uniforms.SetUniform("lightColor", Light.m_LightColor),
-			shader.uniforms.SetUniform("lightPos", LightTransfrom.GetPosition());
-		shader.uniforms.SetUniform("viewPos", CameraTransform.GetPosition());
+		shader.m_Uniforms.SetUniform("Model", transform.GetTransform());
+		shader.m_Uniforms.SetUniform("VP", Camera.m_Camera.GetPerspective() * CameraTransform.GetViewMatrix());
+		shader.m_Uniforms.SetUniform("InverseModel", transform.GetInverseTransform());
+		shader.m_Uniforms.SetUniform("material.ambient", Material.m_Material.Ambient);
+		shader.m_Uniforms.SetUniform("material.diffuse", Material.m_Material.Diffuse);
+		shader.m_Uniforms.SetUniform("material.specular", Material.m_Material.Specular);
+		shader.m_Uniforms.SetUniform("material.shininess", Material.m_Material.Shininess);
+		shader.m_Uniforms.SetUniform("lightColor", Light.m_LightColor),
+			shader.m_Uniforms.SetUniform("lightPos", LightTransfrom.GetPosition());
+		shader.m_Uniforms.SetUniform("viewPos", CameraTransform.GetPosition());
 		Renderer::Draw(
-			mesh.MeshRef.GetVertexArray(),
-			mesh.MeshRef.GetIndexBuffer(),
-			shader.shaderID,
-			shader.uniforms);
+			mesh.m_MeshRef.GetVertexArray(),
+			mesh.m_MeshRef.GetIndexBuffer(),
+			shader.m_ShaderID,
+			shader.m_Uniforms);
 	};
 
 	auto MeshView = Reg.view<Transform3DComponent, MeshComponent, ShaderComponent, PhongMaterialComponent>();

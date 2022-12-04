@@ -23,14 +23,14 @@ namespace YingLong {
 	struct PhongMaterialComponent
 	{
 		PhongMaterialComponent(const PhongMaterial& Material)
-			: Material(Material)
+			: m_Material(Material)
 		{}
 
 		PhongMaterialComponent(glm::vec3 Ambient, glm::vec3 Diffuse, glm::vec3 Specular, float Shininess)
-			: Material(Ambient, Diffuse, Specular, Shininess)
+			: m_Material(Ambient, Diffuse, Specular, Shininess)
 		{}
 
-		PhongMaterial Material;
+		PhongMaterial m_Material;
 	};
 }
 

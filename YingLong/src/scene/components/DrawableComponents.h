@@ -10,17 +10,17 @@ namespace YingLong {
 
 	struct MeshComponent
 	{
-		Mesh& MeshRef;
+		Mesh& m_MeshRef;
 
 		MeshComponent(Mesh& InMesh)
-			: MeshRef(InMesh)
+			: m_MeshRef(InMesh)
 		{}
 
 		MeshComponent& operator=(const MeshComponent& Other)
 		{
 			if (&Other != this)
 			{
-				MeshRef = Other.MeshRef;
+				m_MeshRef = Other.m_MeshRef;
 			}
 			return *this;
 		}
@@ -28,12 +28,12 @@ namespace YingLong {
 
 	struct ShaderComponent
 	{
-		uint32 shaderID;
-		Shader::Uniforms uniforms;
+		uint32 m_ShaderID;
+		Shader::Uniforms m_Uniforms;
 
 		void LoadShader(const std::string& FileName)
 		{
-			shaderID = Renderer::GetShaderManager().LoadShader(FileName);
+			m_ShaderID = Renderer::GetShaderManager().LoadShader(FileName);
 		}
 	};
 

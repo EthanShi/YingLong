@@ -71,7 +71,7 @@ void PhongLightingScene::DrawEntities(float Deltatime)
 	{
 		auto MeshView = m_Registry.view<PhongMaterialComponent>(entt::exclude<PhongLightComponent>);
 		MeshView.each([&CurMat](PhongMaterialComponent& Material) {
-			Material.Material = CurMat->second;
+			Material.m_Material = CurMat->second;
 			});
 	}
 
