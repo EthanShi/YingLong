@@ -36,8 +36,10 @@ void YingLong::DrawBasicLightingSystem::Draw()
 		shader.m_Uniforms.SetUniform("material.diffuse", Material.m_Material.Diffuse);
 		shader.m_Uniforms.SetUniform("material.specular", Material.m_Material.Specular);
 		shader.m_Uniforms.SetUniform("material.shininess", Material.m_Material.Shininess);
-		shader.m_Uniforms.SetUniform("lightColor", Light.m_LightColor),
-			shader.m_Uniforms.SetUniform("lightPos", LightTransfrom.GetPosition());
+		shader.m_Uniforms.SetUniform("light.ambient", Light.m_Ambient);
+		shader.m_Uniforms.SetUniform("light.diffuse", Light.m_Diffuse);
+		shader.m_Uniforms.SetUniform("light.specular", Light.m_Specular);
+		shader.m_Uniforms.SetUniform("light.position", LightTransfrom.GetPosition());
 		shader.m_Uniforms.SetUniform("viewPos", CameraTransform.GetPosition());
 		Renderer::Draw(
 			mesh.m_MeshRef.GetVertexArray(),

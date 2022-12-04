@@ -9,15 +9,15 @@ namespace YingLong {
 
 	struct PhongLightComponent
 	{
-		PhongLightComponent(float Ambient, float Specular, const glm::vec3& Color)
-			: m_AmbientStrength(Ambient)
-			, m_SpecularStrength(Specular)
-			, m_LightColor(Color)
+		PhongLightComponent(const glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular)
+			: m_Ambient(Ambient)
+			, m_Diffuse(Diffuse)
+			, m_Specular(Specular)
 		{}
 
-		float m_AmbientStrength;
-		float m_SpecularStrength;
-		glm::vec3 m_LightColor;
+		glm::vec3 m_Ambient;
+		glm::vec3 m_Diffuse;
+		glm::vec3 m_Specular;
 	};
 
 	struct PhongMaterialComponent
