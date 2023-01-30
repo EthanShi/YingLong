@@ -30,6 +30,7 @@ PhongLightingScene::PhongLightingScene()
 	m_TestMaterials["red rubber"] = PhongMaterial(glm::vec3(0.05, 0.0, 0.0), glm::vec3(0.5, 0.4, 0.4), glm::vec3(0.7, 0.04, 0.04), 0.078125f * 128);
 	m_TestMaterials["white rubber"] = PhongMaterial(glm::vec3(0.05, 0.05, 0.05), glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.7, 0.7, 0.7), 0.078125f * 128);
 	m_TestMaterials["yellow rubber"] = PhongMaterial(glm::vec3(0.05, 0.05, 0.0), glm::vec3(0.5, 0.5, 0.4), glm::vec3(0.7, 0.7, 0.04), 0.078125f * 128);
+	m_TestMaterials["Container"] = PhongMaterial("res/texture/container2.png", "res/texture/container2_specular.png", glm::vec3(0.7, 0.7, 0.04), 0.078125f * 128);
 }
 
 void PhongLightingScene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This)
@@ -69,12 +70,15 @@ void PhongLightingScene::DrawEntities(float Deltatime)
 	auto CurMat = m_TestMaterials.find(m_CurrentMaterialName);
 	if (CurMat != m_TestMaterials.end())
 	{
-		auto MeshView = m_Registry.view<PhongMaterialComponent>(entt::exclude<PhongLightComponent>);
-		MeshView.each([&CurMat](PhongMaterialComponent& Material) {
+		auto ReplaceMaterialView = m_Registry.view<PhongMaterialComponent>(entt::exclude<PhongLightComponent>);
+		ReplaceMaterialView.each([&CurMat](PhongMaterialComponent& Material) {
 			Material.m_Material = CurMat->second;
 			});
+		auto ReplaceShaderView = m_Registry.view<ShaderComponent>(entt::exclude<PhongLightComponent>);
+		ReplaceShaderView.each([this, &CurMat](ShaderComponent& Shader) {
+			Shader.LoadShader(GetShaderPath(CurMat->second.GetDiffuseMap().IsValid()));
+			});
 	}
-
 
 	m_DrawBasicLightingSystem.Draw();
 }
@@ -98,9 +102,9 @@ void PhongLightingScene::CreateACube(const glm::vec3& Position, const glm::vec3&
 	reg.emplace<PhongMaterialComponent>(cube, m_TestMaterials["emerald"]);
 }
 
-std::string PhongLightingScene::GetShaderPath()
+std::string PhongLightingScene::GetShaderPath(bool WithMap)
 {
-	return "../YingLong/res/shaders/PhongLighting.shader";
+	return WithMap ? "../YingLong/res/shaders/PhongLightingWithMaps.shader" : "../YingLong/res/shaders/PhongLighting.shader";
 }
 
 void PhongLightingScene::CreatePhongLight()

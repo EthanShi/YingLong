@@ -26,7 +26,7 @@ protected:
 	virtual void CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale) override;
 
 private:
-	std::string GetShaderPath();
+	std::string GetShaderPath(bool WithMap = false);
 	void CreatePhongLight();
 
 	int m_CurrentMaterialIndex = 0;

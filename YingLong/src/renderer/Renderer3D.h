@@ -7,6 +7,7 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "Texture.h"
 
 namespace YingLong {
 
@@ -37,6 +38,7 @@ namespace YingLong {
 
 		static ShaderManager& GetShaderManager() { return m_ShaderManager; }
 		static MeshObjDataManager& GetMeshObjDataManager() { return m_MeshObjDataManager; }
+		static TextureManager& GetTextureManager() { return m_TextureManager; }
 
 		// Set functions
 		static void SetBackgroundColor(const glm::vec4& color);
@@ -61,6 +63,7 @@ namespace YingLong {
 
 		static ShaderManager m_ShaderManager;
 		static MeshObjDataManager m_MeshObjDataManager;
+		static TextureManager m_TextureManager;
 
 	private:
 		static glm::mat4 GetViewportMatrix();

@@ -63,7 +63,7 @@ void CameraMoveScene::CreateCubes()
 {
 	m_CubeMesh.LoadObjData("res/models/cube.obj");
 	m_CubeMesh.SetDefaultColor(glm::vec3(1.f, 0.5f, 0.3f));
-	m_CubeMesh.FillRenderData(true, false, true);
+	m_CubeMesh.FillRenderData(true, true, true);
 
 	glm::vec3 Scale(50.f, 50.f, 50.f);
 	std::vector<glm::vec3> Positions = {

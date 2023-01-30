@@ -22,6 +22,15 @@ namespace YingLong {
 	public:
 		struct Uniforms
 		{
+			void Clear()
+			{
+				m_Uniform1i.clear();
+				m_Uniform1f.clear();
+				m_Uniform3f.clear();
+				m_Uniform4f.clear();
+				m_UniformMat4f.clear();
+			}
+
 			void SetUniform(const std::string& name, const int32& value) { m_Uniform1i[name] = value; }
 			void SetUniform(const std::string& name, const float& value) { m_Uniform1f[name] = value; }
 			void SetUniform(const std::string& name, const glm::vec3& value) { m_Uniform3f[name] = value; }

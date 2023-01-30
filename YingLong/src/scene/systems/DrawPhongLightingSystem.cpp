@@ -29,13 +29,24 @@ void YingLong::DrawBasicLightingSystem::Draw()
 	Transform3DComponent& LightTransfrom = Reg.get<Transform3DComponent>(FirstLightEntity);
 
 	auto DrawMesh = [this, &CameraTransform, &Camera, &Light, &LightTransfrom](Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader, PhongMaterialComponent& Material) {
+		shader.m_Uniforms.Clear();
 		shader.m_Uniforms.SetUniform("Model", transform.GetTransform());
 		shader.m_Uniforms.SetUniform("VP", Camera.m_Camera.GetPerspective() * CameraTransform.GetViewMatrix());
 		shader.m_Uniforms.SetUniform("InverseModel", transform.GetInverseTransform());
-		shader.m_Uniforms.SetUniform("material.ambient", Material.m_Material.Ambient);
-		shader.m_Uniforms.SetUniform("material.diffuse", Material.m_Material.Diffuse);
-		shader.m_Uniforms.SetUniform("material.specular", Material.m_Material.Specular);
-		shader.m_Uniforms.SetUniform("material.shininess", Material.m_Material.Shininess);
+		if (Material.m_Material.GetDiffuseMap().IsValid())
+		{
+			Material.m_Material.GetDiffuseMap().Bind(0);
+			shader.m_Uniforms.SetUniform("material.diffuse", 0);
+			Material.m_Material.GetSpecularMap().Bind(1);
+			shader.m_Uniforms.SetUniform("material.specular", 1);
+		}
+		else
+		{
+			shader.m_Uniforms.SetUniform("material.ambient", Material.m_Material.m_Ambient);
+			shader.m_Uniforms.SetUniform("material.diffuse", Material.m_Material.m_Diffuse);
+			shader.m_Uniforms.SetUniform("material.specular", Material.m_Material.m_Specular);
+		}
+		shader.m_Uniforms.SetUniform("material.shininess", Material.m_Material.m_Shininess);
 		shader.m_Uniforms.SetUniform("light.ambient", Light.m_Ambient);
 		shader.m_Uniforms.SetUniform("light.diffuse", Light.m_Diffuse);
 		shader.m_Uniforms.SetUniform("light.specular", Light.m_Specular);
