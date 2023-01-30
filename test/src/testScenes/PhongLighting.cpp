@@ -117,8 +117,9 @@ void PhongLightingScene::CreatePhongLight()
 	LightTranform.SetPosition(glm::vec3(0.0f, 0.0f, 1000.0f));
 	LightTranform.SetScale(glm::vec3(10.f));
 
-	PhongLightComponent& Light = reg.emplace<PhongLightComponent>(
+	PhongLightComponent& PointLight = reg.emplace<PhongLightComponent>(
 		LightEntity,
+		PhongLightingType::Directional,
 		glm::vec3(0.2f, 0.2f, 0.2f),
 		glm::vec3(0.5f, 0.5f, 0.5f),
 		glm::vec3(1.0f, 1.0f, 1.0f));

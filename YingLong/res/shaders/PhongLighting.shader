@@ -40,7 +40,9 @@ struct Material {
 uniform Material material;
 
 struct Light {
-    vec3 position;
+    int type;
+
+    vec3 positionOrDirection;
 
     vec3 ambient;
     vec3 diffuse;
@@ -63,7 +65,16 @@ void main()
     vec3 ambient = material.ambient * light.ambient;
 
     vec3 norm = normalize(FragNormal);
-    vec3 lightDir = normalize(light.position * UnitScale - FragWorldPos);
+
+    vec3 lightDir;
+    if (light.type == 0)
+    {
+        lightDir = normalize(-light.positionOrDirection);
+    }
+    else if (light.type == 1)
+    {
+        lightDir = normalize(light.positionOrDirection * UnitScale - FragWorldPos);
+    }
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = light.diffuse * diff * material.diffuse;
 

@@ -4,16 +4,20 @@
 
 #include "renderer/Renderer3D.h"
 #include "renderer/PhongLighting/PhongMaterial.h"
+#include "renderer/PhongLighting/PhongLightingType.h"
 
 namespace YingLong {
 
 	struct PhongLightComponent
 	{
-		PhongLightComponent(const glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular)
-			: m_Ambient(Ambient)
+		PhongLightComponent(PhongLightingType Type, const glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular)
+			: Type(Type)
+			, m_Ambient(Ambient)
 			, m_Diffuse(Diffuse)
 			, m_Specular(Specular)
 		{}
+
+		PhongLightingType Type;
 
 		glm::vec3 m_Ambient;
 		glm::vec3 m_Diffuse;
