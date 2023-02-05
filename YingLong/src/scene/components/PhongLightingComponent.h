@@ -24,6 +24,27 @@ namespace YingLong {
 		glm::vec3 m_Specular;
 	};
 
+	struct PhongDirectionalLightComponent : public PhongLightComponent
+	{
+		PhongDirectionalLightComponent(glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular)
+			: PhongLightComponent(PhongLightingType::Directional, Ambient, Diffuse, Specular)
+		{}
+	};
+
+	struct PhongPointLightComponent : public PhongLightComponent
+	{
+		PhongPointLightComponent(glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular, const float Constant, const float Linear, const float Quadratic)
+			: PhongLightComponent(PhongLightingType::Point, Ambient, Diffuse, Specular)
+			, m_Constant(Constant)
+			, m_Linear(Linear)
+			, m_Quadratic(Quadratic)
+		{}
+
+		float m_Constant;
+		float m_Linear;
+		float m_Quadratic;
+	};
+
 	struct PhongMaterialComponent
 	{
 		PhongMaterialComponent(const PhongMaterial& Material)

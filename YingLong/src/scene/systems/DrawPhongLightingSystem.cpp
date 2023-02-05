@@ -8,15 +8,38 @@ DEFINE_LOGGER(DrawBasicLightingSystemLog)
 void YingLong::DrawBasicLightingSystem::Draw()
 {
 	auto& Reg = GetRegistry();
-	auto LightView = Reg.view<Transform3DComponent, PhongLightComponent>();
 
-	auto FirstLightEntity = LightView.front();
-	if (FirstLightEntity == entt::null)
+	uint32 LightCounts = 0;
+	PhongLightComponent* Light;
+	Transform3DComponent* LightTransform;
+
+	[&Reg, &LightCounts, &Light, &LightTransform]() {
+		auto PointLightView = Reg.view<Transform3DComponent, PhongPointLightComponent>();
+		auto FirstLightEntity = PointLightView.front();
+		if (FirstLightEntity != entt::null)
+		{
+			LightCounts = PointLightView.size_hint();
+			Light = &Reg.get<PhongPointLightComponent>(FirstLightEntity);
+			LightTransform = &Reg.get<Transform3DComponent>(FirstLightEntity);
+			return;
+		}
+
+		auto DirectionalLightView = Reg.view<Transform3DComponent, PhongDirectionalLightComponent>();
+		FirstLightEntity = DirectionalLightView.front();
+		if (FirstLightEntity != entt::null)
+		{
+			LightCounts = PointLightView.size_hint();
+			Light = &Reg.get<PhongDirectionalLightComponent>(FirstLightEntity);
+			LightTransform = &Reg.get<Transform3DComponent>(FirstLightEntity);
+		}
+	}();
+
+	if (LightCounts == 0)
 	{
 		DrawBasicLightingSystemLog().error("Can not Draw without light source.");
 		return;
 	}
-	if (LightView.size_hint() > 1)
+	if (LightCounts > 1)
 	{
 		DrawBasicLightingSystemLog().warn("More than one light source in the Scene, but only first will be used.");
 	}
@@ -25,10 +48,7 @@ void YingLong::DrawBasicLightingSystem::Draw()
 	Transform3DComponent& CameraTransform = Reg.get<Transform3DComponent>(PrimaryCamera);
 	const Camera3DComponent& Camera = Reg.get<Camera3DComponent>(PrimaryCamera);
 
-	PhongLightComponent& Light = Reg.get<PhongLightComponent>(FirstLightEntity);
-	Transform3DComponent& LightTransfrom = Reg.get<Transform3DComponent>(FirstLightEntity);
-
-	auto DrawMesh = [this, &CameraTransform, &Camera, &Light, &LightTransfrom](Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader, PhongMaterialComponent& Material) {
+	auto DrawMesh = [this, &CameraTransform, &Camera, &Light, &LightTransform](Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader, PhongMaterialComponent& Material) {
 		shader.m_Uniforms.Clear();
 		shader.m_Uniforms.SetUniform("Model", transform.GetTransform());
 		shader.m_Uniforms.SetUniform("VP", Camera.m_Camera.GetPerspective() * CameraTransform.GetViewMatrix());
@@ -47,11 +67,18 @@ void YingLong::DrawBasicLightingSystem::Draw()
 			shader.m_Uniforms.SetUniform("material.specular", Material.m_Material.m_Specular);
 		}
 		shader.m_Uniforms.SetUniform("material.shininess", Material.m_Material.m_Shininess);
-		shader.m_Uniforms.SetUniform("light.ambient", Light.m_Ambient);
-		shader.m_Uniforms.SetUniform("light.diffuse", Light.m_Diffuse);
-		shader.m_Uniforms.SetUniform("light.specular", Light.m_Specular);
-		shader.m_Uniforms.SetUniform("light.positionOrDirection", LightTransfrom.GetPosition());
-		shader.m_Uniforms.SetUniform("light.type", (int)Light.Type);
+		shader.m_Uniforms.SetUniform("light.ambient", Light->m_Ambient);
+		shader.m_Uniforms.SetUniform("light.diffuse", Light->m_Diffuse);
+		shader.m_Uniforms.SetUniform("light.specular", Light->m_Specular);
+		shader.m_Uniforms.SetUniform("light.positionOrDirection", LightTransform->GetPosition());
+		shader.m_Uniforms.SetUniform("light.type", (int)Light->Type);
+		if (Light->Type == PhongLightingType::Point)
+		{
+			PhongPointLightComponent* PointLight = static_cast<PhongPointLightComponent*>(Light);
+			shader.m_Uniforms.SetUniform("light.constant", PointLight->m_Constant);
+			shader.m_Uniforms.SetUniform("light.linear", PointLight->m_Linear);
+			shader.m_Uniforms.SetUniform("light.quadratic", PointLight->m_Quadratic);
+		}
 		shader.m_Uniforms.SetUniform("viewPos", CameraTransform.GetPosition());
 		Renderer::Draw(
 			mesh.m_MeshRef.GetVertexArray(),

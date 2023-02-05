@@ -114,15 +114,15 @@ void PhongLightingScene::CreatePhongLight()
 	// Init cubes mesh & shader
 	const auto LightEntity = reg.create();
 	Transform3DComponent& LightTranform = reg.emplace<Transform3DComponent>(LightEntity);
-	LightTranform.SetPosition(glm::vec3(0.0f, 0.0f, 1000.0f));
+	LightTranform.SetPosition(glm::vec3(0.0f, 0.0f, 500.0f));
 	LightTranform.SetScale(glm::vec3(10.f));
 
-	PhongLightComponent& PointLight = reg.emplace<PhongLightComponent>(
+	PhongPointLightComponent& PointLight = reg.emplace<PhongPointLightComponent>(
 		LightEntity,
-		PhongLightingType::Directional,
 		glm::vec3(0.2f, 0.2f, 0.2f),
 		glm::vec3(0.5f, 0.5f, 0.5f),
-		glm::vec3(1.0f, 1.0f, 1.0f));
+		glm::vec3(1.0f, 1.0f, 1.0f),
+		1.f, 0.045f, 0.0075f);
 
 	reg.emplace<MeshComponent>(LightEntity, m_CubeMesh);
 	ShaderComponent& LightShader = reg.emplace<ShaderComponent>(LightEntity);
