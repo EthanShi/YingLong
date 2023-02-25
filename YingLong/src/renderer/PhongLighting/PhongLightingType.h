@@ -5,7 +5,8 @@ namespace YingLong {
 	enum class PhongLightingType
 	{
 		Directional,
-		Point
+		Point,
+		Spot
 	};
 
 }

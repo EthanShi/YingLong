@@ -26,14 +26,15 @@ namespace YingLong {
 
 	struct PhongDirectionalLightComponent : public PhongLightComponent
 	{
-		PhongDirectionalLightComponent(glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular)
+		PhongDirectionalLightComponent(const glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular)
 			: PhongLightComponent(PhongLightingType::Directional, Ambient, Diffuse, Specular)
 		{}
 	};
 
 	struct PhongPointLightComponent : public PhongLightComponent
 	{
-		PhongPointLightComponent(glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular, const float Constant, const float Linear, const float Quadratic)
+		PhongPointLightComponent(const glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular,
+			const float Constant, const float Linear, const float Quadratic)
 			: PhongLightComponent(PhongLightingType::Point, Ambient, Diffuse, Specular)
 			, m_Constant(Constant)
 			, m_Linear(Linear)
@@ -43,6 +44,24 @@ namespace YingLong {
 		float m_Constant;
 		float m_Linear;
 		float m_Quadratic;
+	};
+
+	struct PhongSpotLightComponent : public PhongPointLightComponent
+	{
+		PhongSpotLightComponent(const glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular,
+			const float Constant, const float Linear, const float Quadratic,
+			const glm::vec3& SpotDirection, const float InnerCutOffInCos, const float OuterCutOffInCos)
+			: PhongPointLightComponent(Ambient, Diffuse, Specular, Constant, Linear, Quadratic)
+			, m_SpotDirection(SpotDirection)
+			, m_InnerCutOffInCos(InnerCutOffInCos)
+			, m_OuterCutOffInCos(OuterCutOffInCos)
+		{
+			Type = PhongLightingType::Spot;
+		}
+
+		glm::vec3 m_SpotDirection;
+		float m_InnerCutOffInCos;
+		float m_OuterCutOffInCos;
 	};
 
 	struct PhongMaterialComponent

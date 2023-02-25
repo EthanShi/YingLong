@@ -51,6 +51,10 @@ struct Light {
     float constant;
     float linear;
     float quadratic;
+
+    vec3 spotDirection;
+    float innerCutOffInCos;
+    float outerCutOffInCos;
 };
 
 uniform Light light;
@@ -71,19 +75,29 @@ void main()
     vec3 norm = normalize(FragNormal);
 
     vec3 lightDir;
-    float attenuation;
+    float intensity = 1.0;
 
-    if (light.type == 0)
+    float distance;
+    switch (light.type)
     {
+    case 0: // Direction light
         lightDir = normalize(-light.positionOrDirection);
-        attenuation = 1.0;
-    }
-    else if (light.type == 1)
-    {
+        break;
+    case 1: // Point light
         lightDir = normalize(light.positionOrDirection * UnitScale - FragWorldPos);
-        float distance = length(light.positionOrDirection * UnitScale - FragWorldPos);
-        attenuation = 1.f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+        distance = length(light.positionOrDirection * UnitScale - FragWorldPos);
+        intensity = 1.f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+        break;
+    case 2: // Spot light
+        lightDir = normalize(light.positionOrDirection * UnitScale - FragWorldPos);
+        distance = length(light.positionOrDirection * UnitScale - FragWorldPos);
+        intensity = 1.f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+        float theta = dot(lightDir, normalize(-light.spotDirection));
+        float epsilon = light.innerCutOffInCos - light.outerCutOffInCos;
+        intensity *= clamp((theta - light.outerCutOffInCos) / epsilon, 0.0, 1.0);
+        break;
     }
+
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = light.diffuse * diff * material.diffuse;
 
@@ -92,9 +106,9 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     vec3 specular = material.specular * spec * light.specular;
 
-    ambient *= attenuation;
-    diffuse *= attenuation;
-    specular *= attenuation;
+    ambient *= intensity;
+    diffuse *= intensity;
+    specular *= intensity;
 
     vec3 result = ambient + diffuse + specular;
     FragColor = vec4(result, 1.0);

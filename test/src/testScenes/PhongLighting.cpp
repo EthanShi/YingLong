@@ -117,12 +117,15 @@ void PhongLightingScene::CreatePhongLight()
 	LightTranform.SetPosition(glm::vec3(0.0f, 0.0f, 500.0f));
 	LightTranform.SetScale(glm::vec3(10.f));
 
-	PhongPointLightComponent& PointLight = reg.emplace<PhongPointLightComponent>(
+	PhongSpotLightComponent& PointLight = reg.emplace<PhongSpotLightComponent>(
 		LightEntity,
 		glm::vec3(0.2f, 0.2f, 0.2f),
 		glm::vec3(0.5f, 0.5f, 0.5f),
 		glm::vec3(1.0f, 1.0f, 1.0f),
-		1.f, 0.045f, 0.0075f);
+		1.f, 0.045f, 0.0075f,
+		glm::vec3(0.0f, 0.0f, -1.0f),
+		glm::cos(glm::radians(12.5f)),
+		glm::cos(glm::radians(17.5f)));
 
 	reg.emplace<MeshComponent>(LightEntity, m_CubeMesh);
 	ShaderComponent& LightShader = reg.emplace<ShaderComponent>(LightEntity);
