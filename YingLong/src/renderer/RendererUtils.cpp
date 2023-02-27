@@ -12,9 +12,10 @@ void GLClearError()
 
 bool GLLogCall(const char* function, const char* file, int32 line)
 {
-	while (GLenum error = glGetError())
+	GLenum error = glGetError();
+	while (error)
 	{
-		RendererUtilsLog().error("[OpenGL Error] ({:hex}): {} : {}", error, function, file, line);
+		RendererUtilsLog().error("[OpenGL Error] ({}): {} : {} : {}", error, function, file, line);
 		return false;
 	}
 	return true;

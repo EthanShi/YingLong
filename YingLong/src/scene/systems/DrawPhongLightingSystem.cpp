@@ -65,13 +65,15 @@ void YingLong::DrawBasicLightingSystem::Draw()
 		shader.m_Uniforms.SetUniform("InverseModel", transform.GetInverseTransform());
 		if (Material.m_Material.GetDiffuseMap().IsValid())
 		{
+			shader.m_Uniforms.SetUniform("useMaterialWithMap", 1);
 			Material.m_Material.GetDiffuseMap().Bind(0);
-			shader.m_Uniforms.SetUniform("material.diffuse", 0);
+			shader.m_Uniforms.SetUniform("materialWithMap.diffuse", 0);
 			Material.m_Material.GetSpecularMap().Bind(1);
-			shader.m_Uniforms.SetUniform("material.specular", 1);
+			shader.m_Uniforms.SetUniform("materialWithMap.specular", 1);
 		}
 		else
 		{
+			shader.m_Uniforms.SetUniform("useMaterialWithMap", 0);
 			shader.m_Uniforms.SetUniform("material.ambient", Material.m_Material.m_Ambient);
 			shader.m_Uniforms.SetUniform("material.diffuse", Material.m_Material.m_Diffuse);
 			shader.m_Uniforms.SetUniform("material.specular", Material.m_Material.m_Specular);

@@ -73,11 +73,7 @@ void PhongLightingScene::DrawEntities(float Deltatime)
 		auto ReplaceMaterialView = m_Registry.view<PhongMaterialComponent>(entt::exclude<PhongLightComponent>);
 		ReplaceMaterialView.each([&CurMat](PhongMaterialComponent& Material) {
 			Material.m_Material = CurMat->second;
-			});
-		auto ReplaceShaderView = m_Registry.view<ShaderComponent>(entt::exclude<PhongLightComponent>);
-		ReplaceShaderView.each([this, &CurMat](ShaderComponent& Shader) {
-			Shader.LoadShader(GetShaderPath(CurMat->second.GetDiffuseMap().IsValid()));
-			});
+		});
 	}
 
 	m_DrawBasicLightingSystem.Draw();
@@ -102,9 +98,9 @@ void PhongLightingScene::CreateACube(const glm::vec3& Position, const glm::vec3&
 	reg.emplace<PhongMaterialComponent>(cube, m_TestMaterials["emerald"]);
 }
 
-std::string PhongLightingScene::GetShaderPath(bool WithMap)
+std::string PhongLightingScene::GetShaderPath()
 {
-	return WithMap ? "../YingLong/res/shaders/PhongLightingWithMaps.shader" : "../YingLong/res/shaders/PhongLighting.shader";
+	return "../YingLong/res/shaders/PhongLighting.shader";
 }
 
 void PhongLightingScene::CreatePhongLight()

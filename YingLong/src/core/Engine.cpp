@@ -50,6 +50,8 @@ namespace YingLong
 			EngineLog().error("Failed to initialize OpenGL context");
 			return;
 		}
+		gladUninstallGLDebug();
+
 		// Successfully loaded OpenGL
 		EngineLog().info("Loaded OpenGL {}.{}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
