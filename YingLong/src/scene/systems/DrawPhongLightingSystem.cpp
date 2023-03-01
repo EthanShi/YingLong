@@ -10,55 +10,40 @@ void YingLong::DrawBasicLightingSystem::Draw()
 	auto& Reg = GetRegistry();
 
 	uint32 LightCounts = 0;
-	PhongLightComponent* Light;
-	Transform3DComponent* LightTransform;
+	std::map<PhongLightComponent*, Transform3DComponent*> Lights;
 
-	[&Reg, &LightCounts, &Light, &LightTransform]() {
-		auto DirectionalLightView = Reg.view<Transform3DComponent, PhongDirectionalLightComponent>();
-		auto FirstLightEntity = DirectionalLightView.front();
-		if (FirstLightEntity != entt::null)
+	auto DirectionalLightView = Reg.view<Transform3DComponent, PhongDirectionalLightComponent>();
+	LightCounts += (uint32)DirectionalLightView.size_hint();
+	DirectionalLightView.each([&Reg, &Lights](Transform3DComponent& Transform, PhongDirectionalLightComponent& Light)
 		{
-			LightCounts = DirectionalLightView.size_hint();
-			Light = &Reg.get<PhongDirectionalLightComponent>(FirstLightEntity);
-			LightTransform = &Reg.get<Transform3DComponent>(FirstLightEntity);
-			return;
-		}
+			Lights.emplace(&Light, &Transform);
+		});
 
-		auto PointLightView = Reg.view<Transform3DComponent, PhongPointLightComponent>();
-		FirstLightEntity = PointLightView.front();
-		if (FirstLightEntity != entt::null)
+	auto PointLightView = Reg.view<Transform3DComponent, PhongPointLightComponent>();
+	LightCounts += (uint32)PointLightView.size_hint();
+	PointLightView.each([&Reg, &Lights](Transform3DComponent& Transform, PhongPointLightComponent& Light)
 		{
-			LightCounts = PointLightView.size_hint();
-			Light = &Reg.get<PhongPointLightComponent>(FirstLightEntity);
-			LightTransform = &Reg.get<Transform3DComponent>(FirstLightEntity);
-			return;
-		}
+			Lights.emplace(&Light, &Transform);
+		});
 
-		auto SpotLightView = Reg.view<Transform3DComponent, PhongSpotLightComponent>();
-		FirstLightEntity = SpotLightView.front();
-		if (FirstLightEntity != entt::null)
+	auto SpotLightView = Reg.view<Transform3DComponent, PhongSpotLightComponent>();
+	LightCounts += (uint32)SpotLightView.size_hint();
+	SpotLightView.each([&Reg, &Lights](Transform3DComponent& Transform, PhongSpotLightComponent& Light)
 		{
-			LightCounts = SpotLightView.size_hint();
-			Light = &Reg.get<PhongSpotLightComponent>(FirstLightEntity);
-			LightTransform = &Reg.get<Transform3DComponent>(FirstLightEntity);
-		}
-	}();
+			Lights.emplace(&Light, &Transform);
+		});
 
 	if (LightCounts == 0)
 	{
 		DrawBasicLightingSystemLog().error("Can not Draw without light source.");
 		return;
 	}
-	if (LightCounts > 1)
-	{
-		DrawBasicLightingSystemLog().warn("More than one light source in the Scene, but only first will be used.");
-	}
 	
 	auto PrimaryCamera = GetPrimaryCamera();
 	Transform3DComponent& CameraTransform = Reg.get<Transform3DComponent>(PrimaryCamera);
 	const Camera3DComponent& Camera = Reg.get<Camera3DComponent>(PrimaryCamera);
 
-	auto DrawMesh = [this, &CameraTransform, &Camera, &Light, &LightTransform](Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader, PhongMaterialComponent& Material) {
+	auto DrawMesh = [this, &CameraTransform, &Camera, &Lights](Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader, PhongMaterialComponent& Material) {
 		shader.m_Uniforms.Clear();
 		shader.m_Uniforms.SetUniform("Model", transform.GetTransform());
 		shader.m_Uniforms.SetUniform("VP", Camera.m_Camera.GetPerspective() * CameraTransform.GetViewMatrix());
@@ -79,24 +64,34 @@ void YingLong::DrawBasicLightingSystem::Draw()
 			shader.m_Uniforms.SetUniform("material.specular", Material.m_Material.m_Specular);
 		}
 		shader.m_Uniforms.SetUniform("material.shininess", Material.m_Material.m_Shininess);
-		shader.m_Uniforms.SetUniform("light.ambient", Light->m_Ambient);
-		shader.m_Uniforms.SetUniform("light.diffuse", Light->m_Diffuse);
-		shader.m_Uniforms.SetUniform("light.specular", Light->m_Specular);
-		shader.m_Uniforms.SetUniform("light.positionOrDirection", LightTransform->GetPosition());
-		shader.m_Uniforms.SetUniform("light.type", (int)Light->Type);
-		if (Light->Type == PhongLightingType::Point || Light->Type == PhongLightingType::Spot)
+		
+		shader.m_Uniforms.SetUniform("LightCounts", (int)Lights.size());
+		int8 Index = 0;
+		for (auto& Light : Lights)
 		{
-			PhongPointLightComponent* PointLight = static_cast<PhongPointLightComponent*>(Light);
-			shader.m_Uniforms.SetUniform("light.constant", PointLight->m_Constant);
-			shader.m_Uniforms.SetUniform("light.linear", PointLight->m_Linear);
-			shader.m_Uniforms.SetUniform("light.quadratic", PointLight->m_Quadratic);
-			if (Light->Type == PhongLightingType::Spot)
+			PhongLightComponent* LightComp = Light.first;
+			Transform3DComponent* Transform = Light.second;
+			std::string Perfix = "Lights[" + std::to_string(Index) + "].";
+			shader.m_Uniforms.SetUniform(Perfix + "ambient", LightComp->m_Ambient);
+			shader.m_Uniforms.SetUniform(Perfix + "diffuse", LightComp->m_Diffuse);
+			shader.m_Uniforms.SetUniform(Perfix + "specular", LightComp->m_Specular);
+			shader.m_Uniforms.SetUniform(Perfix + "positionOrDirection", Transform->GetPosition());
+			shader.m_Uniforms.SetUniform(Perfix + "type", (int)LightComp->Type);
+			if (LightComp->Type == PhongLightingType::Point || LightComp->Type == PhongLightingType::Spot)
 			{
-				PhongSpotLightComponent* SpotLight = static_cast<PhongSpotLightComponent*>(Light);
-				shader.m_Uniforms.SetUniform("light.spotDirection", SpotLight->m_SpotDirection);
-				shader.m_Uniforms.SetUniform("light.innerCutOffInCos", SpotLight->m_InnerCutOffInCos);
-				shader.m_Uniforms.SetUniform("light.outerCutOffInCos", SpotLight->m_OuterCutOffInCos);
+				PhongPointLightComponent* PointLight = static_cast<PhongPointLightComponent*>(LightComp);
+				shader.m_Uniforms.SetUniform(Perfix + "constant", PointLight->m_Constant);
+				shader.m_Uniforms.SetUniform(Perfix + "linear", PointLight->m_Linear);
+				shader.m_Uniforms.SetUniform(Perfix + "quadratic", PointLight->m_Quadratic);
+				if (LightComp->Type == PhongLightingType::Spot)
+				{
+					PhongSpotLightComponent* SpotLight = static_cast<PhongSpotLightComponent*>(LightComp);
+					shader.m_Uniforms.SetUniform(Perfix + "spotDirection", SpotLight->m_SpotDirection);
+					shader.m_Uniforms.SetUniform(Perfix + "innerCutOffInCos", SpotLight->m_InnerCutOffInCos);
+					shader.m_Uniforms.SetUniform(Perfix + "outerCutOffInCos", SpotLight->m_OuterCutOffInCos);
+				}
 			}
+			Index++;
 		}
 
 		shader.m_Uniforms.SetUniform("viewPos", CameraTransform.GetPosition()); 

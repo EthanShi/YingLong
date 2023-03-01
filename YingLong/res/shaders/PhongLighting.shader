@@ -71,7 +71,66 @@ struct Light {
     float outerCutOffInCos;
 };
 
-uniform Light light;
+uniform int LightCounts;
+
+#define LIGHT_MAX_COUNTS 16
+uniform Light Lights[LIGHT_MAX_COUNTS];
+
+vec3 CalcAmbient(Light light, vec2 fragTexCoords)
+{
+    return light.ambient * (
+        useMaterialWithMap * vec3(texture(materialWithMap.diffuse, fragTexCoords))
+        + (1 - useMaterialWithMap) * material.ambient);
+}
+
+vec3 CalcDiffuse(Light light, vec3 normal, vec3 lightDir, vec2 fragTexCoords)
+{
+    float diff = max(dot(normal, lightDir), 0.0);
+    return light.diffuse * diff * (
+        useMaterialWithMap * vec3(texture(materialWithMap.diffuse, fragTexCoords))
+        + (1 - useMaterialWithMap) * material.diffuse);
+}
+
+vec3 CalcSpecular(Light light, vec3 normal, vec3 lightDir, vec3 viewDir, vec2 fragTexCoords)
+{
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    return light.specular * spec * (
+        useMaterialWithMap * vec3(texture(materialWithMap.specular, fragTexCoords))
+        + (1 - useMaterialWithMap) * material.specular);
+}
+
+float CalcIntensity(Light light, vec3 lightDir, vec3 fragPos, float unitScale)
+{
+    float distance = length(light.positionOrDirection * unitScale - fragPos);
+    float intensity = 1.f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+    if (light.type == 2)
+    {
+        float theta = dot(lightDir, normalize(-light.spotDirection));
+        float epsilon = light.innerCutOffInCos - light.outerCutOffInCos;
+        intensity *= clamp((theta - light.outerCutOffInCos) / epsilon, 0.0, 1.0);
+    }
+    return intensity;
+}
+
+vec3 CalcLight(Light light, vec3 normal, vec3 viewDir, vec3 fragPos, vec2 fragTexCoords, float unitScale)
+{
+    vec3 lightDir;
+    if (light.type == 0)
+    {
+        lightDir = normalize(-light.positionOrDirection);
+    }
+    else
+    {
+        lightDir = normalize(light.positionOrDirection * unitScale - fragPos);
+    }
+
+    vec3 ambient = CalcAmbient(light, fragTexCoords);
+    vec3 diffuse = CalcDiffuse(light, normal, lightDir, fragTexCoords);
+    vec3 specular = CalcSpecular(light, normal, lightDir, viewDir, fragTexCoords);
+
+    return CalcIntensity(light, lightDir, fragPos, unitScale) * (ambient + diffuse + specular);
+}
 
 out vec4 FragColor;
 
@@ -85,52 +144,14 @@ uniform vec3 viewPos;
 
 void main()
 {
-    vec3 ambient = light.ambient * (
-        useMaterialWithMap * vec3(texture(materialWithMap.diffuse, FragTexCoords))
-        + (1 - useMaterialWithMap) * material.ambient);
-
     vec3 norm = normalize(FragNormal);
+    vec3 viewDir = normalize(viewPos * UnitScale - FragWorldPos);
 
-    vec3 lightDir;
-    float intensity = 1.0;
-
-    float distance;
-    switch (light.type)
+    vec3 result;
+    for (int i = 0; i < LightCounts; i++)
     {
-    case 0: // Direction light
-        lightDir = normalize(-light.positionOrDirection);
-        break;
-    case 1: // Point light
-        lightDir = normalize(light.positionOrDirection * UnitScale - FragWorldPos);
-        distance = length(light.positionOrDirection * UnitScale - FragWorldPos);
-        intensity = 1.f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-        break;
-    case 2: // Spot light
-        lightDir = normalize(light.positionOrDirection * UnitScale - FragWorldPos);
-        distance = length(light.positionOrDirection * UnitScale - FragWorldPos);
-        intensity = 1.f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-        float theta = dot(lightDir, normalize(-light.spotDirection));
-        float epsilon = light.innerCutOffInCos - light.outerCutOffInCos;
-        intensity *= clamp((theta - light.outerCutOffInCos) / epsilon, 0.0, 1.0);
-        break;
+        result += CalcLight(Lights[i], norm, viewDir, FragWorldPos, FragTexCoords, UnitScale);
     }
 
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = light.diffuse * diff * (
-        useMaterialWithMap * vec3(texture(materialWithMap.diffuse, FragTexCoords))
-        + (1 - useMaterialWithMap) * material.diffuse);
-
-    vec3 viewDir = normalize(viewPos * UnitScale - FragWorldPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    vec3 specular = light.specular * spec * (
-        useMaterialWithMap * vec3(texture(materialWithMap.specular, FragTexCoords))
-        + (1 - useMaterialWithMap) * material.specular);
-
-    ambient *= intensity;
-    diffuse *= intensity;
-    specular *= intensity;
-
-    vec3 result = ambient + diffuse + specular;
     FragColor = vec4(result, 1.0);
 };
