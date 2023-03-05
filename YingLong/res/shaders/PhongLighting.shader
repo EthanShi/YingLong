@@ -102,6 +102,10 @@ vec3 CalcSpecular(Light light, vec3 normal, vec3 lightDir, vec3 viewDir, vec2 fr
 
 float CalcIntensity(Light light, vec3 lightDir, vec3 fragPos, float unitScale)
 {
+    if (light.type == 0)
+    {
+        return 1.0;
+    }
     float distance = length(light.positionOrDirection * unitScale - fragPos);
     float intensity = 1.f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
     if (light.type == 2)
@@ -142,8 +146,16 @@ uniform float UnitScale;
 
 uniform vec3 viewPos;
 
+uniform int DrawingLight;
+
 void main()
 {
+    if (DrawingLight != 0)
+    {
+        FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+        return;
+    }
+
     vec3 norm = normalize(FragNormal);
     vec3 viewDir = normalize(viewPos * UnitScale - FragWorldPos);
 

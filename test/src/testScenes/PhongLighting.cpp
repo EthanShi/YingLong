@@ -37,7 +37,7 @@ void PhongLightingScene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, co
 {
 	CameraMoveScene::OnActive(OwnerEngine, This);
 
-	CreatePhongLight();
+	CreatePhongLights();
 
 	m_DrawBasicLightingSystem.SetOwnerScene(This);
 }
@@ -103,33 +103,102 @@ std::string PhongLightingScene::GetShaderPath()
 	return "../YingLong/res/shaders/PhongLighting.shader";
 }
 
-void PhongLightingScene::CreatePhongLight()
+void PhongLightingScene::CreatePhongLights()
 {
 	auto& reg = m_Registry;
 
-	// Init cubes mesh & shader
-	const auto LightEntity = reg.create();
-	Transform3DComponent& LightTranform = reg.emplace<Transform3DComponent>(LightEntity);
-	LightTranform.SetPosition(glm::vec3(0.0f, 0.0f, 500.0f));
-	LightTranform.SetScale(glm::vec3(10.f));
+	std::vector<glm::vec3> DirLightsTransform = {
+		glm::vec3(0.f, 0.f, 0.f),	// pos
+		glm::vec3(0.f, 0.f, -1.f),	// forward
+		glm::vec3(0.f, 1.f, 0.f),	// up
+	};
 
-	PhongSpotLightComponent& PointLight = reg.emplace<PhongSpotLightComponent>(
-		LightEntity,
-		glm::vec3(0.2f, 0.2f, 0.2f),
-		glm::vec3(0.5f, 0.5f, 0.5f),
-		glm::vec3(1.0f, 1.0f, 1.0f),
-		1.f, 0.045f, 0.0075f,
-		glm::vec3(0.0f, 0.0f, -1.0f),
-		glm::cos(glm::radians(12.5f)),
-		glm::cos(glm::radians(17.5f)));
+	std::vector<glm::vec3> SpotLightsTransform = {
+		glm::vec3(0.f, 400.f, -400.f),	// pos
+		glm::vec3(0.f, -1.f, 1.f),	// forward
+		glm::vec3(0.f, 1.f, 1.f),	// up
+		glm::vec3(0.f, -400.f, 0.f),	// pos
+		glm::vec3(0.f, 1.f, 0.f),	// forward
+		glm::vec3(0.f, 0.f, 1.f),	// up
+		glm::vec3(400.f, 400.f, 400.f),	// pos
+		glm::vec3(-1.f, -1.f, -1.f),	// forward
+		glm::vec3(2.f, -1.f, -1.f),	// up
+	};
 
-	reg.emplace<MeshComponent>(LightEntity, m_CubeMesh);
-	ShaderComponent& LightShader = reg.emplace<ShaderComponent>(LightEntity);
-	LightShader.LoadShader(GetShaderPath());
+	std::vector<glm::vec3> PointLightsTransform = {
+		glm::vec3(0.f, -1000.f, -1000.f),	// pos
+		glm::vec3(-1000.f, -1000.f, -1000.f),	// pos
+		glm::vec3(0.f, -1000.f, 0.f),	// pos
+	};
 
-	reg.emplace<PhongMaterialComponent>(
-		LightEntity,
-		glm::vec3(1.0f, 1.0f, 1.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f), 32);
+	std::vector<entt::entity> Lights;
+
+	for (int32 Index = 0; Index < DirLightsTransform.size(); Index += 3)
+	{
+		const auto LightEntity = reg.create();
+		Transform3DComponent& LightTranform = reg.emplace<Transform3DComponent>(LightEntity);
+		LightTranform.SetPosition(DirLightsTransform[Index]);
+		LightTranform.SetForward(DirLightsTransform[Index + 1]);
+		LightTranform.SetUp(DirLightsTransform[Index + 2]);
+		LightTranform.SetScale(glm::vec3(10.f));
+
+		reg.emplace<PhongDirectionalLightComponent>(
+			LightEntity,
+			glm::vec3(0.2f, 0.2f, 0.2f),
+			glm::vec3(0.5f, 0.5f, 0.5f),
+			glm::vec3(1.0f, 1.0f, 1.0f));
+
+		Lights.push_back(LightEntity);
+	}
+
+	for (int32 Index = 0; Index < SpotLightsTransform.size(); Index += 3)
+	{
+		const auto LightEntity = reg.create();
+		Transform3DComponent& LightTranform = reg.emplace<Transform3DComponent>(LightEntity);
+		LightTranform.SetPosition(SpotLightsTransform[Index]);
+		LightTranform.SetForward(SpotLightsTransform[Index + 1]);
+		LightTranform.SetUp(SpotLightsTransform[Index + 2]);
+		LightTranform.SetScale(glm::vec3(10.f));
+
+		reg.emplace<PhongSpotLightComponent>(
+			LightEntity,
+			glm::vec3(0.2f, 0.2f, 0.2f),
+			glm::vec3(0.5f, 0.5f, 0.5f),
+			glm::vec3(1.0f, 1.0f, 1.0f),
+			1.f, 0.045f, 0.0075f,
+			glm::cos(glm::radians(12.5f)),
+			glm::cos(glm::radians(17.5f)));
+
+		Lights.push_back(LightEntity);
+	}
+
+	for (int32 Index = 0; Index < PointLightsTransform.size(); Index++)
+	{
+		const auto LightEntity = reg.create();
+		Transform3DComponent& LightTranform = reg.emplace<Transform3DComponent>(LightEntity);
+		LightTranform.SetPosition(PointLightsTransform[Index]);
+		LightTranform.SetScale(glm::vec3(10.f));
+
+		reg.emplace<PhongPointLightComponent>(
+			LightEntity,
+			glm::vec3(0.2f, 0.2f, 0.2f),
+			glm::vec3(0.5f, 0.5f, 0.5f),
+			glm::vec3(1.0f, 1.0f, 1.0f),
+			1.f, 0.045f, 0.0075f);
+
+		Lights.push_back(LightEntity);
+	}
+
+	for (auto Light : Lights)
+	{
+		reg.emplace<MeshComponent>(Light, m_CubeMesh);
+		ShaderComponent& LightShader = reg.emplace<ShaderComponent>(Light);
+		LightShader.LoadShader(GetShaderPath());
+
+		reg.emplace<PhongMaterialComponent>(
+			Light,
+			glm::vec3(1.0f, 1.0f, 1.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f), 32);
+	}
 }

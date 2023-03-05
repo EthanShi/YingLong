@@ -27,7 +27,7 @@ protected:
 
 private:
 	std::string GetShaderPath();
-	void CreatePhongLight();
+	void CreatePhongLights();
 
 	int m_CurrentMaterialIndex = 0;
 	std::string m_CurrentMaterialName = "";

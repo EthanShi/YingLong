@@ -50,16 +50,14 @@ namespace YingLong {
 	{
 		PhongSpotLightComponent(const glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular,
 			const float Constant, const float Linear, const float Quadratic,
-			const glm::vec3& SpotDirection, const float InnerCutOffInCos, const float OuterCutOffInCos)
+			const float InnerCutOffInCos, const float OuterCutOffInCos)
 			: PhongPointLightComponent(Ambient, Diffuse, Specular, Constant, Linear, Quadratic)
-			, m_SpotDirection(SpotDirection)
 			, m_InnerCutOffInCos(InnerCutOffInCos)
 			, m_OuterCutOffInCos(OuterCutOffInCos)
 		{
 			Type = PhongLightingType::Spot;
 		}
 
-		glm::vec3 m_SpotDirection;
 		float m_InnerCutOffInCos;
 		float m_OuterCutOffInCos;
 	};
