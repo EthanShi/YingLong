@@ -1,12 +1,18 @@
-#include "SingleCube.h"
+#include "DepthTest.h"
 #include "renderer/Mesh.h"
+#include "input/Input.h"
 
 #include "scene/components/BasicComponents.h"
 #include "scene/components/DrawableComponents.h"
 
-SingleCubeScene::SingleCubeScene()
+DepthTestScene::DepthTestScene()
 	: Scene::Scene()
+	, m_FreeMovementSystem()
+	, m_DrawBasic3DMeshSystem()
 {
+	Input& InputInstance = Input::Instance();
+	InputInstance.SetCursorMode(CursorMode::CURSOR_DISABLED);
+
 	auto& reg = m_Registry;
 
 	// Init cubes mesh & shader
@@ -23,18 +29,32 @@ SingleCubeScene::SingleCubeScene()
 
 	ShaderComponent& ShaderComp = reg.emplace<ShaderComponent>(cubes);
 	ShaderComp.LoadShader("../YingLong/res/shaders/basic3D.shader");
+
+
 }
 
-void SingleCubeScene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This)
+void DepthTestScene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This)
 {
 	Scene::OnActive(OwnerEngine, This);
 
+	m_FreeMovementSystem.SetOwnerScene(This);
 	m_DrawBasic3DMeshSystem.SetOwnerScene(This);
 }
 
-void SingleCubeScene::DrawEntities(float deltatime)
+void DepthTestScene::Update(float deltatime)
+{
+	m_FreeMovementSystem.Update(deltatime);
+}
+
+void DepthTestScene::DrawEntities(float deltatime)
 {
 	Scene::DrawEntities(deltatime);
 
 	m_DrawBasic3DMeshSystem.Draw();
+}
+
+void DepthTestScene::CreateDefaultCamera()
+{
+	Scene::CreateDefaultCamera();
+	m_Registry.emplace<FreeMovementComponent>(m_PrimaryCamera);
 }

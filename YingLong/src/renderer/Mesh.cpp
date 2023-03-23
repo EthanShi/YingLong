@@ -173,13 +173,13 @@ namespace YingLong {
 
     uint32 MeshObjDataManager::LoadMeshObjData(const std::string& FileName, const std::string& materialSearchPath)
     {
-        auto& FindMeshResult = m_LoadedMeshObjDataMap.find(FileName);
+        auto FindMeshResult = m_LoadedMeshObjDataMap.find(FileName);
         if (FindMeshResult != m_LoadedMeshObjDataMap.end())
         {
             return FindMeshResult->second.m_MeshObjDataID;
         }
 
-        auto& Result = m_LoadedMeshObjDataMap.emplace(FileName, MeshObjData());
+        auto Result = m_LoadedMeshObjDataMap.emplace(FileName, MeshObjData());
         if (!Result.second)
         {
             MeshLog().error("Load mesh failed: {}", FileName);
@@ -230,7 +230,7 @@ namespace YingLong {
         if (m_LoadedMeshObjDataMapPath.find(MeshObjDataID) != m_LoadedMeshObjDataMapPath.end())
         {
             const std::string& filepath = m_LoadedMeshObjDataMapPath.at(MeshObjDataID);
-            auto& FindMeshObjDataResult = m_LoadedMeshObjDataMap.find(filepath);
+            auto FindMeshObjDataResult = m_LoadedMeshObjDataMap.find(filepath);
             if (FindMeshObjDataResult != m_LoadedMeshObjDataMap.end())
             {
                 return FindMeshObjDataResult->second;

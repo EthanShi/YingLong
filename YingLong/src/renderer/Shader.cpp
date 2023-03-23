@@ -173,13 +173,13 @@ namespace YingLong {
 
 	uint32 ShaderManager::LoadShader(const std::string& filepath)
 	{
-		auto& shader = m_LoadedShaderMap.find(filepath);
+		auto shader = m_LoadedShaderMap.find(filepath);
 		if (shader != m_LoadedShaderMap.end())
 		{
 			return shader->second.GetRendererID();
 		}
 
-		auto& result = m_LoadedShaderMap.emplace(filepath, Shader(filepath));
+		auto result = m_LoadedShaderMap.emplace(filepath, Shader(filepath));
 		if (result.second)
 		{
 

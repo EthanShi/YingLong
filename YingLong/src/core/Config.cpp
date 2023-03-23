@@ -10,7 +10,7 @@ namespace YingLong {
     const toml::table& Config::ReadOnly(const std::string& SceneName)
     {
         MergeConfigData();
-        auto& FindResult = m_MergedConfigs.find(SceneName);
+        auto FindResult = m_MergedConfigs.find(SceneName);
         if (FindResult != m_MergedConfigs.end())
         {
             return FindResult->second.Data;
@@ -21,7 +21,7 @@ namespace YingLong {
     const toml::table& Config::ReadOnlyWithUser(const std::string& SceneName)
     {
         MergeConfigData();
-        auto& FindResult = m_MergedConfigsWithUser.find(SceneName);
+        auto FindResult = m_MergedConfigsWithUser.find(SceneName);
         if (FindResult != m_MergedConfigsWithUser.end())
         {
             return FindResult->second.Data;
@@ -162,7 +162,7 @@ namespace YingLong {
         {
             if (SceneConfig.second.Dirty)
             {
-                auto& FindResult = m_MergedConfigsWithUser.find(SceneConfig.first);
+                auto FindResult = m_MergedConfigsWithUser.find(SceneConfig.first);
                 if (FindResult != m_MergedConfigsWithUser.end())
                 {
                     MergeTable(FindResult->second.Data, SceneConfig.second.Data);
@@ -189,7 +189,7 @@ namespace YingLong {
                 IsReplacePerfix = true;
                 Key = Key.substr(1);
             }
-            auto& FindInBase = BaseTable.find(Key);
+            auto FindInBase = BaseTable.find(Key);
             if (FindInBase == BaseTable.end() || IsReplacePerfix)
             {
                 BaseTable.insert_or_assign(Key, Elem.second);

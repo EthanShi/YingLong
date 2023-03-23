@@ -133,7 +133,7 @@ namespace YingLong
 
 	void Engine::AddScene(std::shared_ptr<Scene> scene)
 	{
-		auto& FindResult = m_Scenes.find(scene->GetName());
+		auto FindResult = m_Scenes.find(scene->GetName());
 		if (FindResult != m_Scenes.end())
 		{
 			// Log already added error
@@ -145,7 +145,7 @@ namespace YingLong
 
 	void Engine::RemoveScene(const std::shared_ptr<Scene>& scene)
 	{
-		auto& FindResult = m_Scenes.find(scene->GetName());
+		auto FindResult = m_Scenes.find(scene->GetName());
 		if (FindResult == m_Scenes.end())
 		{
 			// Log can not find this scene error

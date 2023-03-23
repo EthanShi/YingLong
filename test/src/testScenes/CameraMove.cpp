@@ -27,12 +27,6 @@ void CameraMoveScene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, const
 
 	CreateCubes();
 
-	// Switch cursor mode
-	GetInputAction().Bind("SwitchCursorMode", [this]() {
-		Input& InputInstance = Input::Instance();
-		InputInstance.SetCursorMode(InputInstance.GetCursorMode() == CursorMode::CURSOR_DISABLED ? CursorMode::CURSOR_NORMAL : CursorMode::CURSOR_DISABLED);
-		});
-
 	m_FreeMovementSystem.SetOwnerScene(This);
 	m_DrawBasic3DMeshSystem.SetOwnerScene(This);
 }

@@ -28,10 +28,7 @@ namespace YingLong {
 			: m_Stride(0) {}
 
 		template<typename T>
-		void Push(uint32 count)
-		{
-			static_assert(false);
-		}
+		void Push(uint32 count);
 
 		template<>
 		void Push<float>(uint32 count)

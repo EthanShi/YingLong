@@ -11,7 +11,6 @@ namespace YingLong {
 	FreeMovementSystem::FreeMovementSystem()
 		: SystemBase()
 	{
-
 	}
 
 	FreeMovementSystem::~FreeMovementSystem()
@@ -30,16 +29,21 @@ namespace YingLong {
 		}
 		auto& InputAction = GetInputAction();
 
-		m_InputActionHandlers[0] = InputAction.Bind("MoveForward", INPUTACTION_AXIS_CALLBACK(this, OnMoveForward));
-		m_InputActionHandlers[1] = InputAction.Bind("MoveRight", INPUTACTION_AXIS_CALLBACK(this, OnMoveRight));
-		m_InputActionHandlers[2] = InputAction.Bind("Pitch", INPUTACTION_AXIS_CALLBACK(this, OnTurnPitch));
-		m_InputActionHandlers[3] = InputAction.Bind("Yaw", INPUTACTION_AXIS_CALLBACK(this, OnTurnYaw));
+		m_InputActionHandlers[0] = InputAction.Bind("SwitchCursorMode", [this]() {
+			Input& InputInstance = Input::Instance();
+			InputInstance.SetCursorMode(InputInstance.GetCursorMode() == CursorMode::CURSOR_DISABLED ? CursorMode::CURSOR_NORMAL : CursorMode::CURSOR_DISABLED);
+			});
+
+		m_InputActionHandlers[1] = InputAction.Bind("MoveForward", INPUTACTION_AXIS_CALLBACK(this, OnMoveForward));
+		m_InputActionHandlers[2] = InputAction.Bind("MoveRight", INPUTACTION_AXIS_CALLBACK(this, OnMoveRight));
+		m_InputActionHandlers[3] = InputAction.Bind("Pitch", INPUTACTION_AXIS_CALLBACK(this, OnTurnPitch));
+		m_InputActionHandlers[4] = InputAction.Bind("Yaw", INPUTACTION_AXIS_CALLBACK(this, OnTurnYaw));
 	}
 
 	void FreeMovementSystem::Update(float DeltaTime)
 	{
 		auto& reg = GetRegistry();
-		auto& view = reg.view<Transform3DComponent, FreeMovementComponent>();
+		auto view = reg.view<Transform3DComponent, FreeMovementComponent>();
 		view.each(
 			[this, DeltaTime](Transform3DComponent& Transform, const FreeMovementComponent& FreeMovement) {
 				glm::vec3 Right = glm::cross(Transform.GetForward(), Transform.GetUp());

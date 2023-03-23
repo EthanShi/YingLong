@@ -50,13 +50,13 @@ namespace YingLong {
 
 	uint32 TextureManager::LoadTexture(const std::string& FileName)
 	{
-		auto& FindMeshResult = m_LoadedTextureMap.find(FileName);
+		auto FindMeshResult = m_LoadedTextureMap.find(FileName);
 		if (FindMeshResult != m_LoadedTextureMap.end())
 		{
 			return FindMeshResult->second.GetTexutureID();
 		}
 
-		auto& Result = m_LoadedTextureMap.emplace(FileName, Texture());
+		auto Result = m_LoadedTextureMap.emplace(FileName, Texture());
 		if (!Result.second)
 		{
 			TextureLog().error("Load texture failed: {}", FileName);
@@ -78,7 +78,7 @@ namespace YingLong {
 		if (m_LoadedTextureMapPath.find(TextureID) != m_LoadedTextureMapPath.end())
 		{
 			const std::string& filepath = m_LoadedTextureMapPath.at(TextureID);
-			auto& FindTextureResult = m_LoadedTextureMap.find(filepath);
+			auto FindTextureResult = m_LoadedTextureMap.find(filepath);
 			if (FindTextureResult != m_LoadedTextureMap.end())
 			{
 				return FindTextureResult->second;

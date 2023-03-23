@@ -17,7 +17,7 @@ namespace YingLong {
 	public:
 		void SetOwnerScene(const std::weak_ptr<Scene>& OwnerScene)
 		{
-			auto& SPtr = m_OwnerScene.lock();
+			auto SPtr = m_OwnerScene.lock();
 			Scene* OldScene = SPtr ? SPtr.get() : nullptr;
 			m_OwnerScene = OwnerScene;
 			OnOwnerSceneChanged(OldScene);

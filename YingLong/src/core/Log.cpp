@@ -28,7 +28,7 @@ namespace YingLong {
             StringToLogLevelMap["critical"] = spdlog::level::level_enum::critical;
         }
 
-        auto& FindResult = StringToLogLevelMap.find(InString);
+        auto FindResult = StringToLogLevelMap.find(InString);
         if (FindResult != StringToLogLevelMap.end())
         {
             return FindResult->second;

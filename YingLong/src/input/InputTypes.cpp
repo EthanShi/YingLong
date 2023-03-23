@@ -133,7 +133,7 @@ namespace YingLong {
 			StringToKeyMap["KEY_RIGHT_SUPER"] = InputKey::KEY_RIGHT_SUPER;
 			StringToKeyMap["KEY_MENU"] = InputKey::KEY_MENU;
 		};
-		auto& FindResult = StringToKeyMap.find(KeyName);
+		auto FindResult = StringToKeyMap.find(KeyName);
 		if (FindResult == StringToKeyMap.end())
 		{
 			return InputKey::KEY_UNKNOWN;
@@ -150,7 +150,7 @@ namespace YingLong {
 			StringToInputModeMap["KEY_PRESS"] = InputMode::KEY_PRESS;
 			StringToInputModeMap["KEY_REPEAT"] = InputMode::KEY_REPEAT;
 		}
-		auto& FindResult = StringToInputModeMap.find(InputModeName);
+		auto FindResult = StringToInputModeMap.find(InputModeName);
 		if (FindResult == StringToInputModeMap.end())
 		{
 			return InputMode::INPUT_MODE_UNKNOWN;
@@ -178,7 +178,7 @@ namespace YingLong {
 			StringToInputMouseMap["MOUSE_X"] = InputMouse::MOUSE_X;
 			StringToInputMouseMap["MOUSE_Y"] = InputMouse::MOUSE_Y;
 		}
-		auto& FindResult = StringToInputMouseMap.find(InputMouseName);
+		auto FindResult = StringToInputMouseMap.find(InputMouseName);
 		if (FindResult == StringToInputMouseMap.end())
 		{
 			return InputMouse::MOUSE_UNKNOWN;
@@ -195,7 +195,7 @@ namespace YingLong {
 			StringToCursorModeMap["CURSOR_HIDDEN"] = CursorMode::CURSOR_HIDDEN;
 			StringToCursorModeMap["CURSOR_DISABLED"] = CursorMode::CURSOR_DISABLED;
 		}
-		auto& FindResult = StringToCursorModeMap.find(CursorModeName);
+		auto FindResult = StringToCursorModeMap.find(CursorModeName);
 		if (FindResult == StringToCursorModeMap.end())
 		{
 			return CursorMode::CURSOR_MODE_UNKNOWN;

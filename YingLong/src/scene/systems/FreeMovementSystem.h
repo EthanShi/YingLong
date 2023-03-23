@@ -25,6 +25,6 @@ namespace YingLong {
 		float m_ForwardValue = 0.f;
 		float m_RightValue = 0.f;
 		glm::vec2 m_TurnDirect{0.f, 0.f};
-		InputAction::CallbackHandler m_InputActionHandlers[4];
+		InputAction::CallbackHandler m_InputActionHandlers[5];
 	};
 }

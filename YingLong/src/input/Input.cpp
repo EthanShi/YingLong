@@ -34,7 +34,7 @@ namespace YingLong {
 	{
 		for (InputKey& Key : Keys)
 		{
-			auto& FindResult = m_LastKeyMode.find(Key);
+			auto FindResult = m_LastKeyMode.find(Key);
 			if (FindResult == m_LastKeyMode.end())
 			{
 				m_LastKeyMode[Key] = (InputMode)glfwGetKey(m_Window, (int)Key);
@@ -46,7 +46,7 @@ namespace YingLong {
 	{
 		for (InputMouse& Mouse : Mouses)
 		{
-			auto& FindResult = m_LastMouseMode.find(Mouse);
+			auto FindResult = m_LastMouseMode.find(Mouse);
 			if (FindResult == m_LastMouseMode.end())
 			{
 				m_LastMouseMode[Mouse] = (InputMode)glfwGetMouseButton(m_Window, (int)Mouse);
@@ -174,9 +174,9 @@ namespace YingLong {
 		m_RegistedKeyChangeCallbacks.erase(Handler);
 		m_RegistedMouseChangeCallbacks.erase(Handler);
 
-		auto& RemoveHandlerFromVector = [](std::vector<CallbackHandler>& Vector, const CallbackHandler& Handler)
+		auto RemoveHandlerFromVector = [](std::vector<CallbackHandler>& Vector, const CallbackHandler& Handler)
 		{
-			auto& WhereIter = std::remove(Vector.begin(), Vector.end(), Handler);
+			auto WhereIter = std::remove(Vector.begin(), Vector.end(), Handler);
 			if (WhereIter != Vector.end())
 			{
 				Vector.erase(WhereIter);
@@ -258,7 +258,7 @@ namespace YingLong {
 		// Call keys callbacks
 		for (auto& Iter : ChangedKeys)
 		{
-			auto& Callbacks = m_KeyModeToCallbacks.find({Iter.first, Iter.second});
+			auto Callbacks = m_KeyModeToCallbacks.find({Iter.first, Iter.second});
 			if (Callbacks != m_KeyModeToCallbacks.end())
 			{
 				for (CallbackHandler& CallbackHandler : Callbacks->second)
@@ -275,7 +275,7 @@ namespace YingLong {
 		// Call mouses callbacks
 		for (auto& Iter : ChangedMouses)
 		{
-			auto& Callbacks = m_MouseModeToCallbacks.find({ Iter.first, Iter.second });
+			auto Callbacks = m_MouseModeToCallbacks.find({ Iter.first, Iter.second });
 			if (Callbacks != m_MouseModeToCallbacks.end())
 			{
 				for (CallbackHandler& CallbackHandler : Callbacks->second)

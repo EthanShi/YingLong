@@ -6,6 +6,7 @@
 #include "testScenes/SingleCube.h"
 #include "testScenes/CameraMove.h"
 #include "testScenes/PhongLighting.h"
+#include "testScenes/DepthTest.h"
 
 
 TestSelectorScene::TestSelectorScene()
@@ -16,6 +17,7 @@ TestSelectorScene::TestSelectorScene()
 	AddTestScene<SingleCubeScene>("Single cube");
 	AddTestScene<CameraMoveScene>("Camera move");
 	AddTestScene<PhongLightingScene>("Phong lighting");
+	AddTestScene<DepthTestScene>("Depth test");
 }
 
 void TestSelectorScene::DrawImgui(float deltatime)
@@ -29,7 +31,7 @@ void TestSelectorScene::DrawImgui(float deltatime)
 			if (ImGui::Button(testPair.first.c_str()))
 			{
 				m_CurrentTest = testPair.second();
-				if (auto& Engine = m_Engine.lock())
+				if (auto Engine = m_Engine.lock())
 				{
 					Engine->AddScene(m_CurrentTest);
 				}
@@ -40,7 +42,7 @@ void TestSelectorScene::DrawImgui(float deltatime)
 	{
 		if (ImGui::Button("<-"))
 		{
-			if (auto& Engine = m_Engine.lock())
+			if (auto Engine = m_Engine.lock())
 			{
 				Engine->RemoveScene(m_CurrentTest);
 			}
