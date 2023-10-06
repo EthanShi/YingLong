@@ -14,10 +14,10 @@ DEFINE_LOGGER(SceneLog)
 namespace YingLong {
 
 	Scene::Scene()
-		: m_Registry()
-		, m_Dispatcher()
-		, m_PrimaryCamera()
-		, m_InputAction()
+		: Registry()
+		, Dispatcher()
+		, PrimaryCamera()
+		, InputAction()
 	{
 	}
 
@@ -25,10 +25,10 @@ namespace YingLong {
 	{
 	}
 
-	void Scene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, const std::shared_ptr<Scene>& This)
+	void Scene::OnActive(const std::shared_ptr<Engine>& InOwnerEngine, const std::shared_ptr<Scene>& This)
 	{
-		m_Engine = OwnerEngine;
-		m_WeakThis = This;
+		OwnerEngine = InOwnerEngine;
+		WeakThis = This;
 
 		Renderer::SetDepthTestEnable(true);
 
@@ -39,7 +39,7 @@ namespace YingLong {
 		ConfigInstance.LoadSceneConfig(Config::ConfigLayer::Scene, GetName());
 		ConfigInstance.LoadSceneConfig(Config::ConfigLayer::SceneUser, GetName());
 
-		m_InputAction.Init(m_WeakThis);
+		InputAction.Init(WeakThis);
 
 		std::stringstream StrStream;
 		StrStream << "Config with user:";
@@ -52,7 +52,7 @@ namespace YingLong {
 
 	void Scene::Tick(float deltatime)
 	{
-		m_Dispatcher.update();
+		Dispatcher.update();
 		Update(deltatime);
 		DrawEntities(deltatime);
 		DrawImgui(deltatime);
@@ -72,9 +72,9 @@ namespace YingLong {
 
 	void Scene::CreateDefaultCamera()
 	{
-		m_PrimaryCamera = m_Registry.create();
-		Transform3DComponent& cameraTransform = m_Registry.emplace<Transform3DComponent>(m_PrimaryCamera);
+		PrimaryCamera = Registry.create();
+		Transform3DComponent& cameraTransform = Registry.emplace<Transform3DComponent>(PrimaryCamera);
 		cameraTransform.SetPosition(glm::vec3(0.0f, 0.0f, 500.0f));
-		m_Registry.emplace<Camera3DComponent>(m_PrimaryCamera);
+		Registry.emplace<Camera3DComponent>(PrimaryCamera);
 	}
 }

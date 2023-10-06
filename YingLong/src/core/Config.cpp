@@ -10,38 +10,38 @@ namespace YingLong {
     const toml::table& Config::ReadOnly(const std::string& SceneName)
     {
         MergeConfigData();
-        auto FindResult = m_MergedConfigs.find(SceneName);
-        if (FindResult != m_MergedConfigs.end())
+        auto FindResult = MergedConfigs.find(SceneName);
+        if (FindResult != MergedConfigs.end())
         {
             return FindResult->second.Data;
         }
-        return m_MergedProjectConfig.Data;
+        return MergedProjectConfig.Data;
     }
 
     const toml::table& Config::ReadOnlyWithUser(const std::string& SceneName)
     {
         MergeConfigData();
-        auto FindResult = m_MergedConfigsWithUser.find(SceneName);
-        if (FindResult != m_MergedConfigsWithUser.end())
+        auto FindResult = MergedConfigsWithUser.find(SceneName);
+        if (FindResult != MergedConfigsWithUser.end())
         {
             return FindResult->second.Data;
         }
-        return m_MergedProjectConfig.Data;
+        return MergedProjectConfig.Data;
     }
 
     bool Config::Writable(toml::table& OutTable, ConfigLayer Layer, const std::string& SceneName)
     {
         ConfigTableInfo* Info =nullptr;
-        if (Layer == ConfigLayer::Engine) { Info = &m_EngineConfig; }
-        if (Layer == ConfigLayer::Project) { Info = &m_ProjectConfig; }
-        if (Layer == ConfigLayer::Scene && m_SceneConfigs.find(SceneName) != m_SceneConfigs.end())
+        if (Layer == ConfigLayer::Engine) { Info = &EngineConfig; }
+        if (Layer == ConfigLayer::Project) { Info = &ProjectConfig; }
+        if (Layer == ConfigLayer::Scene && SceneConfigs.find(SceneName) != SceneConfigs.end())
         {
-            Info = &m_SceneConfigs[SceneName];
+            Info = &SceneConfigs[SceneName];
         }
-        if (Layer == ConfigLayer::ProjectUser) { Info = &m_ProjectUserConfig; }
-        if (Layer == ConfigLayer::SceneUser && m_SceneUserConfigs.find(SceneName) != m_SceneUserConfigs.end())
+        if (Layer == ConfigLayer::ProjectUser) { Info = &ProjectUserConfig; }
+        if (Layer == ConfigLayer::SceneUser && SceneUserConfigs.find(SceneName) != SceneUserConfigs.end())
         {
-            Info = &m_SceneUserConfigs[SceneName];
+            Info = &SceneUserConfigs[SceneName];
         }
         if (Info)
         {
@@ -62,28 +62,28 @@ namespace YingLong {
         }
         if (WithUser)
         {
-            m_SceneUserConfigs[SceneName] = { true, std::move(tbl) };
+            SceneUserConfigs[SceneName] = { true, std::move(tbl) };
         }
         else
         {
-            m_SceneConfigs[SceneName] = { true, std::move(tbl) };
+            SceneConfigs[SceneName] = { true, std::move(tbl) };
         }
         return true;
     }
 
     void Config::Flush()
     {
-        if (m_EngineConfig.Dirty) { SaveFile(Path::EngineConfigFile(), m_EngineConfig.Data); }
-        if (m_ProjectConfig.Dirty) { SaveFile(Path::ProjectConfigFile(), m_ProjectConfig.Data); }
-        for (auto& SceneConfig : m_SceneConfigs)
+        if (EngineConfig.Dirty) { SaveFile(Path::EngineConfigFile(), EngineConfig.Data); }
+        if (ProjectConfig.Dirty) { SaveFile(Path::ProjectConfigFile(), ProjectConfig.Data); }
+        for (auto& SceneConfig : SceneConfigs)
         {
             if (SceneConfig.second.Dirty)
             { 
                 SaveFile(Path::SceneConfigFile(SceneConfig.first, false), SceneConfig.second.Data);
             }
         }
-        if (m_ProjectUserConfig.Dirty) { SaveFile(Path::ProjectUserConfigFile(), m_ProjectUserConfig.Data); }
-        for (auto& SceneUserConfig : m_SceneUserConfigs)
+        if (ProjectUserConfig.Dirty) { SaveFile(Path::ProjectUserConfigFile(), ProjectUserConfig.Data); }
+        for (auto& SceneUserConfig : SceneUserConfigs)
         {
             if (SceneUserConfig.second.Dirty)
             {
@@ -126,52 +126,52 @@ namespace YingLong {
     {
         // Merge default engine and project config
         bool IsProjectConfigDirty = false;
-        if (m_EngineConfig.Dirty || m_ProjectConfig.Dirty)
+        if (EngineConfig.Dirty || ProjectConfig.Dirty)
         {
             IsProjectConfigDirty = true;
-            m_MergedProjectConfig = { true, m_EngineConfig.Data };
-            MergeTable(m_MergedProjectConfig.Data, m_ProjectConfig.Data);
-            m_EngineConfig.Dirty = false;
-            m_ProjectConfig.Dirty = false;
+            MergedProjectConfig = { true, EngineConfig.Data };
+            MergeTable(MergedProjectConfig.Data, ProjectConfig.Data);
+            EngineConfig.Dirty = false;
+            ProjectConfig.Dirty = false;
         }
 
         // Merge default scene configs
-        for (auto& SceneConfig : m_SceneConfigs)
+        for (auto& SceneConfig : SceneConfigs)
         {
             if (IsProjectConfigDirty || SceneConfig.second.Dirty)
             {
-                m_MergedConfigs[SceneConfig.first] = { true, m_MergedProjectConfig.Data };
-                MergeTable(m_MergedConfigs[SceneConfig.first].Data, SceneConfig.second.Data);
+                MergedConfigs[SceneConfig.first] = { true, MergedProjectConfig.Data };
+                MergeTable(MergedConfigs[SceneConfig.first].Data, SceneConfig.second.Data);
                 SceneConfig.second.Dirty = false;
             }
         }
 
         // Merge user project config
-        for (auto& SceneConfig : m_MergedConfigs)
+        for (auto& SceneConfig : MergedConfigs)
         {
-            if (m_ProjectUserConfig.Dirty || SceneConfig.second.Dirty)
+            if (ProjectUserConfig.Dirty || SceneConfig.second.Dirty)
             {
-                m_MergedConfigsWithUser[SceneConfig.first] = { true, SceneConfig.second.Data };
-                MergeTable(m_MergedConfigsWithUser[SceneConfig.first].Data, m_ProjectUserConfig.Data);
+                MergedConfigsWithUser[SceneConfig.first] = { true, SceneConfig.second.Data };
+                MergeTable(MergedConfigsWithUser[SceneConfig.first].Data, ProjectUserConfig.Data);
                 SceneConfig.second.Dirty = false;
             }
         }
 
         // Merge user scene configs
-        for (auto& SceneConfig : m_SceneUserConfigs)
+        for (auto& SceneConfig : SceneUserConfigs)
         {
             if (SceneConfig.second.Dirty)
             {
-                auto FindResult = m_MergedConfigsWithUser.find(SceneConfig.first);
-                if (FindResult != m_MergedConfigsWithUser.end())
+                auto FindResult = MergedConfigsWithUser.find(SceneConfig.first);
+                if (FindResult != MergedConfigsWithUser.end())
                 {
                     MergeTable(FindResult->second.Data, SceneConfig.second.Data);
                 }
                 else
                 {
-                    m_MergedConfigsWithUser[SceneConfig.first] = { false, m_MergedProjectConfig.Data };
-                    MergeTable(m_MergedConfigsWithUser[SceneConfig.first].Data, m_ProjectUserConfig.Data);
-                    MergeTable(m_MergedConfigsWithUser[SceneConfig.first].Data, SceneConfig.second.Data);
+                    MergedConfigsWithUser[SceneConfig.first] = { false, MergedProjectConfig.Data };
+                    MergeTable(MergedConfigsWithUser[SceneConfig.first].Data, ProjectUserConfig.Data);
+                    MergeTable(MergedConfigsWithUser[SceneConfig.first].Data, SceneConfig.second.Data);
                 }
             }
         }
@@ -219,9 +219,9 @@ namespace YingLong {
 
     Config::Config()
     {
-        if (ParseFile(Path::EngineConfigFile(), m_EngineConfig.Data)) { m_EngineConfig.Dirty = true; }
-        if (ParseFile(Path::ProjectConfigFile(), m_ProjectConfig.Data)) { m_ProjectConfig.Dirty = true; }
-        if (ParseFile(Path::ProjectUserConfigFile(), m_ProjectUserConfig.Data)) { m_ProjectUserConfig.Dirty = true; }
+        if (ParseFile(Path::EngineConfigFile(), EngineConfig.Data)) { EngineConfig.Dirty = true; }
+        if (ParseFile(Path::ProjectConfigFile(), ProjectConfig.Data)) { ProjectConfig.Dirty = true; }
+        if (ParseFile(Path::ProjectUserConfigFile(), ProjectUserConfig.Data)) { ProjectUserConfig.Dirty = true; }
     }
 }
 

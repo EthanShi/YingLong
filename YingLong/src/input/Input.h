@@ -58,26 +58,26 @@ namespace YingLong {
 		void ProcessInput();
 
 	private:
-		GLFWwindow* m_Window = nullptr;
+		GLFWwindow* Window = nullptr;
 
-		CallbackHandler m_Handler = 0;
+		CallbackHandler Handler = 0;
 
 		/* All registed callbacks in input system. */
-		std::unordered_map<CallbackHandler, InputButtonCallback> m_RegistedButtonCallbacks;
-		std::unordered_map<CallbackHandler, InputMouseMoveCallback> m_RegistedMouseMoveCallbacks;
-		std::unordered_map<CallbackHandler, KeyChangeCallback>  m_RegistedKeyChangeCallbacks;
-		std::unordered_map<CallbackHandler, MouseChangeCallback> m_RegistedMouseChangeCallbacks;
+		std::unordered_map<CallbackHandler, InputButtonCallback> RegistedButtonCallbacks;
+		std::unordered_map<CallbackHandler, InputMouseMoveCallback> RegistedMouseMoveCallbacks;
+		std::unordered_map<CallbackHandler, KeyChangeCallback>  RegistedKeyChangeCallbacks;
+		std::unordered_map<CallbackHandler, MouseChangeCallback> RegistedMouseChangeCallbacks;
 
 		/* Helper data to determine which callback should be called. */
-		std::unordered_map<std::pair<InputKey, InputMode>, std::vector<CallbackHandler>, HashPair> m_KeyModeToCallbacks;
-		std::unordered_map<std::pair<InputMouse, InputMode>, std::vector<CallbackHandler>, HashPair> m_MouseModeToCallbacks;
+		std::unordered_map<std::pair<InputKey, InputMode>, std::vector<CallbackHandler>, HashPair> KeyModeToCallbacks;
+		std::unordered_map<std::pair<InputMouse, InputMode>, std::vector<CallbackHandler>, HashPair> MouseModeToCallbacks;
 
-		std::vector<CallbackHandler> m_MouseMoveCallbacks;
-		std::unordered_map<InputMouse, std::vector<CallbackHandler>> m_MouseMoveCallbacksWithMouse;
+		std::vector<CallbackHandler> MouseMoveCallbacks;
+		std::unordered_map<InputMouse, std::vector<CallbackHandler>> MouseMoveCallbacksWithMouse;
 
-		std::unordered_map<InputKey, InputMode> m_LastKeyMode;
-		std::unordered_map<InputMouse, InputMode> m_LastMouseMode;
-		glm::dvec2 m_LastCursorPos {0.f, 0.f};
+		std::unordered_map<InputKey, InputMode> LastKeyMode;
+		std::unordered_map<InputMouse, InputMode> LastMouseMode;
+		glm::dvec2 LastCursorPos {0.f, 0.f};
 
 	private:
 		Input() {}

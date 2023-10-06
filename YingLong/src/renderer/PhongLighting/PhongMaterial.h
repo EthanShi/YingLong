@@ -10,24 +10,24 @@ namespace YingLong {
 	public:
 		PhongMaterial() = default;
 		PhongMaterial(glm::vec3 Ambient, glm::vec3 Diffuse, glm::vec3 Specular, float Shininess)
-			: m_Ambient(Ambient)
-			, m_Diffuse(Diffuse)
-			, m_Specular(Specular)
-			, m_Shininess(Shininess)
+			: Ambient(Ambient)
+			, Diffuse(Diffuse)
+			, Specular(Specular)
+			, Shininess(Shininess)
 		{}
 		PhongMaterial(const std::string& DiffuseMapFileName, const std::string& SpecularMapFileName, glm::vec3 Specular, float Shininess);
 
 		Texture& GetDiffuseMap();
 		Texture& GetSpecularMap();
 
-		glm::vec3 m_Ambient;
-		glm::vec3 m_Diffuse;
-		glm::vec3 m_Specular;
-		float m_Shininess;
+		glm::vec3 Ambient;
+		glm::vec3 Diffuse;
+		glm::vec3 Specular;
+		float Shininess;
 
 	private:
-		uint32 m_DiffuseMapTextureID;
-		uint32 m_SpecularMapTextureID;
+		uint32 DiffuseMapTextureID;
+		uint32 SpecularMapTextureID;
 	};
 
 }

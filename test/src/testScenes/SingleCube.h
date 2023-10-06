@@ -19,7 +19,7 @@ protected:
 	virtual void DrawEntities(float deltatime) override;
 
 private:
-	Mesh m_CubeMesh;
-	DrawBasic3DMeshSystem m_DrawBasic3DMeshSystem;
+	Mesh CubeMesh;
+	DrawBasic3DMeshSystem DrawBasic3DMeshSystem;
 };
 

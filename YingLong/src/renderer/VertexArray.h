@@ -10,7 +10,7 @@ namespace YingLong {
 	class YINGLONG_API VertexArray
 	{
 	private:
-		uint32 m_RendererID = 0;
+		uint32 RendererID = 0;
 
 	public:
 		VertexArray() = default;

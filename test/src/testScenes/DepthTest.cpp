@@ -7,13 +7,13 @@
 
 DepthTestScene::DepthTestScene()
 	: Scene::Scene()
-	, m_FreeMovementSystem()
-	, m_DrawBasic3DMeshSystem()
+	, FreeMovementSystem()
+	, DrawBasic3DMeshSystem()
 {
 	Input& InputInstance = Input::Instance();
 	InputInstance.SetCursorMode(CursorMode::CURSOR_DISABLED);
 
-	auto& reg = m_Registry;
+	auto& reg = Registry;
 
 	// Init cubes mesh & shader
 	const auto cubes = reg.create();
@@ -21,11 +21,11 @@ DepthTestScene::DepthTestScene()
 	cubesTransform.SetScale(glm::vec3(100.f, 100.f, 100.f));
 	cubesTransform.SetForward(glm::vec3(1.f, 1.f, 1.f));
 
-	m_CubeMesh.LoadObjData("res/models/cube.obj");
-	m_CubeMesh.SetDefaultColor(glm::vec3(1.0f, 0.5f, 0.3f));
-	m_CubeMesh.FillRenderData(true, false, true);
+	CubeMesh.LoadObjData("res/models/cube.obj");
+	CubeMesh.SetDefaultColor(glm::vec3(1.0f, 0.5f, 0.3f));
+	CubeMesh.FillRenderData(true, false, true);
 
-	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cubes, m_CubeMesh);
+	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cubes, CubeMesh);
 
 	ShaderComponent& ShaderComp = reg.emplace<ShaderComponent>(cubes);
 	ShaderComp.LoadShader("../YingLong/res/shaders/basic3D.shader");
@@ -37,24 +37,24 @@ void DepthTestScene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, const 
 {
 	Scene::OnActive(OwnerEngine, This);
 
-	m_FreeMovementSystem.SetOwnerScene(This);
-	m_DrawBasic3DMeshSystem.SetOwnerScene(This);
+	FreeMovementSystem.SetOwnerScene(This);
+	DrawBasic3DMeshSystem.SetOwnerScene(This);
 }
 
 void DepthTestScene::Update(float deltatime)
 {
-	m_FreeMovementSystem.Update(deltatime);
+	FreeMovementSystem.Update(deltatime);
 }
 
 void DepthTestScene::DrawEntities(float deltatime)
 {
 	Scene::DrawEntities(deltatime);
 
-	m_DrawBasic3DMeshSystem.Draw();
+	DrawBasic3DMeshSystem.Draw();
 }
 
 void DepthTestScene::CreateDefaultCamera()
 {
 	Scene::CreateDefaultCamera();
-	m_Registry.emplace<FreeMovementComponent>(m_PrimaryCamera);
+	Registry.emplace<FreeMovementComponent>(PrimaryCamera);
 }

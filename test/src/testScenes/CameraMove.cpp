@@ -10,7 +10,7 @@
 
 CameraMoveScene::CameraMoveScene()
 	: Scene::Scene()
-	, m_FreeMovementSystem()
+	, FreeMovementSystem()
 {
 	Input& InputInstance = Input::Instance();
 	InputInstance.SetCursorMode(CursorMode::CURSOR_DISABLED);
@@ -27,13 +27,13 @@ void CameraMoveScene::OnActive(const std::shared_ptr<Engine>& OwnerEngine, const
 
 	CreateCubes();
 
-	m_FreeMovementSystem.SetOwnerScene(This);
-	m_DrawBasic3DMeshSystem.SetOwnerScene(This);
+	FreeMovementSystem.SetOwnerScene(This);
+	DrawBasic3DMeshSystem.SetOwnerScene(This);
 }
 
 void CameraMoveScene::Update(float Deltatime)
 {
-	m_FreeMovementSystem.Update(Deltatime);
+	FreeMovementSystem.Update(Deltatime);
 }
 
 void CameraMoveScene::DrawImgui(float Deltatime)
@@ -44,20 +44,20 @@ void CameraMoveScene::DrawEntities(float deltatime)
 {
 	Scene::DrawEntities(deltatime);
 
-	m_DrawBasic3DMeshSystem.Draw();
+	DrawBasic3DMeshSystem.Draw();
 }
 
 void CameraMoveScene::CreateDefaultCamera()
 {
 	Scene::CreateDefaultCamera();
-	m_Registry.emplace<FreeMovementComponent>(m_PrimaryCamera);
+	Registry.emplace<FreeMovementComponent>(PrimaryCamera);
 }
 
 void CameraMoveScene::CreateCubes()
 {
-	m_CubeMesh.LoadObjData("res/models/cube.obj");
-	m_CubeMesh.SetDefaultColor(glm::vec3(1.f, 0.5f, 0.3f));
-	m_CubeMesh.FillRenderData(true, true, true);
+	CubeMesh.LoadObjData("res/models/cube.obj");
+	CubeMesh.SetDefaultColor(glm::vec3(1.f, 0.5f, 0.3f));
+	CubeMesh.FillRenderData(true, true, true);
 
 	glm::vec3 Scale(50.f, 50.f, 50.f);
 	std::vector<glm::vec3> Positions = {
@@ -84,7 +84,7 @@ void CameraMoveScene::CreateCubes()
 
 void CameraMoveScene::CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale)
 {
-	auto& reg = m_Registry;
+	auto& reg = Registry;
 
 	// Init cubes mesh & shader
 	const auto cube = reg.create();
@@ -93,7 +93,7 @@ void CameraMoveScene::CreateACube(const glm::vec3& Position, const glm::vec3& Fo
 	cubesTranform.SetScale(Scale);
 	cubesTranform.SetForward(Forward);
 
-	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cube, m_CubeMesh);
+	MeshComponent& MeshComp = reg.emplace<MeshComponent>(cube, CubeMesh);
 
 	ShaderComponent& ShaderComp = reg.emplace<ShaderComponent>(cube);
 	ShaderComp.LoadShader("../YingLong/res/shaders/basic3D.shader");

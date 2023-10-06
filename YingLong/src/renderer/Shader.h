@@ -24,49 +24,49 @@ namespace YingLong {
 		{
 			void Clear()
 			{
-				m_Uniform1i.clear();
-				m_Uniform1f.clear();
-				m_Uniform3f.clear();
-				m_Uniform4f.clear();
-				m_UniformMat4f.clear();
+				Uniform1i.clear();
+				Uniform1f.clear();
+				Uniform3f.clear();
+				Uniform4f.clear();
+				UniformMat4f.clear();
 			}
 
-			void SetUniform(const std::string& name, const int32& value) { m_Uniform1i[name] = value; }
-			void SetUniform(const std::string& name, const float& value) { m_Uniform1f[name] = value; }
-			void SetUniform(const std::string& name, const glm::vec3& value) { m_Uniform3f[name] = value; }
-			void SetUniform(const std::string& name, const glm::vec4& value) { m_Uniform4f[name] = value; }
-			void SetUniform(const std::string& name, const glm::mat4& value) { m_UniformMat4f[name] = value; }
+			void SetUniform(const std::string& name, const int32& value) { Uniform1i[name] = value; }
+			void SetUniform(const std::string& name, const float& value) { Uniform1f[name] = value; }
+			void SetUniform(const std::string& name, const glm::vec3& value) { Uniform3f[name] = value; }
+			void SetUniform(const std::string& name, const glm::vec4& value) { Uniform4f[name] = value; }
+			void SetUniform(const std::string& name, const glm::mat4& value) { UniformMat4f[name] = value; }
 
 			void BindUniforms(Shader& shader) const
 			{
-				for (auto& iter : m_Uniform1i)
+				for (auto& iter : Uniform1i)
 				{
 					shader.SetUniform1i(iter.first, iter.second);
 				}
-				for (auto& iter : m_Uniform1f)
+				for (auto& iter : Uniform1f)
 				{
 					shader.SetUniform1f(iter.first, iter.second);
 				}
-				for (auto& iter : m_Uniform3f)
+				for (auto& iter : Uniform3f)
 				{
 					shader.SetUniform3f(iter.first, iter.second.x, iter.second.y, iter.second.z);
 				}
-				for (auto& iter : m_Uniform4f)
+				for (auto& iter : Uniform4f)
 				{
 					shader.SetUniform4f(iter.first, iter.second.x, iter.second.y, iter.second.z, iter.second.w);
 				}
-				for (auto& iter : m_UniformMat4f)
+				for (auto& iter : UniformMat4f)
 				{
 					shader.SetUniformMat4f(iter.first, iter.second);
 				}
 			}
 
 		private:
-			std::unordered_map<std::string, int32> m_Uniform1i;
-			std::unordered_map<std::string, float> m_Uniform1f;
-			std::unordered_map<std::string, glm::vec3> m_Uniform3f;
-			std::unordered_map<std::string, glm::vec4> m_Uniform4f;
-			std::unordered_map<std::string, glm::mat4> m_UniformMat4f;
+			std::unordered_map<std::string, int32> Uniform1i;
+			std::unordered_map<std::string, float> Uniform1f;
+			std::unordered_map<std::string, glm::vec3> Uniform3f;
+			std::unordered_map<std::string, glm::vec4> Uniform4f;
+			std::unordered_map<std::string, glm::mat4> UniformMat4f;
 		};
 
 	public:
@@ -80,7 +80,7 @@ namespace YingLong {
 		void Bind(const Uniforms& InUniforms);
 		void UnBind() const;
 
-		uint32 GetRendererID() const { return m_RendererID; }
+		uint32 GetRendererID() const { return RendererID; }
 
 		void SetUniform1i(const std::string& name, int32 value);
 		void SetUniform1f(const std::string& name, float value);
@@ -96,9 +96,9 @@ namespace YingLong {
 		ShaderPrgramSource ParseShader(const std::string& filepath);
 
 	private:
-		uint32 m_RendererID = 0;
-		std::string m_Filepath = "";
-		std::unordered_map<std::string, int32> m_UniformLocationCache;
+		uint32 RendererID = 0;
+		std::string Filepath = "";
+		std::unordered_map<std::string, int32> UniformLocationCache;
 	};
 
 	using Shader_SPtr = std::shared_ptr<Shader>;
@@ -110,9 +110,9 @@ namespace YingLong {
 		Shader& GetShader(uint32 shaderID);
 
 	private:
-		Shader m_InvalidShader;
-		std::unordered_map<std::string, Shader> m_LoadedShaderMap;
-		std::unordered_map<uint32, std::string> m_LoadedShaderMapPath;
+		Shader InvalidShader;
+		std::unordered_map<std::string, Shader> LoadedShaderMap;
+		std::unordered_map<uint32, std::string> LoadedShaderMapPath;
 	};
 
 }

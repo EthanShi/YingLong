@@ -21,23 +21,23 @@ namespace YingLong {
 		void AddScene(std::shared_ptr<Scene> scene);
 		void RemoveScene(const std::shared_ptr<Scene>& scene);
 
-		const std::string& GetProjectName() { return m_ProjectName; }
-		const std::string& GetWindowTitle() { return m_WindowTitle; }
+		const std::string& GetProjectName() { return ProjectName; }
+		const std::string& GetWindowTitle() { return WindowTitle; }
 
 	private:
 		static void OnFrameSizeChanged(GLFWwindow* Window, int32 Width, int32 Height);
 	
 	private:
-		GLFWwindow* m_Window = nullptr;
-		const int32 m_DEFAULT_WINDOW_WIDTH = 1280;
-		const int32 m_DEFAULT_WINDOW_HEIGHT = 720;
+		GLFWwindow* Window = nullptr;
+		const int32 DEFAULT_WINDOW_WIDTH = 1280;
+		const int32 DEFAULT_WINDOW_HEIGHT = 720;
 
-		std::string m_WindowTitle = "YingLong";
-		std::string m_ProjectName = "YingLong";
+		std::string WindowTitle = "YingLong";
+		std::string ProjectName = "YingLong";
 
-		std::map<std::string, std::shared_ptr<Scene>> m_Scenes;
+		std::map<std::string, std::shared_ptr<Scene>> Scenes;
 
-		uint64 m_LastFrameTime = 0;
+		uint64 LastFrameTime = 0;
 	};
 
 }

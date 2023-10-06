@@ -12,16 +12,16 @@ namespace YingLong {
 	{
 		PhongLightComponent(PhongLightingType Type, const glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular)
 			: Type(Type)
-			, m_Ambient(Ambient)
-			, m_Diffuse(Diffuse)
-			, m_Specular(Specular)
+			, Ambient(Ambient)
+			, Diffuse(Diffuse)
+			, Specular(Specular)
 		{}
 
 		PhongLightingType Type;
 
-		glm::vec3 m_Ambient;
-		glm::vec3 m_Diffuse;
-		glm::vec3 m_Specular;
+		glm::vec3 Ambient;
+		glm::vec3 Diffuse;
+		glm::vec3 Specular;
 	};
 
 	struct PhongDirectionalLightComponent : public PhongLightComponent
@@ -36,14 +36,14 @@ namespace YingLong {
 		PhongPointLightComponent(const glm::vec3& Ambient, const glm::vec3& Diffuse, const glm::vec3& Specular,
 			const float Constant, const float Linear, const float Quadratic)
 			: PhongLightComponent(PhongLightingType::Point, Ambient, Diffuse, Specular)
-			, m_Constant(Constant)
-			, m_Linear(Linear)
-			, m_Quadratic(Quadratic)
+			, Constant(Constant)
+			, Linear(Linear)
+			, Quadratic(Quadratic)
 		{}
 
-		float m_Constant;
-		float m_Linear;
-		float m_Quadratic;
+		float Constant;
+		float Linear;
+		float Quadratic;
 	};
 
 	struct PhongSpotLightComponent : public PhongPointLightComponent
@@ -52,27 +52,27 @@ namespace YingLong {
 			const float Constant, const float Linear, const float Quadratic,
 			const float InnerCutOffInCos, const float OuterCutOffInCos)
 			: PhongPointLightComponent(Ambient, Diffuse, Specular, Constant, Linear, Quadratic)
-			, m_InnerCutOffInCos(InnerCutOffInCos)
-			, m_OuterCutOffInCos(OuterCutOffInCos)
+			, InnerCutOffInCos(InnerCutOffInCos)
+			, OuterCutOffInCos(OuterCutOffInCos)
 		{
 			Type = PhongLightingType::Spot;
 		}
 
-		float m_InnerCutOffInCos;
-		float m_OuterCutOffInCos;
+		float InnerCutOffInCos;
+		float OuterCutOffInCos;
 	};
 
 	struct PhongMaterialComponent
 	{
 		PhongMaterialComponent(const PhongMaterial& Material)
-			: m_Material(Material)
+			: Material(Material)
 		{}
 
 		PhongMaterialComponent(glm::vec3 Ambient, glm::vec3 Diffuse, glm::vec3 Specular, float Shininess)
-			: m_Material(Ambient, Diffuse, Specular, Shininess)
+			: Material(Ambient, Diffuse, Specular, Shininess)
 		{}
 
-		PhongMaterial m_Material;
+		PhongMaterial Material;
 	};
 }
 

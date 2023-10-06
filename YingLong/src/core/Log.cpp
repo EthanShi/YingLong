@@ -12,7 +12,7 @@ namespace YingLong {
 
     void Log::SetLogFileName(const std::string& FileName)
     {
-        m_FullFileName = Path::ProjectLogFileName(FileName);
+        FullFileName = Path::ProjectLogFileName(FileName);
     }
 
     spdlog::level::level_enum Log::GetLogLevelFromString(const std::string& InString)
@@ -28,7 +28,7 @@ namespace YingLong {
             StringToLogLevelMap["critical"] = spdlog::level::level_enum::critical;
         }
 
-        auto FindResult = StringToLogLevelMap.find(InString);
+        const auto FindResult = StringToLogLevelMap.find(InString);
         if (FindResult != StringToLogLevelMap.end())
         {
             return FindResult->second;
@@ -38,19 +38,19 @@ namespace YingLong {
 
 	LoggerBase::LoggerBase(const std::string& LoggerName)
 	{
-        auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        auto rotating_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(Log::Instance().GetFileName());
+        const auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        const auto rotating_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(Log::Instance().GetFileName());
         std::vector<spdlog::sink_ptr> sinks{ stdout_sink, rotating_sink };
-        auto logger = std::make_shared<spdlog::async_logger>(LoggerName, sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::block);
-        logger->set_pattern("[%H:%M:%S %z] [%n] [%^-%l-%$] %v");
-        spdlog::register_logger(logger);
-        m_logger = spdlog::get(LoggerName);
+        auto Newlogger = std::make_shared<spdlog::async_logger>(LoggerName, sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::block);
+        Newlogger->set_pattern("[%H:%M:%S %z] [%n] [%^-%l-%$] %v");
+        spdlog::register_logger(Newlogger);
+        logger = spdlog::get(LoggerName);
 
         // Read log level from config
         auto ConfigData = Config::Instance().ReadOnly();
         const std::string& LevelStr = ConfigData["Log"]["Levels"][LoggerName].value_or("info");
         auto Level = Log::GetLogLevelFromString(LevelStr);
-        m_logger->set_level(Level);
+        logger->set_level(Level);
 	}
 
 }

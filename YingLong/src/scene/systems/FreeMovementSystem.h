@@ -16,15 +16,15 @@ namespace YingLong {
 		void Update(float DeltaTime);
 
 	private:
-		void OnMoveForward(float Value) { m_ForwardValue = Value; }
-		void OnMoveRight(float Value) { m_RightValue = Value; }
-		void OnTurnPitch(float Value) { m_TurnDirect.y = Value; }
-		void OnTurnYaw(float Value) { m_TurnDirect.x = Value; }
+		void OnMoveForward(float Value) { ForwardValue = Value; }
+		void OnMoveRight(float Value) { RightValue = Value; }
+		void OnTurnPitch(float Value) { TurnDirect.y = Value; }
+		void OnTurnYaw(float Value) { TurnDirect.x = Value; }
 
 	private:
-		float m_ForwardValue = 0.f;
-		float m_RightValue = 0.f;
-		glm::vec2 m_TurnDirect{0.f, 0.f};
-		InputAction::CallbackHandler m_InputActionHandlers[5];
+		float ForwardValue = 0.f;
+		float RightValue = 0.f;
+		glm::vec2 TurnDirect{0.f, 0.f};
+		InputAction::CallbackHandler InputActionHandlers[5];
 	};
 }

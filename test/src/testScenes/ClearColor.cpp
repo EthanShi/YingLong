@@ -8,26 +8,26 @@
 ClearColorScene::ClearColorScene()
 	: Scene()
 {
-	m_BackgroundColorCache = Renderer::GetBackgroundColor();
+	BackgroundColorCache = Renderer::GetBackgroundColor();
 }
 
 ClearColorScene::~ClearColorScene()
 {
-	Renderer::SetBackgroundColor(m_BackgroundColorCache);
+	Renderer::SetBackgroundColor(BackgroundColorCache);
 }
 
 void ClearColorScene::Update(float deltatime)
 {
 	Renderer::SetBackgroundColor(glm::vec4(
-		m_ClearColor[0],
-		m_ClearColor[1],
-		m_ClearColor[2],
-		m_ClearColor[3]));
+		ClearColor[0],
+		ClearColor[1],
+		ClearColor[2],
+		ClearColor[3]));
 }
 
 void ClearColorScene::DrawImgui(float deltatime)
 {
 	ImGui::Begin("clear color");
-	ImGui::ColorEdit4("Clear Color", m_ClearColor);
+	ImGui::ColorEdit4("Clear Color", ClearColor);
 	ImGui::End();
 }

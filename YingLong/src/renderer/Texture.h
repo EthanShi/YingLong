@@ -22,21 +22,21 @@ namespace YingLong {
 		void Bind(uint32 slot) const;
 		void UnBind() const;
 
-		inline uint32 GetTexutureID() { return m_TextureID; }
-		inline int32 GetWidth() const { return m_Width; }
-		inline int32 GetHeight() const { return m_Height; }
+		inline uint32 GetTexutureID() { return TextureID; }
+		inline int32 GetWidth() const { return Width; }
+		inline int32 GetHeight() const { return Height; }
 
 	private:
 		void Load(const std::string& filepath);
 
 	private:
-		uint32 m_TextureID = 0;
-		uint32 m_RendererID = 0;
-		std::string m_FilePath;
-		unsigned char* m_LocalBuffer = nullptr;
-		int32 m_Width = 0;
-		int32 m_Height = 0;
-		int32 m_BPP = 0;
+		uint32 TextureID = 0;
+		uint32 RendererID = 0;
+		std::string FilePath;
+		unsigned char* LocalBuffer = nullptr;
+		int32 Width = 0;
+		int32 Height = 0;
+		int32 BPP = 0;
 	};
 
 	using Texture_SPtr = std::shared_ptr<Texture>;
@@ -48,10 +48,10 @@ namespace YingLong {
 		Texture& GetTexture(uint32 TextureID);
 
 	private:
-		uint32 m_TextureID = 0;
-		Texture m_InvalidTexture;
-		std::unordered_map<std::string, Texture> m_LoadedTextureMap;
-		std::unordered_map<uint32, std::string> m_LoadedTextureMapPath;
+		uint32 TextureID = 0;
+		Texture InvalidTexture;
+		std::unordered_map<std::string, Texture> LoadedTextureMap;
+		std::unordered_map<uint32, std::string> LoadedTextureMapPath;
 	};
 }
 

@@ -14,19 +14,19 @@ namespace YingLong {
 
 	VertexBuffer::~VertexBuffer()
 	{
-		GLCall(glDeleteBuffers(1, &m_RendererID));
+		GLCall(glDeleteBuffers(1, &RendererID));
 	}
 
 	void VertexBuffer::Init(const void* data, uint32 size, int32 usage)
 	{
-		GLCall(glGenBuffers(1, &m_RendererID));
-		GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
+		GLCall(glGenBuffers(1, &RendererID));
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, RendererID));
 		GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, GLenum(usage)));
 	}
 
 	void VertexBuffer::Bind() const
 	{
-		GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, RendererID));
 	}
 
 	void VertexBuffer::UnBind() const

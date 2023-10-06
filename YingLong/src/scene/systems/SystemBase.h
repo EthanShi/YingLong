@@ -15,11 +15,11 @@ namespace YingLong {
 	class SystemBase
 	{
 	public:
-		void SetOwnerScene(const std::weak_ptr<Scene>& OwnerScene)
+		void SetOwnerScene(const std::weak_ptr<Scene>& InOwnerScene)
 		{
-			auto SPtr = m_OwnerScene.lock();
+			auto SPtr = InOwnerScene.lock();
 			Scene* OldScene = SPtr ? SPtr.get() : nullptr;
-			m_OwnerScene = OwnerScene;
+			OwnerScene = InOwnerScene;
 			OnOwnerSceneChanged(OldScene);
 		}
 
@@ -37,6 +37,6 @@ namespace YingLong {
 		entt::entity& GetPrimaryCamera();
 
 	private:
-		std::weak_ptr<Scene> m_OwnerScene;
+		std::weak_ptr<Scene> OwnerScene;
 	};
 }

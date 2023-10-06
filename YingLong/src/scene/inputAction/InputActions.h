@@ -128,22 +128,22 @@ namespace YingLong {
 		void AddAction(const std::string& ActionGroupName, const std::string& ActionName, const toml::array* InputsInfo);
 
 	private:
-		const std::string m_TrigerActionGroupName = "InputTriggerActions";
-		const std::string m_AxisActionGroupName = "InputAxisActions";
+		const std::string TrigerActionGroupName = "InputTriggerActions";
+		const std::string AxisActionGroupName = "InputAxisActions";
 
-		std::weak_ptr<Scene> m_OwnerScene;
+		std::weak_ptr<Scene> OwnerScene;
 		Input::CallbackHandler KeyEventHandler;
 		Input::CallbackHandler MouseEventHandler;
 		Input::CallbackHandler MouseMoveEventHandler;
 
-		std::map<std::pair<InputKey, InputMode>, std::vector<std::string>> m_KeyToActionsMap;
-		std::map<std::pair<InputMouse, InputMode>, std::vector<std::string>> m_MouseToActionsMap;
+		std::map<std::pair<InputKey, InputMode>, std::vector<std::string>> KeyToActionsMap;
+		std::map<std::pair<InputMouse, InputMode>, std::vector<std::string>> MouseToActionsMap;
 
-		CallbackHandler m_Handler = 0;
+		CallbackHandler Handler = 0;
 
-		std::unordered_map<CallbackHandler, std::string> m_HandlerToActionNameMap;
-		std::unordered_map<std::string, TriggerActionInfo> m_TriggerActionsMap;
-		std::unordered_map<std::string, AxisActionInfo> m_AxisActionsMap;
+		std::unordered_map<CallbackHandler, std::string> HandlerToActionNameMap;
+		std::unordered_map<std::string, TriggerActionInfo> TriggerActionsMap;
+		std::unordered_map<std::string, AxisActionInfo> AxisActionsMap;
 	};
 
 }

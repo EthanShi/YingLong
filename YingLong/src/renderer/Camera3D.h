@@ -17,9 +17,9 @@ namespace YingLong {
 	class YINGLONG_API Camera3D
 	{
 	private:
-		Camera3DInfo m_CameraInfo;
+		Camera3DInfo CameraInfo;
 
-		glm::mat4 m_Perspective = glm::mat4();
+		glm::mat4 Perspective = glm::mat4();
 
 	public:
 		Camera3D() { UpdatePerspective(); }

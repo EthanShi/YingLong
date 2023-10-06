@@ -29,10 +29,10 @@ private:
 	std::string GetShaderPath();
 	void CreatePhongLights();
 
-	int m_CurrentMaterialIndex = 0;
-	std::string m_CurrentMaterialName = "";
-	std::map<std::string, PhongMaterial> m_TestMaterials;
+	int CurrentMaterialIndex = 0;
+	std::string CurrentMaterialName = "";
+	std::map<std::string, PhongMaterial> TestMaterials;
 
 private:
-	DrawBasicLightingSystem m_DrawBasicLightingSystem;
+	DrawBasicLightingSystem DrawBasicLightingSystem;
 };

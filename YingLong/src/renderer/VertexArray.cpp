@@ -8,12 +8,12 @@ namespace YingLong {
 
 	VertexArray::~VertexArray()
 	{
-		GLCall(glDeleteVertexArrays(1, &m_RendererID));
+		GLCall(glDeleteVertexArrays(1, &RendererID));
 	}
 
 	void VertexArray::Init()
 	{
-		GLCall(glGenVertexArrays(1, &m_RendererID));
+		GLCall(glGenVertexArrays(1, &RendererID));
 	}
 
 	void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
@@ -34,7 +34,7 @@ namespace YingLong {
 
 	void VertexArray::Bind() const
 	{
-		GLCall(glBindVertexArray(m_RendererID));
+		GLCall(glBindVertexArray(RendererID));
 	}
 
 	void VertexArray::UnBind() const

@@ -10,37 +10,37 @@ namespace YingLong {
 
 	Texture::~Texture()
 	{
-		GLCall(glDeleteTextures(1, &m_RendererID));
+		GLCall(glDeleteTextures(1, &RendererID));
 	}
 
 	bool Texture::IsValid() const
 	{
-		return m_TextureID > 0;
+		return TextureID > 0;
 	}
 
 	void Texture::Load(const std::string& filepath)
 	{
-		m_FilePath = filepath;
+		FilePath = filepath;
 
 		stbi_set_flip_vertically_on_load(1);
-		m_LocalBuffer = stbi_load(filepath.c_str(), &m_Width, &m_Height, &m_BPP, 3);
+		LocalBuffer = stbi_load(filepath.c_str(), &Width, &Height, &BPP, 3);
 
-		GLCall(glGenTextures(1, &m_RendererID));
-		GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
+		GLCall(glGenTextures(1, &RendererID));
+		GLCall(glBindTexture(GL_TEXTURE_2D, RendererID));
 
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
-		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, m_LocalBuffer));
+		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, LocalBuffer));
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 	}
 
 	void Texture::Bind(uint32 slot) const
 	{
 		GLCall(glActiveTexture(GL_TEXTURE0 + slot));
-		GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
+		GLCall(glBindTexture(GL_TEXTURE_2D, RendererID));
 	}
 
 	void Texture::UnBind() const
@@ -50,13 +50,13 @@ namespace YingLong {
 
 	uint32 TextureManager::LoadTexture(const std::string& FileName)
 	{
-		auto FindMeshResult = m_LoadedTextureMap.find(FileName);
-		if (FindMeshResult != m_LoadedTextureMap.end())
+		auto FindMeshResult = LoadedTextureMap.find(FileName);
+		if (FindMeshResult != LoadedTextureMap.end())
 		{
 			return FindMeshResult->second.GetTexutureID();
 		}
 
-		auto Result = m_LoadedTextureMap.emplace(FileName, Texture());
+		auto Result = LoadedTextureMap.emplace(FileName, Texture());
 		if (!Result.second)
 		{
 			TextureLog().error("Load texture failed: {}", FileName);
@@ -66,25 +66,25 @@ namespace YingLong {
 		Texture& Texture = Result.first->second;
 		Texture.Load(FileName);
 
-		Texture.m_TextureID = ++m_TextureID;
+		Texture.TextureID = ++TextureID;
 
-		m_LoadedTextureMapPath[Texture.m_TextureID] = FileName;
+		LoadedTextureMapPath[Texture.TextureID] = FileName;
 
-		return Texture.m_TextureID;
+		return Texture.TextureID;
 	}
 
 	Texture& TextureManager::GetTexture(uint32 TextureID)
 	{
-		if (m_LoadedTextureMapPath.find(TextureID) != m_LoadedTextureMapPath.end())
+		if (LoadedTextureMapPath.find(TextureID) != LoadedTextureMapPath.end())
 		{
-			const std::string& filepath = m_LoadedTextureMapPath.at(TextureID);
-			auto FindTextureResult = m_LoadedTextureMap.find(filepath);
-			if (FindTextureResult != m_LoadedTextureMap.end())
+			const std::string& filepath = LoadedTextureMapPath.at(TextureID);
+			auto FindTextureResult = LoadedTextureMap.find(filepath);
+			if (FindTextureResult != LoadedTextureMap.end())
 			{
 				return FindTextureResult->second;
 			}
 		}
-		return m_InvalidTexture;
+		return InvalidTexture;
 	}
 
 }

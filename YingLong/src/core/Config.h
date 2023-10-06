@@ -60,16 +60,16 @@ namespace YingLong {
 			toml::table Data;
 		};
 
-		ConfigTableInfo m_EngineConfig;
-		ConfigTableInfo m_ProjectConfig;
-		std::unordered_map<std::string, ConfigTableInfo> m_SceneConfigs;
-		ConfigTableInfo m_ProjectUserConfig;
-		std::unordered_map<std::string, ConfigTableInfo> m_SceneUserConfigs;
+		ConfigTableInfo EngineConfig;
+		ConfigTableInfo ProjectConfig;
+		std::unordered_map<std::string, ConfigTableInfo> SceneConfigs;
+		ConfigTableInfo ProjectUserConfig;
+		std::unordered_map<std::string, ConfigTableInfo> SceneUserConfigs;
 
 		// Merged configs
-		ConfigTableInfo m_MergedProjectConfig;
-		std::unordered_map<std::string, ConfigTableInfo> m_MergedConfigs;
-		std::unordered_map<std::string, ConfigTableInfo> m_MergedConfigsWithUser;
+		ConfigTableInfo MergedProjectConfig;
+		std::unordered_map<std::string, ConfigTableInfo> MergedConfigs;
+		std::unordered_map<std::string, ConfigTableInfo> MergedConfigsWithUser;
 
 	private:
 		Config();

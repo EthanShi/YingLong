@@ -19,12 +19,12 @@ namespace YingLong {
 
 	struct YINGLONG_API MeshObjData
 	{
-		uint32 m_MeshObjDataID = 0;
-		std::string m_Filename = "";
-		tinyobj::ObjReader m_ObjReader;
-		bool m_HasNormals = false;
-		bool m_HasTexcoords = false;
-		bool m_HasColors = false;
+		uint32 MeshObjDataID = 0;
+		std::string Filename = "";
+		tinyobj::ObjReader ObjReader;
+		bool HasNormals = false;
+		bool HasTexcoords = false;
+		bool HasColors = false;
 	};
 
 	class YINGLONG_API Mesh
@@ -37,8 +37,8 @@ namespace YingLong {
 		bool LoadObjData(const std::string& FileName, const std::string& MaterialSearchPath = std::string());
 		void FillRenderData(bool withNormal, bool withTexcoord, bool withColor);
 
-		void SetDefaultColor(glm::vec3 color) { m_DefaultColor = color; }
-		const glm::vec3& GetDefaultColor() { return m_DefaultColor; }
+		void SetDefaultColor(glm::vec3 color) { DefaultColor = color; }
+		const glm::vec3& GetDefaultColor() { return DefaultColor; }
 
 		const MeshObjData& GetObjData() const;
 
@@ -46,19 +46,19 @@ namespace YingLong {
 		bool HasTexcoords() const;
 		bool HasColors() const;
 
-		const VertexArray& GetVertexArray() const { return m_VertexArray; }
-		const IndexBuffer& GetIndexBuffer() const { return m_IndexBuffer; }
+		const VertexArray& GetVertexArray() const { return VertexArray; }
+		const IndexBuffer& GetIndexBuffer() const { return IndexBuffer; }
 
-		operator bool() { return GetObjData().m_ObjReader.Valid(); }
+		operator bool() { return GetObjData().ObjReader.Valid(); }
 
 	private:
-		uint32 m_MeshObjDataID = 0;
+		uint32 MeshObjDataID = 0;
 
-		glm::vec3 m_DefaultColor = glm::vec3(0.3, 0.3, 0.3);
+		glm::vec3 DefaultColor = glm::vec3(0.3, 0.3, 0.3);
 
-		VertexArray m_VertexArray;
-		VertexBuffer m_VertexBuffer;
-		IndexBuffer m_IndexBuffer;
+		VertexArray VertexArray;
+		VertexBuffer VertexBuffer;
+		IndexBuffer IndexBuffer;
 	};
 
 	class YINGLONG_API MeshObjDataManager
@@ -68,10 +68,10 @@ namespace YingLong {
 		MeshObjData& GetMeshObjData(uint32 MeshObjDataID);
 
 	private:
-		uint32 m_MeshObjDataID = 0;
-		MeshObjData m_InvalidMeshObjData;
-		std::unordered_map<std::string, MeshObjData> m_LoadedMeshObjDataMap;
-		std::unordered_map<uint32, std::string> m_LoadedMeshObjDataMapPath;
+		uint32 MeshObjDataID = 0;
+		MeshObjData InvalidMeshObjData;
+		std::unordered_map<std::string, MeshObjData> LoadedMeshObjDataMap;
+		std::unordered_map<uint32, std::string> LoadedMeshObjDataMapPath;
 	};
 
 }

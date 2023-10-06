@@ -26,12 +26,12 @@ namespace YingLong {
 
 			view.each(
 				[this, &CameraTransform, &Camera](Transform3DComponent& transform, MeshComponent& mesh, ShaderComponent& shader) {
-					shader.m_Uniforms.SetUniform("MVP", Camera.m_Camera.GetPerspective() * CameraTransform.GetViewMatrix() * transform.GetTransform());
+					shader.Uniforms.SetUniform("MVP", Camera.Camera.GetPerspective() * CameraTransform.GetViewMatrix() * transform.GetTransform());
 					Renderer::Draw(
-						mesh.m_MeshRef.GetVertexArray(),
-						mesh.m_MeshRef.GetIndexBuffer(),
-						shader.m_ShaderID,
-						shader.m_Uniforms);
+						mesh.MeshRef.GetVertexArray(),
+						mesh.MeshRef.GetIndexBuffer(),
+						shader.ShaderID,
+						shader.Uniforms);
 				}
 			);
 		}

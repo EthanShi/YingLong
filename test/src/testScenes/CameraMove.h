@@ -29,11 +29,11 @@ protected:
 	virtual void CreateACube(const glm::vec3& Position, const glm::vec3& Forward, const glm::vec3& Scale);
 
 protected:
-	Mesh m_CubeMesh;
+	Mesh CubeMesh;
 
 private:
-	FreeMovementSystem m_FreeMovementSystem;
-	DrawBasic3DMeshSystem m_DrawBasic3DMeshSystem;
+	FreeMovementSystem FreeMovementSystem;
+	DrawBasic3DMeshSystem DrawBasic3DMeshSystem;
 
 private:
 	void CreateCubes();

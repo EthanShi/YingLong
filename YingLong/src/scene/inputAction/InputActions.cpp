@@ -29,51 +29,51 @@ namespace YingLong {
 
 	void InputAction::Init(std::weak_ptr<Scene> Owner)
 	{
-		m_OwnerScene = Owner;
+		OwnerScene = Owner;
 
 		Input& InputInstance = Input::Instance();
 		const toml::table& ConfigTable = Config::Instance().ReadOnly();
 
-		ReadActions(m_TrigerActionGroupName);
-		ReadActions(m_AxisActionGroupName);
+		ReadActions(TrigerActionGroupName);
+		ReadActions(AxisActionGroupName);
 	}
 
 	InputAction::CallbackHandler InputAction::Bind(const std::string& ActionName, const TriggerActionCallback& Callback)
 	{
-		auto TriggerAction = m_TriggerActionsMap.find(ActionName);
-		if (TriggerAction == m_TriggerActionsMap.end())
+		auto TriggerAction = TriggerActionsMap.find(ActionName);
+		if (TriggerAction == TriggerActionsMap.end())
 		{
 			return 0;
 		}
 
-		TriggerAction->second.Callbacks.push_back({ Callback, ++m_Handler });
-		m_HandlerToActionNameMap[m_Handler] = ActionName;
-		return m_Handler;
+		TriggerAction->second.Callbacks.push_back({ Callback, ++Handler });
+		HandlerToActionNameMap[Handler] = ActionName;
+		return Handler;
 	}
 
 	InputAction::CallbackHandler InputAction::Bind(const std::string& ActionName, const AxisActionCallback& Callback)
 	{
-		auto TriggerAction = m_AxisActionsMap.find(ActionName);
-		if (TriggerAction == m_AxisActionsMap.end())
+		auto TriggerAction = AxisActionsMap.find(ActionName);
+		if (TriggerAction == AxisActionsMap.end())
 		{
 			return 0;
 		}
 
-		TriggerAction->second.Callbacks.push_back({ Callback, ++m_Handler });
-		m_HandlerToActionNameMap[m_Handler] = ActionName;
-		return m_Handler;
+		TriggerAction->second.Callbacks.push_back({ Callback, ++Handler });
+		HandlerToActionNameMap[Handler] = ActionName;
+		return Handler;
 	}
 
 	void InputAction::UnBind(CallbackHandler Handler)
 	{
-		auto OwnerAction = m_HandlerToActionNameMap.find(Handler);
-		if (OwnerAction == m_HandlerToActionNameMap.end())
+		auto OwnerAction = HandlerToActionNameMap.find(Handler);
+		if (OwnerAction == HandlerToActionNameMap.end())
 		{
 			return;
 		}
 
-		auto TryTrigger = m_TriggerActionsMap.find(OwnerAction->second);
-		if (TryTrigger != m_TriggerActionsMap.end())
+		auto TryTrigger = TriggerActionsMap.find(OwnerAction->second);
+		if (TryTrigger != TriggerActionsMap.end())
 		{
 			auto& Callbacks = TryTrigger->second.Callbacks;
 			Callbacks.erase(
@@ -85,8 +85,8 @@ namespace YingLong {
 				Callbacks.end());
 		}
 
-		auto TryAxis = m_AxisActionsMap.find(OwnerAction->second);
-		if (TryAxis != m_AxisActionsMap.end())
+		auto TryAxis = AxisActionsMap.find(OwnerAction->second);
+		if (TryAxis != AxisActionsMap.end())
 		{
 			auto Callbacks = TryAxis->second.Callbacks;
 			Callbacks.erase(
@@ -98,27 +98,27 @@ namespace YingLong {
 				Callbacks.end());
 		}
 
-		m_HandlerToActionNameMap.erase(Handler);
+		HandlerToActionNameMap.erase(Handler);
 	}
 
 	void InputAction::ClearCallbacks(const std::string& ActionName)
 	{
-		auto TryTrigger = m_TriggerActionsMap.find(ActionName);
-		if (TryTrigger != m_TriggerActionsMap.end())
+		auto TryTrigger = TriggerActionsMap.find(ActionName);
+		if (TryTrigger != TriggerActionsMap.end())
 		{
 			for (auto& CallbackInfo : TryTrigger->second.Callbacks)
 			{
-				m_HandlerToActionNameMap.erase(CallbackInfo.Handler);
+				HandlerToActionNameMap.erase(CallbackInfo.Handler);
 			}
 			TryTrigger->second.Callbacks.clear();
 		}
 
-		auto TryAxis = m_AxisActionsMap.find(ActionName);
-		if (TryAxis != m_AxisActionsMap.end())
+		auto TryAxis = AxisActionsMap.find(ActionName);
+		if (TryAxis != AxisActionsMap.end())
 		{
 			for (auto& CallbackInfo : TryAxis->second.Callbacks)
 			{
-				m_HandlerToActionNameMap.erase(CallbackInfo.Handler);
+				HandlerToActionNameMap.erase(CallbackInfo.Handler);
 			}
 			TryAxis->second.Callbacks.clear();
 		}
@@ -126,12 +126,12 @@ namespace YingLong {
 
 	void InputAction::ClearCallbacks()
 	{
-		m_HandlerToActionNameMap.clear();
-		for (auto& Action : m_TriggerActionsMap)
+		HandlerToActionNameMap.clear();
+		for (auto& Action : TriggerActionsMap)
 		{
 			Action.second.Callbacks.clear();
 		}
-		for (auto& Action : m_AxisActionsMap)
+		for (auto& Action : AxisActionsMap)
 		{
 			Action.second.Callbacks.clear();
 		}
@@ -139,9 +139,9 @@ namespace YingLong {
 
 	void InputAction::OnKeyChanged(InputKey Key, InputMode Mode)
 	{
-		auto OwnerScene = m_OwnerScene.lock();
-		auto Actions = m_KeyToActionsMap.find({Key, Mode});
-		if (!OwnerScene || Actions == m_KeyToActionsMap.end()) { return; }
+		auto SharedOwnerScene = OwnerScene.lock();
+		auto Actions = KeyToActionsMap.find({Key, Mode});
+		if (!SharedOwnerScene || Actions == KeyToActionsMap.end()) { return; }
 
 		for (auto& ActionName : Actions->second)
 		{
@@ -151,9 +151,9 @@ namespace YingLong {
 
 	void InputAction::OnMouseChanged(InputMouse Mouse, InputMode Mode)
 	{
-		auto OwnerScene = m_OwnerScene.lock();
-		auto Actions = m_MouseToActionsMap.find({ Mouse, Mode });
-		if (!OwnerScene || Actions == m_MouseToActionsMap.end()) { return; }
+		auto SharedOwnerScene = OwnerScene.lock();
+		auto Actions = MouseToActionsMap.find({ Mouse, Mode });
+		if (!SharedOwnerScene || Actions == MouseToActionsMap.end()) { return; }
 
 		for (auto& ActionName : Actions->second)
 		{
@@ -163,10 +163,10 @@ namespace YingLong {
 
 	void InputAction::OnMouseMove(const glm::vec2& OldPos, const glm::vec2& NewPos)
 	{
-		auto OwnerScene = m_OwnerScene.lock();
+		auto SharedOwnerScene = OwnerScene.lock();
 		// Do MOUSE_X actions
-		auto Actions = m_MouseToActionsMap.find({ InputMouse::MOUSE_X, InputMode::KEY_PRESS });
-		if (!OwnerScene || Actions == m_MouseToActionsMap.end()) { return; }
+		auto Actions = MouseToActionsMap.find({ InputMouse::MOUSE_X, InputMode::KEY_PRESS });
+		if (!SharedOwnerScene || Actions == MouseToActionsMap.end()) { return; }
 
 		for (auto& ActionName : Actions->second)
 		{
@@ -174,8 +174,8 @@ namespace YingLong {
 		}
 
 		// Do MOUSE_Y actions
-		Actions = m_MouseToActionsMap.find({ InputMouse::MOUSE_Y, InputMode::KEY_PRESS });
-		if (!OwnerScene || Actions == m_MouseToActionsMap.end()) { return; }
+		Actions = MouseToActionsMap.find({ InputMouse::MOUSE_Y, InputMode::KEY_PRESS });
+		if (!SharedOwnerScene || Actions == MouseToActionsMap.end()) { return; }
 
 		for (auto& ActionName : Actions->second)
 		{
@@ -244,12 +244,12 @@ namespace YingLong {
 			if (TryKey != InputKey::KEY_UNKNOWN)
 			{
 				std::pair<InputKey, InputMode> FindKey(TryKey, BindMode);
-				auto FindResult = m_KeyToActionsMap.find(FindKey);
-				if (FindResult == m_KeyToActionsMap.end())
+				auto FindResult = KeyToActionsMap.find(FindKey);
+				if (FindResult == KeyToActionsMap.end())
 				{
-					m_KeyToActionsMap[FindKey] = {};
+					KeyToActionsMap[FindKey] = {};
 				}
-				m_KeyToActionsMap[FindKey].push_back(ActionName);
+				KeyToActionsMap[FindKey].push_back(ActionName);
 				KeyOrMouse.Key = TryKey;
 				CareKeys.push_back(TryKey);
 			}
@@ -258,12 +258,12 @@ namespace YingLong {
 			if (TryMouse != InputMouse::MOUSE_UNKNOWN)
 			{
 				std::pair<InputMouse, InputMode> FindKey(TryMouse, BindMode);
-				auto FindResult = m_MouseToActionsMap.find(FindKey);
-				if (FindResult == m_MouseToActionsMap.end())
+				auto FindResult = MouseToActionsMap.find(FindKey);
+				if (FindResult == MouseToActionsMap.end())
 				{
-					m_MouseToActionsMap[FindKey] = {};
+					MouseToActionsMap[FindKey] = {};
 				}
-				m_MouseToActionsMap[FindKey].push_back(ActionName);
+				MouseToActionsMap[FindKey].push_back(ActionName);
 				KeyOrMouse.Mouse = TryMouse;
 				CareMouses.push_back(TryMouse);
 			}
@@ -272,22 +272,22 @@ namespace YingLong {
 			InputInstance.AddCareKeys(CareKeys);
 			InputInstance.AddCareMouses(CareMouses);
 
-			if (ActionGroupName == m_TrigerActionGroupName)
+			if (ActionGroupName == TrigerActionGroupName)
 			{
 				TriggerActionBindInfo BindInfo;
 				BindInfo.KeyOrMouse = KeyOrMouse;
 				BindInfo.Mode = BindMode;
-				auto ActionInfoFindResult = m_TriggerActionsMap.find(ActionName);
-				if (ActionInfoFindResult == m_TriggerActionsMap.end())
+				auto ActionInfoFindResult = TriggerActionsMap.find(ActionName);
+				if (ActionInfoFindResult == TriggerActionsMap.end())
 				{
 					TriggerActionInfo NewActionInfo;
 					NewActionInfo.Name = ActionName;
-					m_TriggerActionsMap[ActionName] = std::move(NewActionInfo);
+					TriggerActionsMap[ActionName] = std::move(NewActionInfo);
 				}
-				auto& ActionInfo = m_TriggerActionsMap[ActionName];
+				auto& ActionInfo = TriggerActionsMap[ActionName];
 				ActionInfo.BindInfo.push_back(BindInfo);
 			}
-			else if (ActionGroupName == m_AxisActionGroupName)
+			else if (ActionGroupName == AxisActionGroupName)
 			{
 				AxisActionBindInfo BindInfo;
 				BindInfo.KeyOrMouse = KeyOrMouse;
@@ -297,14 +297,14 @@ namespace YingLong {
 				{
 					BindInfo.Scale = float(double(*Scale));
 				}
-				auto ActionInfoFindResult = m_AxisActionsMap.find(ActionName);
-				if (ActionInfoFindResult == m_AxisActionsMap.end())
+				auto ActionInfoFindResult = AxisActionsMap.find(ActionName);
+				if (ActionInfoFindResult == AxisActionsMap.end())
 				{
 					AxisActionInfo NewActionInfo;
 					NewActionInfo.Name = ActionName;
-					m_AxisActionsMap[ActionName] = std::move(NewActionInfo);
+					AxisActionsMap[ActionName] = std::move(NewActionInfo);
 				}
-				auto& ActionInfo = m_AxisActionsMap[ActionName];
+				auto& ActionInfo = AxisActionsMap[ActionName];
 				ActionInfo.BindInfo.push_back(BindInfo);
 			}
 		});
@@ -312,8 +312,8 @@ namespace YingLong {
 
 	void InputAction::CallCallbacks(std::string ActionName, InputMode Mode, InputKey Key, InputMouse Mouse, float InputAxisValue)
 	{
-		auto TriggerAction = m_TriggerActionsMap.find(ActionName);
-		if (TriggerAction != m_TriggerActionsMap.end())
+		auto TriggerAction = TriggerActionsMap.find(ActionName);
+		if (TriggerAction != TriggerActionsMap.end())
 		{
 			for (auto& Callback : TriggerAction->second.Callbacks)
 			{
@@ -331,8 +331,8 @@ namespace YingLong {
 			KeyOrMouse.Mouse = Mouse;
 		}
 
-		auto AxisAction = m_AxisActionsMap.find(ActionName);
-		if (AxisAction != m_AxisActionsMap.end())
+		auto AxisAction = AxisActionsMap.find(ActionName);
+		if (AxisAction != AxisActionsMap.end())
 		{
 			float Scale = 1.0f;
 			for (auto& BindInfo : AxisAction->second.BindInfo)

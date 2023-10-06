@@ -23,8 +23,8 @@ protected:
 	virtual void CreateDefaultCamera() override;
 
 private:
-	Mesh m_CubeMesh;
-	FreeMovementSystem m_FreeMovementSystem;
-	DrawBasic3DMeshSystem m_DrawBasic3DMeshSystem;
+	Mesh CubeMesh;
+	FreeMovementSystem FreeMovementSystem;
+	DrawBasic3DMeshSystem DrawBasic3DMeshSystem;
 };
 

@@ -19,17 +19,17 @@ namespace YingLong {
 
 	void Shader::Load(const std::string& filepath)
 	{
-		m_Filepath = filepath;
+		Filepath = filepath;
 
-		ShaderPrgramSource source = ParseShader(m_Filepath);
+		ShaderPrgramSource source = ParseShader(Filepath);
 		if (source.FragmentShaderSource.empty() || source.VertexShaderSource.empty())
 		{
 			ShaderLog().error("Can not find shader: '{}'", filepath);
 			return;
 		}
-		m_RendererID = CreateShader(source.VertexShaderSource, source.FragmentShaderSource);
+		RendererID = CreateShader(source.VertexShaderSource, source.FragmentShaderSource);
 
-		if (m_RendererID == 0)
+		if (RendererID == 0)
 		{
 			ShaderLog().error("Failed to load shader: '{}'", filepath);
 		}
@@ -37,7 +37,7 @@ namespace YingLong {
 
 	void Shader::Bind() const
 	{
-		GLCall(glUseProgram(m_RendererID));
+		GLCall(glUseProgram(RendererID));
 	}
 
 	void Shader::Bind(const Uniforms& InUniforms)
@@ -78,18 +78,18 @@ namespace YingLong {
 
 	int32 Shader::GetUniformLocation(const std::string& name)
 	{
-		if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
+		if (UniformLocationCache.find(name) != UniformLocationCache.end())
 		{
-			return m_UniformLocationCache[name];
+			return UniformLocationCache[name];
 		}
 
-		GLCall(int32 location = glGetUniformLocation(m_RendererID, name.c_str()));
+		GLCall(int32 location = glGetUniformLocation(RendererID, name.c_str()));
 		if (location == -1)
 		{
 			ShaderLog().warn("Warning: uniform '{}' doesn't exist!", name);
 		}
 
-		m_UniformLocationCache[name] = location;
+		UniformLocationCache[name] = location;
 		return location;
 	}
 
@@ -173,18 +173,18 @@ namespace YingLong {
 
 	uint32 ShaderManager::LoadShader(const std::string& filepath)
 	{
-		auto shader = m_LoadedShaderMap.find(filepath);
-		if (shader != m_LoadedShaderMap.end())
+		auto shader = LoadedShaderMap.find(filepath);
+		if (shader != LoadedShaderMap.end())
 		{
 			return shader->second.GetRendererID();
 		}
 
-		auto result = m_LoadedShaderMap.emplace(filepath, Shader(filepath));
+		auto result = LoadedShaderMap.emplace(filepath, Shader(filepath));
 		if (result.second)
 		{
 
 			uint32 rendererID = result.first->second.GetRendererID();
-			m_LoadedShaderMapPath.emplace(rendererID, filepath);
+			LoadedShaderMapPath.emplace(rendererID, filepath);
 			return rendererID;
 		}
 		return 0;
@@ -192,15 +192,15 @@ namespace YingLong {
 
 	Shader& ShaderManager::GetShader(uint32 shaderID)
 	{
-		if (m_LoadedShaderMapPath.find(shaderID) != m_LoadedShaderMapPath.end())
+		if (LoadedShaderMapPath.find(shaderID) != LoadedShaderMapPath.end())
 		{
-			const std::string& filepath = m_LoadedShaderMapPath.at(shaderID);
-			if (m_LoadedShaderMap.find(filepath) != m_LoadedShaderMap.end())
+			const std::string& filepath = LoadedShaderMapPath.at(shaderID);
+			if (LoadedShaderMap.find(filepath) != LoadedShaderMap.end())
 			{
-				return m_LoadedShaderMap.at(filepath);
+				return LoadedShaderMap.at(filepath);
 			}
 		}
-		return m_InvalidShader;
+		return InvalidShader;
 	}
 
 }

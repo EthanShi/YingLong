@@ -17,7 +17,7 @@ protected:
 	virtual void DrawImgui(float deltatime) override;
 
 private:
-	float m_ClearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	glm::vec4 m_BackgroundColorCache;
+	float ClearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	glm::vec4 BackgroundColorCache;
 };
 

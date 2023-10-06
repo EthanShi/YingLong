@@ -9,7 +9,7 @@ namespace YingLong {
 	class YINGLONG_API VertexBuffer
 	{
 	private:
-		uint32 m_RendererID;
+		uint32 RendererID;
 
 	public:
 		VertexBuffer() = default;

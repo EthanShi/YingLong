@@ -18,10 +18,10 @@ public:
 	template<class T>
 	void AddTestScene(const std::string& TestName)
 	{
-		m_TestScenes.push_back(std::make_pair(TestName, []() { return std::make_shared<T>(); }));
+		TestScenes.push_back(std::make_pair(TestName, []() { return std::make_shared<T>(); }));
 	}
 
 private:
-	std::vector<std::pair<std::string, std::function<std::shared_ptr<Scene>()>>> m_TestScenes;
-	std::shared_ptr<Scene> m_CurrentTest;
+	std::vector<std::pair<std::string, std::function<std::shared_ptr<Scene>()>>> TestScenes;
+	std::shared_ptr<Scene> CurrentTest;
 };

@@ -33,12 +33,12 @@ namespace YingLong {
 			uint32 shaderID,
 			Shader::Uniforms& Uniforms)
 		{
-			Draw(vao, ibo, m_ShaderManager.GetShader(shaderID), Uniforms);
+			Draw(vao, ibo, ShaderManager.GetShader(shaderID), Uniforms);
 		}
 
-		static ShaderManager& GetShaderManager() { return m_ShaderManager; }
-		static MeshObjDataManager& GetMeshObjDataManager() { return m_MeshObjDataManager; }
-		static TextureManager& GetTextureManager() { return m_TextureManager; }
+		static ShaderManager& GetShaderManager() { return ShaderManager; }
+		static MeshObjDataManager& GetMeshObjDataManager() { return MeshObjDataManager; }
+		static TextureManager& GetTextureManager() { return TextureManager; }
 
 		// Set functions
 		static void SetBackgroundColor(const glm::vec4& color);
@@ -54,16 +54,16 @@ namespace YingLong {
 
 	private:
 		// Clear color for renderer
-		static glm::vec4 m_BackgroundColor;
+		static glm::vec4 BackgroundColor;
 
-		static float m_UnitScale;
+		static float UnitScale;
 
-		static uint32 m_windowHeight;
-		static uint32 m_windowWidth;
+		static uint32 windowHeight;
+		static uint32 windowWidth;
 
-		static ShaderManager m_ShaderManager;
-		static MeshObjDataManager m_MeshObjDataManager;
-		static TextureManager m_TextureManager;
+		static ShaderManager ShaderManager;
+		static MeshObjDataManager MeshObjDataManager;
+		static TextureManager TextureManager;
 
 	private:
 		static glm::mat4 GetViewportMatrix();

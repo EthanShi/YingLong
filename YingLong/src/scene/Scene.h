@@ -28,12 +28,12 @@ namespace YingLong {
 
 		void Tick(float deltatime);
 
-		entt::dispatcher& GetDispatcher() { return m_Dispatcher; }
-		entt::registry& GetRegistry() { return m_Registry; }
+		entt::dispatcher& GetDispatcher() { return Dispatcher; }
+		entt::registry& GetRegistry() { return Registry; }
 
-		InputAction& GetInputAction() { return m_InputAction; }
+		InputAction& GetInputAction() { return InputAction; }
 
-		entt::entity& GetPrimaryCamera() { return m_PrimaryCamera; }
+		entt::entity& GetPrimaryCamera() { return PrimaryCamera; }
 
 
 	protected:
@@ -45,20 +45,20 @@ namespace YingLong {
 
 	protected:
 		// Weak this ptr from owner
-		std::weak_ptr<Scene> m_WeakThis;
+		std::weak_ptr<Scene> WeakThis;
 
 		// Owner Engine
-		std::weak_ptr<Engine> m_Engine;
+		std::weak_ptr<Engine> OwnerEngine;
 
 		// Registry manage all entities & components in this Scene
-		entt::registry m_Registry;
+		entt::registry Registry;
 
 		// Event dispatcher manage all engine and user events for this Scene
-		entt::dispatcher m_Dispatcher;
+		entt::dispatcher Dispatcher;
 
 		// Camera that renderer use to render this Scene
-		entt::entity m_PrimaryCamera;
+		entt::entity PrimaryCamera;
 
-		InputAction m_InputAction;
+		InputAction InputAction;
 	};
 }

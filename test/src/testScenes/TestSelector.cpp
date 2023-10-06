@@ -11,7 +11,7 @@
 
 TestSelectorScene::TestSelectorScene()
 	: Scene()
-	, m_CurrentTest(nullptr)
+	, CurrentTest(nullptr)
 {
 	AddTestScene<ClearColorScene>("Clear color");
 	AddTestScene<SingleCubeScene>("Single cube");
@@ -24,16 +24,16 @@ void TestSelectorScene::DrawImgui(float deltatime)
 {
 	ImGui::Begin("Tests");
 
-	if (m_CurrentTest.get() == nullptr)
+	if (CurrentTest.get() == nullptr)
 	{
-		for (auto& testPair : m_TestScenes)
+		for (auto& testPair : TestScenes)
 		{
 			if (ImGui::Button(testPair.first.c_str()))
 			{
-				m_CurrentTest = testPair.second();
-				if (auto Engine = m_Engine.lock())
+				CurrentTest = testPair.second();
+				if (const auto SharedEngine = OwnerEngine.lock())
 				{
-					Engine->AddScene(m_CurrentTest);
+					SharedEngine->AddScene(CurrentTest);
 				}
 			}
 		}
@@ -42,11 +42,11 @@ void TestSelectorScene::DrawImgui(float deltatime)
 	{
 		if (ImGui::Button("<-"))
 		{
-			if (auto Engine = m_Engine.lock())
+			if (const auto SharedEngine = OwnerEngine.lock())
 			{
-				Engine->RemoveScene(m_CurrentTest);
+				SharedEngine->RemoveScene(CurrentTest);
 			}
-			m_CurrentTest = nullptr;
+			CurrentTest = nullptr;
 		}
 	}
 

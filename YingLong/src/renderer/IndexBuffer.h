@@ -7,8 +7,8 @@ namespace YingLong {
 	class YINGLONG_API IndexBuffer
 	{
 	private:
-		uint32 m_RendererID;
-		uint32 m_Count;
+		uint32 RendererID;
+		uint32 Count;
 
 	public:
 		IndexBuffer() = default;
@@ -20,7 +20,7 @@ namespace YingLong {
 		void Bind() const;
 		void UnBind() const;
 
-		inline uint32 GetCount() const { return m_Count; }
+		inline uint32 GetCount() const { return Count; }
 	};
 
 	using IndexBuffer_SPtr = std::shared_ptr<IndexBuffer>;
